@@ -1,10 +1,10 @@
 ![OpenIPC logo][logo]
 
 ## OpenIPC Builder
-_System for building OpenIPC firmware for known devices_
+_Experimental system for building OpenIPC firmware for known devices_
 
 
-### List of known devices (experimental)
+### List of known devices
 
 ```
 Rostelecom HS303 v1      HI3518EV200               RTL8188FU
