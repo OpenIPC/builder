@@ -10,18 +10,27 @@ _Experimental system for building OpenIPC firmware for known devices_
 - Specialized storage location for customized firmware for well-known devices.
 
 
+### Preparing and using the project
+
+```
+sudo apt-get update -y
+sudo apt-get install -y automake autotools-dev bc build-essential curl fzf git libtool rsync unzip mc tree python-is-python3
+git clone https://github.com/openipc/builder.git
+cd builder
+./building.sh
+```
 
 ### List of known devices
 
 ```
 Imou IPC-C22EP-S2             SSC325DE       SC2239     RTL8188FU     NAND_?       preparation
-Imou IPC-F22AP                SSC325         SC2239     -             NOR_?        preparation 
+Imou IPC-F22AP                SSC325         SC2239     -             NOR_?        preparation
 Rostelecom IPC8232SWC-WE-B    SSC337DE       OS02G10    RTL8188FU     NOR_16M      preparation
 Smartwares CIP-37210          HI3518EV200               RTL8188FU     NOR_?        preparation
 Switcam HS303                 HI3518EV200               RTL8188FU     NOR_16M      preparation
 Switcam HS303 v2              HI3518EV200    OV9732     RTL8188EU     NOR_16M      preparation
 Switcam HS303 v3              HI3518EV200                             NOR_16M      preparation
-TP-Link Tapo C110             SSC333         SC3338     SSW101B       NOR_8M       preparation 
+TP-Link Tapo C110             SSC333         SC3338     SSW101B       NOR_8M       first for test
 Uniview C1L-2WN-G-RU          SSC337DE       OS02G10    RTL8188FU     NOR_16M      preparation
 
 ```
