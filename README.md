@@ -6,7 +6,7 @@ _Experimental system for building OpenIPC firmware for known devices_
 
 ### Specialized features
 
-- Tweaker for automatically configuring devices according to profile.
+- Tweaker for automatically configuring devices according to profile (gpio, wifi, etc).
 - Specialized storage location for customized firmware for well-known devices.
 
 
