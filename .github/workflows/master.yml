@@ -1,0 +1,54 @@
+name: Build
+on:
+  schedule:
+  - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  buildroot:
+    name: Firmware
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - ssc325de_lite_imou-c22ep-s2
+          - ssc333_lite_tp-link-tapo-c110
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Prepare
+        run: |
+          echo "8.8.8.8 invisible-mirror.net" | sudo tee -a /etc/hosts
+          echo "8.8.8.8 distfiles.dereferenced.org" | sudo tee -a /etc/hosts
+
+      - name: Build
+        run: |
+          export GIT_HASH=$(git rev-parse --short ${GITHUB_SHA})
+          export GIT_BRANCH=${GITHUB_REF_NAME}
+
+          NAME=${{matrix.platform}}
+          bash builder.sh ${NAME}
+
+          NORFW=$(find ${GITHUB_WORKSPACE}/openipc/output/images -name openipc*nor*)
+          if [ ! -z ${NORFW} ]; then
+            mv ${NORFW} ${NAME}-nor.tgz
+            echo NORFW=${GITHUB_WORKSPACE}/${NAME}-nor.tgz >> ${GITHUB_ENV}
+          fi
+
+          NANDFW=$(find ${GITHUB_WORKSPACE}/openipc/output/images -name openipc*nand*)
+          if [ ! -z ${NANDFW} ]; then
+            mv ${NANDFW} ${NAME}-nand.tgz
+            echo NANDFW=${GITHUB_WORKSPACE}/${NAME}-nand.tgz >> ${GITHUB_ENV}
+          fi
+
+      - name: Upload
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: latest
+          files: |
+            ${{env.NORFW}}
+            ${{env.NANDFW}}
