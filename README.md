@@ -6,8 +6,8 @@ _Experimental system for building OpenIPC firmware for known devices_
 
 ### Specialized features
 
-- tweaker for automatically configuring devices according to profile
-- specialized storage location for customized firmware for well-known devices
+- Tweaker for automatically configuring devices according to profile.
+- Specialized storage location for customized firmware for well-known devices.
 
 
 
@@ -25,6 +25,10 @@ TP-Link Tapo C110             SSC333         SC3338     SSW101B       NOR_8M
 Uniview C1L-2WN-G-RU          SSC337DE       OS02G10    RTL8188FU     NOR_16M
 
 ```
+
+### Technical support and donations
+
+Please [support our project](https://openipc.org/support-open-source) with donations or orders for development or maintenance. Thank you.
 
 
 [logo]: https://openipc.org/assets/openipc-logo-black.svg
