@@ -17,7 +17,7 @@ sudo apt-get update -y
 sudo apt-get install -y automake autotools-dev bc build-essential curl fzf git libtool rsync unzip mc tree python-is-python3
 git clone https://github.com/openipc/builder.git
 cd builder
-./building.sh
+./builder.sh
 ```
 
 ### List of known devices
