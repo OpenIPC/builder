@@ -1,3 +1,4 @@
+etc/mediatek
 etc/sensors/ar0130_i2c_720p.ini
 etc/sensors/gc1034_i2c_720p.ini
 etc/sensors/imx222_i2c_1080p.ini
@@ -5,6 +6,7 @@ etc/sensors/imx222_i2c_720p.ini
 etc/sensors/imx291_i2c_lvds_1080p.ini
 etc/sensors/imx323_i2c_dc_1080p.ini
 etc/sensors/imx323_spi_dc_1080p.ini
+etc/sensors/jxf22_i2c_1080p.ini
 etc/sensors/jxf23_i2c_1080p.ini
 etc/sensors/jxh62_i2c_720p.ini
 etc/sensors/jxh65_i2c_960p.ini
@@ -19,8 +21,16 @@ etc/sensors/sc2135_i2c_1080p.ini
 etc/sensors/sc2235_i2c_dc_1080p.ini
 etc/sensors/iq/ar0130.ini
 etc/sensors/iq/ar0230.ini
+etc/sensors/iq/default.ini
 etc/sensors/iq/imx222.ini
 etc/sensors/iq/ov9750.ini
+lib/firmware/mediatek
+lib/firmware/mt7601u.bin
+lib/firmware/rtlwifi
+lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek
+lib/modules/4.9.37/kernel/drivers/net/wireless/realtek
+lib/modules/4.9.37/kernel/drivers/staging/rtl8188eu
+lib/modules/4.9.37/kernel/fs/f2fs
 usr/lib/sensors/libsns_ar0130.so
 usr/lib/sensors/libsns_gc1034.so
 usr/lib/sensors/libsns_gc2023.so
@@ -29,6 +39,7 @@ usr/lib/sensors/libsns_imx222.so
 usr/lib/sensors/libsns_imx291.so
 usr/lib/sensors/libsns_imx323_i2c_dc.so
 usr/lib/sensors/libsns_imx323_i2c_dc_v1.so
+usr/lib/sensors/libsns_jxf22.so
 usr/lib/sensors/libsns_jxf23.so
 usr/lib/sensors/libsns_jxh62.so
 usr/lib/sensors/libsns_jxh65.so
