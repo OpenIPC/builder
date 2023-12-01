@@ -37,8 +37,7 @@ Uniview C1L-2WN-G-RU          SSC337DE       OS02G10    RTL8188FU     NOR_16M   
 
 ### Existing problems
 
-- Device TP-Link Tapo C110
-    - NOR flash 8M is small, and the WiFi driver SSW101B is very large and the QR scanner currently does not fit into the firmware
+- On some devices NOR flash 8M is small, and the WiFi driver is very large and the QR scanner currently does not fit into the firmware
 
 
 ### Technical support and donations
