@@ -1,0 +1,2 @@
+etc/sensors/imx307.bin
+lib/modules/4.9.84/sigmastar/sensor/sensor_imx307_mipi.ko

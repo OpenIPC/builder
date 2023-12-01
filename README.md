@@ -23,17 +23,23 @@ cd builder
 ### List of known devices
 
 ```
-Imou IPC-C22EP-S2             SSC325DE       SC2239     RTL8188FU     NAND_?       preparation
+Imou IPC-C22EP-S2             SSC325DE       SC2239     RTL8188FU     NAND         in progress
 Imou IPC-F22AP                SSC325         SC2239     -             NOR_?        preparation
 Rostelecom IPC8232SWC-WE-B    SSC337DE       OS02G10    RTL8188FU     NOR_16M      preparation
 Smartwares CIP-37210          HI3518EV200               RTL8188FU     NOR_?        preparation
 Switcam HS303                 HI3518EV200               RTL8188FU     NOR_16M      preparation
 Switcam HS303 v2              HI3518EV200    OV9732     RTL8188EU     NOR_16M      preparation
 Switcam HS303 v3              HI3518EV200                             NOR_16M      preparation
-TP-Link Tapo C110             SSC333         SC3338     SSW101B       NOR_8M       first for test
+TP-Link Tapo C110             SSC333         SC3338     SSW101B       NOR_8M       in progress
 Uniview C1L-2WN-G-RU          SSC337DE       OS02G10    RTL8188FU     NOR_16M      preparation
 
 ```
+
+### Existing problems
+
+- Device TP-Link Tapo C110
+    - NOR flash 8M is small, and the WiFi driver SSW101B is very large and the QR scanner currently does not fit into the firmware
+
 
 ### Technical support and donations
 
