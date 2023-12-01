@@ -13,6 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         platform:
+          - hi3518ev200_lite_smartwares-cip-37210
+          - hi3518ev200_lite_switcam-hs303
+          - hi3518ev200_lite_switcam-hs303-v2
+          - hi3518ev200_lite_switcam-hs303-v3
           - ssc325de_lite_imou-c22ep-s2
           - ssc333_lite_tp-link-tapo-c110
           - ssc335de_lite_rostelecom-ipc8232swc-we-b
