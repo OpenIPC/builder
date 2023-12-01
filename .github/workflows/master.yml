@@ -15,7 +15,7 @@ jobs:
         platform:
           - ssc325de_lite_imou-c22ep-s2
           - ssc333_lite_tp-link-tapo-c110
-          - ssc335de_lite_rostelecom_ipc8232swc-we-b
+          - ssc335de_lite_rostelecom-ipc8232swc-we-b
 
     steps:
       - name: Checkout
