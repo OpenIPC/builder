@@ -5,22 +5,23 @@
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/ssc325de_lite_imou-c22ep-s2-nand.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/ssc333_lite_tp-link-tapo-c110-nor.tgz'
 #
 #
 # Set custom majestic settings
 #
 cli -s .system.staticDir /var/www/majestic
 cli -s .nightMode.enabled true
-cli -s .nightMode.irCutPin1 13
-cli -s .nightMode.irCutPin2 12
-cli -s .nightMode.backlightPin 52
+cli -s .nightMode.irCutPin1 78
+cli -s .nightMode.irCutPin2 79
+cli -s .nightMode.backlightPin 14
+cli -s .audio.speakerPin 61
 cli -s .video0.codec h264
 #
 #
 # Set wlan device and credentials if need
 #
-fw_setenv wlandev rtl8188fu-ssc325de-imou-c22ep-s2
+fw_setenv wlandev ssw101b-ssc333-tapo-c110
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 
