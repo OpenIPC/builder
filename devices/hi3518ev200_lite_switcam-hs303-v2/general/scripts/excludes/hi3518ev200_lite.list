@@ -1,4 +1,3 @@
-etc/mediatek
 etc/sensors/ar0130_i2c_720p.ini
 etc/sensors/gc1034_i2c_720p.ini
 etc/sensors/imx222_i2c_1080p.ini
@@ -18,16 +17,13 @@ etc/sensors/sc1235_i2c_dc_960p.ini
 etc/sensors/sc2035_i2c_1080p.ini
 etc/sensors/sc2135_i2c_1080p.ini
 etc/sensors/sc2235_i2c_dc_1080p.ini
+#
 etc/sensors/iq/ar0130.ini
 etc/sensors/iq/ar0230.ini
 etc/sensors/iq/default.ini
 etc/sensors/iq/imx222.ini
 etc/sensors/iq/ov9750.ini
-lib/firmware/mediatek
-lib/firmware/mt7601u.bin
-lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek
-lib/modules/4.9.37/kernel/drivers/net/wireless/realtek
-lib/modules/4.9.37/kernel/fs/f2fs
+#
 usr/lib/sensors/libsns_ar0130.so
 usr/lib/sensors/libsns_gc1034.so
 usr/lib/sensors/libsns_gc2023.so
@@ -51,4 +47,7 @@ usr/lib/sensors/libsns_sc1235.so
 usr/lib/sensors/libsns_sc2035.so
 usr/lib/sensors/libsns_sc2135.so
 usr/lib/sensors/libsns_sc2235.so
-
+#
+etc/mediatek
+lib/modules/4.9.37/kernel/drivers/net/wireless
+lib/modules/4.9.37/kernel/fs/f2fs
