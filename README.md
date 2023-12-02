@@ -1,7 +1,8 @@
 ![OpenIPC logo][logo]
 
 ## OpenIPC Builder
-_Experimental system for building OpenIPC firmware for known devices_
+**_Experimental system for building OpenIPC firmware for known devices_**
+- **_[Current release of firmware builds](https://github.com/OpenIPC/builder/releases/tag/latest)_**
 
 
 ### Specialized features
@@ -34,7 +35,6 @@ TP-Link Tapo C110             SSC333         SC3338     SSW101B       NOR_8M    
 Uniview C1L-2WN-G-RU          SSC337DE       OS02G10    RTL8188FU     NOR_16M      preparation
 
 ```
-- **[Current release of firmware builds](https://github.com/OpenIPC/builder/releases/tag/latest)**
 
 
 ### Existing problems
