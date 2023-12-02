@@ -44,7 +44,7 @@ Uniview C1L-2WN-G-RU          SSC337DE       OS02G10    RTL8188FU     NOR_16M   
 
 ### Technical support and donations
 
-Please [support our project](https://openipc.org/support-open-source) with donations or orders for development or maintenance. Thank you.
+Please **_[support our project](https://openipc.org/support-open-source)_** with donations or orders for development or maintenance. Thank you!
 
 
 [logo]: https://openipc.org/assets/openipc-logo-black.svg
