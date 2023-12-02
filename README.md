@@ -9,18 +9,8 @@
 
 - Tweaker for automatically configuring devices according to profile (gpio, wifi, etc).
 - Specialized _[storage location](https://github.com/OpenIPC/builder/releases/tag/latest)_ for customized firmware for well-known devices.
-- QR code recognition to automatically _[connect to WiFi](https://openipc.org/tools/qr-code-generator)_ on your home network
+- QR code recognition to automatically _[connect to WiFi](https://openipc.org/tools/qr-code-generator)_ on your home network.
 
-
-### Preparing and using the project
-
-```
-sudo apt-get update -y
-sudo apt-get install -y automake autotools-dev bc build-essential curl fzf git libtool rsync unzip mc tree python-is-python3
-git clone https://github.com/openipc/builder.git
-cd builder
-./builder.sh
-```
 
 ### List of known devices
 
@@ -37,6 +27,16 @@ Uniview C1L-2WN-G-RU          SSC337DE       OS02G10    RTL8188FU     NOR_16M   
 
 ```
 
+
+### Preparing and using the project
+
+```
+sudo apt-get update -y
+sudo apt-get install -y automake autotools-dev bc build-essential curl fzf git libtool rsync unzip mc tree python-is-python3
+git clone https://github.com/openipc/builder.git
+cd builder
+./builder.sh
+```
 
 ### Existing problems
 
