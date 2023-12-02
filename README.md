@@ -8,7 +8,8 @@
 ### Specialized features
 
 - Tweaker for automatically configuring devices according to profile (gpio, wifi, etc).
-- Specialized storage location for customized firmware for well-known devices.
+- Specialized _[storage location](https://github.com/OpenIPC/builder/releases/tag/latest)_ for customized firmware for well-known devices.
+- QR code recognition to automatically _[connect to WiFi](https://openipc.org/tools/qr-code-generator)_ on your home network
 
 
 ### Preparing and using the project
