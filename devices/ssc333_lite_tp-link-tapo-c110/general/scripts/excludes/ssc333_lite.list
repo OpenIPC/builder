@@ -5,6 +5,7 @@ etc/sensors/imx307.bin
 etc/sensors/imx335.bin
 etc/sensors/sc2335.bin
 etc/sensors/sc2336.bin
+#
 lib/modules/4.9.84/sigmastar/sensor/sensor_gc2053_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_gc2083_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_gc4023_mipi.ko
