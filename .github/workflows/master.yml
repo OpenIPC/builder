@@ -21,6 +21,7 @@ jobs:
           - ssc333_lite_tp-link-tapo-c110
           - ssc335de_lite_rostelecom-ipc8232swc-we-b
           - ssc335de_lite_uniview-c1l-2wn-g-ru
+          - t31_lite_xiaomi-mjsxj03hl
 
     steps:
       - name: Checkout
