@@ -5,7 +5,7 @@
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/ssc325de_lite_imou-c22ep-s2-nand.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/ssc325de_lite_imou-c22ep-s2-nor.tgz'
 #
 #
 # Set custom majestic settings
