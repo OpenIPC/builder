@@ -40,22 +40,13 @@ jobs:
           NAME=${{matrix.platform}}
           bash builder.sh ${NAME}
 
-          NORFW=$(find ${GITHUB_WORKSPACE}/openipc/output/images -name openipc*nor*)
-          if [ ! -z ${NORFW} ]; then
-            mv ${NORFW} ${NAME}-nor.tgz
-            echo NORFW=${GITHUB_WORKSPACE}/${NAME}-nor.tgz >> ${GITHUB_ENV}
-          fi
-
-          NANDFW=$(find ${GITHUB_WORKSPACE}/openipc/output/images -name openipc*nand*)
-          if [ ! -z ${NANDFW} ]; then
-            mv ${NANDFW} ${NAME}-nand.tgz
-            echo NANDFW=${GITHUB_WORKSPACE}/${NAME}-nand.tgz >> ${GITHUB_ENV}
-          fi
+          FW=$(find ${GITHUB_WORKSPACE}/openipc/output/images -name openipc*)
+          TYPE=$(echo $FW | grep -q nor && echo nor || echo nand)
+          mv ${FW} ${NAME}-${TYPE}.tgz
+          echo ARCHIVE=${GITHUB_WORKSPACE}/${NAME}-${TYPE}.tgz >> ${GITHUB_ENV}
 
       - name: Upload
         uses: softprops/action-gh-release@v1
         with:
           tag_name: latest
-          files: |
-            ${{env.NORFW}}
-            ${{env.NANDFW}}
+          files: ${{env.ARCHIVE}}
