@@ -24,7 +24,9 @@ Switcam HS303 v2              HI3518EV200    OV9732     RTL8188EU     NOR_16M   
 Switcam HS303 v3              HI3518EV200    OV9732     RTL8188EU     NOR_16M      in progress     @flyrouter
 TP-Link Tapo C110             SSC333         SC3338     SSW101B       NOR_8M       in progress     @flyrouter
 Uniview C1L-2WN-G-RU          SSC337DE       OS02G10    RTL8188FU     NOR_16M      preparation     @flyrouter
-Xiaomi MJSXJ03HL              T31N           JXQ03P     RTL8189FS     NOR_16M      in progress     @cronyx
+Xiaomi MJSXJ03HL              T31N           JXQ03P     RTL8189FS     NOR_16M      in progress
+Wansview Q5 1080p             T21Z           OV2735B    RTL8188FU     NOR_16M      in progress
+Wansview Q5 2K                T31L           SC2336     ATBM6032i     NOR_8M       preparation
 
 ```
 
