@@ -15,15 +15,14 @@
 ### List of known devices
 
 ```
-Imou IPC-C22EP-S2             SSC325DE       SC2239     RTL8188FU     NAND         in progress     @flyrouter
-Imou IPC-F22AP                SSC325         SC2239     -             NOR_?        preparation     @flyrouter
-Rostelecom IPC8232SWC-WE-B    SSC337DE       OS02G10    RTL8188FU     NOR_16M      preparation     @flyrouter
-Smartwares CIP-37210          HI3518EV200    OV9732     RTL8188FU     NOR_16M      in progress     @flyrouter
-Switcam HS303                 HI3518EV200    JXF22      RTL8188FU     NOR_16M      in progress     @flyrouter
-Switcam HS303 v2              HI3518EV200    OV9732     RTL8188EU     NOR_16M      in progress     @flyrouter
-Switcam HS303 v3              HI3518EV200    OV9732     RTL8188EU     NOR_16M      in progress     @flyrouter
-TP-Link Tapo C110             SSC333         SC3338     SSW101B       NOR_8M       in progress     @flyrouter
-Uniview C1L-2WN-G-RU          SSC337DE       OS02G10    RTL8188FU     NOR_16M      preparation     @flyrouter
+Imou IPC-C22EP-S2             SSC325DE       SC2239     RTL8188FU     NAND         in progress
+Imou IPC-F22AP                SSC325         SC2239     -             NOR_?        preparation
+Qtech QVC-IPC-136W            HI3518EV200    OV9732     RTL8188EU     NOR_16M      in progress
+Smartwares CIP-37210          HI3518EV200    OV9732     RTL8188FU     NOR_16M      in progress
+Switcam HS303                 HI3518EV200    JXF22      RTL8188FU     NOR_16M      in progress
+Switcam HS303 v2              HI3518EV200    OV9732     RTL8188EU     NOR_16M      in progress
+TP-Link Tapo C110             SSC333         SC3338     SSW101B       NOR_8M       in progress
+Uniview C1L-2WN-G             SSC335DE       OS02G10    RTL8188FU     NOR_16M      preparation
 Xiaomi MJSXJ03HL              T31N           JXQ03P     RTL8189FS     NOR_16M      in progress
 Wansview Q5 1080p             T21Z           OV2735B    RTL8188FU     NOR_16M      in progress
 Wansview Q5 2K                T31L           SC2336     ATBM6032i     NOR_8M       preparation
@@ -31,11 +30,22 @@ Wansview Q5 2K                T31L           SC2336     ATBM6032i     NOR_8M    
 ```
 
 
+### Compatibility and clones
+​
+Many devices sold in online stores are clones of original devices or, more often, devices adapted for the local national market.
+
+```
+Switcam HS303 v3                =>     Qtech QVC-IPC-136W
+Rostelecom IPC8232SWC-WE-B      =>     Uniview C1L-2WN-G
+```
+
+
 ### Preparing and using the project
 
 ```
 sudo apt-get update -y
-sudo apt-get install -y automake autotools-dev bc build-essential curl fzf git libtool rsync unzip mc tree python-is-python3
+sudo apt-get install -y automake autotools-dev bc build-essential curl fzf git libtool rsync \
+  unzip mc tree python-is-python3
 git clone https://github.com/openipc/builder.git
 cd builder
 ./builder.sh
