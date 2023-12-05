@@ -15,17 +15,17 @@
 ### List of known devices
 
 ```
-Imou IPC-C22EP-S2             SSC325DE       SC2239     RTL8188FU     NAND         in progress
-Imou IPC-F22AP                SSC325         SC2239     -             NOR_?        preparation
-Qtech QVC-IPC-136W            HI3518EV200    OV9732     RTL8188EU     NOR_16M      in progress
-Smartwares CIP-37210          HI3518EV200    OV9732     RTL8188FU     NOR_16M      in progress
-Switcam HS303                 HI3518EV200    JXF22      RTL8188FU     NOR_16M      in progress
-Switcam HS303 v2              HI3518EV200    OV9732     RTL8188EU     NOR_16M      in progress
-TP-Link Tapo C110             SSC333         SC3338     SSW101B       NOR_8M       in progress
-Uniview C1L-2WN-G             SSC335DE       OS02G10    RTL8188FU     NOR_16M      preparation
-Xiaomi MJSXJ03HL              T31N           JXQ03P     RTL8189FS     NOR_16M      in progress
-Wansview Q5 1080p             T21Z           OV2735B    RTL8188FU     NOR_16M      in progress
-Wansview Q5 2K                T31L           SC2336     ATBM6032i     NOR_8M       preparation
+Imou IPC-C22EP-S2             SSC325DE     SC2239/SC2335  RTL8188FU   NAND         testing
+Imou IPC-F22AP                SSC325       SC2239         -           NOR_?        preparation
+Qtech QVC-IPC-136W            HI3518EV200  OV9732         RTL8188EU   NOR_16M      in progress
+Smartwares CIP-37210          HI3518EV200  OV9732         RTL8188FU   NOR_16M      in progress
+Switcam HS303                 HI3518EV200  JXF22          RTL8188FU   NOR_16M      in progress
+Switcam HS303 v2              HI3518EV200  OV9732         RTL8188EU   NOR_16M      in progress
+TP-Link Tapo C110             SSC333       SC3338         SSW101B     NOR_8M       in progress
+Uniview C1L-2WN-G             SSC335DE     OS02G10        RTL8188FU   NOR_16M      testing
+Xiaomi MJSXJ03HL              T31N         JXQ03P         RTL8189FS   NOR_16M      in progress
+Wansview Q5 1080p             T21Z         OV2735B        RTL8188FU   NOR_16M      in progress
+Wansview Q5 2K                T31L         SC2336         ATBM6032i   NOR_8M       preparation
 ```
 
 
