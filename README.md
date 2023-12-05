@@ -26,12 +26,11 @@ Uniview C1L-2WN-G             SSC335DE       OS02G10    RTL8188FU     NOR_16M   
 Xiaomi MJSXJ03HL              T31N           JXQ03P     RTL8189FS     NOR_16M      in progress
 Wansview Q5 1080p             T21Z           OV2735B    RTL8188FU     NOR_16M      in progress
 Wansview Q5 2K                T31L           SC2336     ATBM6032i     NOR_8M       preparation
-
 ```
 
 
 ### Compatibility and clones
-​
+
 Many devices sold in online stores are clones of original devices or, more often, devices adapted for the local national market.
 
 ```
