@@ -52,4 +52,5 @@ usr/lib/sensors/libsns_sc2235.so
 #
 etc/mediatek
 lib/modules/4.9.37/kernel/drivers/net/wireless
+lib/modules/4.9.37/kernel/drivers/staging
 lib/modules/4.9.37/kernel/fs/f2fs
