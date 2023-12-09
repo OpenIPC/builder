@@ -19,6 +19,7 @@ Imou IPC-C22EP-S2       SSC325DE     SC2239/SC2335  RTL8188FU   NAND      testin
 Imou IPC-F22AP          SSC325       SC2239         -           NOR_?     preparation
 Qtech QVC-IPC-136W      HI3518EV200  OV9732         RTL8188EU   NOR_16M   in progress
 Smartwares CIP-37210    HI3518EV200  OV9732         RTL8188FU   NOR_16M   in progress
+Speed 6S                SSC333       JXF37          RTL8188FU   NOR_16M   new
 Switcam HS303           HI3518EV200  JXF22          RTL8188FU   NOR_16M   in progress
 Switcam HS303 v2        HI3518EV200  OV9732         RTL8188EU   NOR_16M   in progress
 TP-Link Tapo C110       SSC333       SC3338         SSW101B     NOR_8M    in progress
