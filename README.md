@@ -26,6 +26,7 @@ TP-Link Tapo C110       SSC333       SC3338         SSW101B     NOR_8M    in pro
 Uniview C1L-2WN-G       SSC335DE     OS02G10        RTL8188FU   NOR_16M   testing stage 2
 Wansview Q5 1080p       T21Z         OV2735B        RTL8188FU   NOR_16M   in progress
 Wansview Q5 2K          T31L         SC2336         ATBM6032i   NOR_8M    preparation
+Xiaomi MJSXJ02HL        HI3518EV300  JXF22          RTL8189FS   NOR_16M   preparation
 Xiaomi MJSXJ03HL        T31N         JXQ03P         RTL8189FS   NOR_16M   in progress
 Xiaomi MJSXJ05HL        T31L         GC2053         ATBM6031    NOR_16M   preparation
 ```

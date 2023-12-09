@@ -1,0 +1,28 @@
+#!/bin/sh
+
+case "$1" in
+  start | restart | reload)
+    if [ ! -d /sys/class/gpio/gpio0/ ]; then
+        echo 0 > /sys/class/gpio/export
+        echo in > /sys/class/gpio/gpio0/direction
+    fi
+    printf "Checking the reset button: "
+    if [ $(cat /sys/class/gpio/gpio0/value) -eq 0 ]; then
+        echo "PRESSED"
+        # Wipe overlay partition and reboot
+        echo "Let's start wipe overlay partition (/dev/mtd4)"
+        /usr/sbin/sysupgrade -n -z
+    else
+        echo "NOT PRESSED"
+    fi
+    exit $?
+    ;;
+  stop)
+    exit 0
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
