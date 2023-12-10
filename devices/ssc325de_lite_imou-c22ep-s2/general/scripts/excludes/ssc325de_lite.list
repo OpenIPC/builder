@@ -3,3 +3,8 @@ etc/sensors/imx307.bin
 #
 lib/modules/4.9.84/sigmastar/sensor/sensor_gc2053_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_imx307_mipi.ko
+#
+lib/modules/4.9.84/kernel/fs/lockd
+lib/modules/4.9.84/kernel/fs/nfs
+lib/modules/4.9.84/kernel/fs/nfs_common
+lib/modules/4.9.84/kernel/net/sunrpc

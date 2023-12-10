@@ -19,3 +19,8 @@ lib/modules/4.9.84/sigmastar/sensor/sensor_sc2335_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_sc2336_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_sc3335_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_sc3338_mipi.ko
+#
+lib/modules/4.9.84/kernel/fs/lockd
+lib/modules/4.9.84/kernel/fs/nfs
+lib/modules/4.9.84/kernel/fs/nfs_common
+lib/modules/4.9.84/kernel/net/sunrpc
