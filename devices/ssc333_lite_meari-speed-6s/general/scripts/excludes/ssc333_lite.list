@@ -3,6 +3,7 @@ etc/sensors/gc4023.bin
 etc/sensors/gc4653.bin
 etc/sensors/imx307.bin
 etc/sensors/imx335.bin
+etc/sensors/sc223a.bin
 etc/sensors/sc2335.bin
 etc/sensors/sc2336.bin
 etc/sensors/sc2338.bin
