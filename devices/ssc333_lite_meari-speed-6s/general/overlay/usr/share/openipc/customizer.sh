@@ -5,7 +5,7 @@
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/ssc333_lite_speed-6s-nor.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/ssc333_lite_meari-speed-6s-nor.tgz'
 #
 #
 # Set custom majestic settings
@@ -21,7 +21,7 @@ cli -s .video0.codec h264
 #
 # Set wlan device and credentials if need
 #
-fw_setenv wlandev ssw101b-ssc333-tapo-c110
+fw_setenv wlandev rtl8188fu-ssc333-meari-speed-6s
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 
