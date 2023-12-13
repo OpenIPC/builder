@@ -21,6 +21,7 @@ jobs:
           - ssc333_lite_meari-speed-6s
           - ssc333_lite_tp-link-tapo-c110-v2
           - ssc335_lite_tp-link-tapo-c110-v1
+          - ssc335_lite_trassir-tr-w2c1-v2
           - ssc335de_lite_uniview-c1l-2wn-g
           - t21_lite_wansview-q5-1080p
           - t31_lite_xiaomi-mjsxj03hl

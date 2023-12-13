@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set_gpio() {
+	[ "$2" -eq 1 ] && gpio set $1 || gpio clear $1
+	sleep 1
+}
+
+# Generic MT7601STA
+if [ "$1" = "mt7601sta-generic" ]; then
+        modprobe mt7601sta
+        exit 0
+fi
+
+exit 1
