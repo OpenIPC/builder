@@ -15,22 +15,22 @@
 ### List of known devices
 
 ```
-Imou IPC-C22EP-S2       SSC325DE     SC2239/SC2335  RTL8188FU   NAND      testing stage 1
-Imou IPC-F22AP          SSC325       SC2239         -           NOR_?     preparation
-Qtech QVC-IPC-136W      HI3518EV200  OV9732         RTL8188EU   NOR_16M   in progress
-Smartwares CIP-37210    HI3518EV200  OV9732         RTL8188FU   NOR_16M   in progress
-Meari Speed 6S          SSC333       JXF37          RTL8188FU   NOR_16M   new
-Switcam HS303           HI3518EV200  JXF22          RTL8188FU   NOR_16M   in progress
-Switcam HS303 v2        HI3518EV200  OV9732         RTL8188EU   NOR_16M   in progress
-TP-Link Tapo C110 v1    SSC335       SC3335         ATBM6032i   NOR_8M    in progress
-TP-Link Tapo C110 v2    SSC333       SC3338         SSW101B     NOR_8M    in progress
-Trassir TR-W2C1 v2      SSC335       GC2053         MT7601U     NOR_16M   in progress
-Uniview C1L-2WN-G       SSC335DE     OS02G10        RTL8188FU   NOR_16M   testing stage 2
-Wansview Q5 1080p       T21Z         OV2735B        RTL8188FU   NOR_16M   in progress
-Wansview Q5 2K          T31L         SC2336         ATBM6032i   NOR_8M    preparation
-Xiaomi MJSXJ02HL        HI3518EV300  JXF22          RTL8189FS   NOR_16M   preparation
-Xiaomi MJSXJ03HL        T31N         JXQ03P         RTL8189FS   NOR_16M   in progress
-Xiaomi MJSXJ05HL        T31L         GC2053         ATBM6031    NOR_16M   preparation
+Imou IPC-C22EP-S2       SSC325DE     SC2239/SC2335  RTL8188FU_USB    NAND      testing stage 1
+Imou IPC-F22AP          SSC325       SC2239         -                NOR_?     preparation
+Qtech QVC-IPC-136W      HI3518EV200  OV9732         RTL8188EU_USB    NOR_16M   in progress
+Smartwares CIP-37210    HI3518EV200  OV9732         RTL8188FU_USB    NOR_16M   in progress
+Meari Speed 6S          SSC333       JXF37          RTL8188FU_USB    NOR_16M   new
+Switcam HS303           HI3518EV200  JXF22          RTL8188FU_USB    NOR_16M   in progress
+Switcam HS303 v2        HI3518EV200  OV9732         RTL8188EU_USB    NOR_16M   in progress
+TP-Link Tapo C110 v1    SSC335       SC3335         ATBM6032i_USB    NOR_8M    in progress
+TP-Link Tapo C110 v2    SSC333       SC3338         SSW101B_USB      NOR_8M    in progress
+Trassir TR-W2C1 v2      SSC335       GC2053         MT7601U_?        NOR_16M   in progress
+Uniview C1L-2WN-G       SSC335DE     OS02G10        RTL8188FU_USB    NOR_16M   testing stage 2
+Wansview Q5 1080p       T21Z         OV2735B        RTL8188FU_?      NOR_16M   in progress
+Wansview Q5 2K          T31L         SC2336         ATBM6032i_?      NOR_8M    preparation
+Xiaomi MJSXJ02HL        HI3518EV300  JXF22          RTL8189FS_?      NOR_16M   preparation
+Xiaomi MJSXJ03HL        T31N         JXQ03P         RTL8189FS_?      NOR_16M   in progress
+Xiaomi MJSXJ05HL        T31L         GC2053         ATBM6031_?       NOR_16M   preparation
 ```
 
 
