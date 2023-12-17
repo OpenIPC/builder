@@ -14,6 +14,7 @@ cli -s .system.staticDir /var/www/majestic
 cli -s .nightMode.enabled true
 cli -s .nightMode.irCutPin1 78
 cli -s .nightMode.backlightPin 14
+cli -s .nightMode.colorToGray true
 cli -s .audio.speakerPin 61
 cli -s .video0.codec h264
 #
