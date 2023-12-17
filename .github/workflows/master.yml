@@ -26,6 +26,8 @@ jobs:
           - ssc335_lite_trassir-tr-w2c1-v2
           - ssc335de_lite_uniview-c1l-2wn-g
           - t21_lite_wansview-q5-1080p
+          - t31_lite_aoni-ep01j05
+          - t31_lite_chinatelecom-y4h-50
           - t31_lite_xiaomi-mjsxj03hl
 
     steps:

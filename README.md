@@ -12,17 +12,19 @@
 - QR code recognition to automatically _[connect to WiFi](https://openipc.org/tools/qr-code-generator)_ on your home network.
 
 
-### List of known devices
+### List of known and supported devices
 
 ```
-ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   new
+Aoni EP01J05             T31L         ?         RTL8188FU_USB    NOR_16M   new
+ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no
+ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
 Imilab EC3 CMSXJ25A      SSC325       GC2053    MT7603UN_?       NOR_16M   in progress
 Imou IPC-C22EP-S2        SSC325DE     SC2239    RTL8188FU_USB    NAND      testing stage 1
 Imou IPC-C22EP-S2 ?      SSC325DE     SC2335    RTL8188FU_USB    NAND      wait driver
 Imou IPC-F22AP           SSC325       SC2239    -                NOR_?     preparation
 Qtech QVC-IPC-136W       HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   in progress
 Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   in progress
-Meari Speed 6S           SSC333       JXF37     RTL8188FU_USB    NOR_16M   new
+Meari Speed 6S           SSC333       JXF37     RTL8188FU_USB    NOR_16M   video-yes, wifi-yes, motors-no
 Switcam HS303            HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   in progress
 Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   in progress
 TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    in progress
