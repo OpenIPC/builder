@@ -17,6 +17,7 @@ cli -s .nightMode.enabled true
 cli -s .nightMode.irCutPin1 61
 cli -s .nightMode.irCutPin2 79
 cli -s .nightMode.backlightPin 4
+cli -s .nightMode.colorToGray true
 cli -s .audio.speakerPin 0
 cli -s .video0.codec h264
 #
