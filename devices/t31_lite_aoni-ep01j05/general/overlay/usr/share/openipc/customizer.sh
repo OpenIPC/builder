@@ -21,7 +21,7 @@ cli -s .video0.codec h264
 #
 # Set wlan device and credentials if need
 #
-#fw_setenv wlandev rtl8189fs-generic
+fw_setenv wlandev rtl8188fu-t31-aoni-ep01
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 #
