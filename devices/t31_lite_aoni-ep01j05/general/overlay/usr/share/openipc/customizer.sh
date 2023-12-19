@@ -11,7 +11,7 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t
 # Set custom majestic settings
 #
 cli -s .system.staticDir /var/www/majestic
-#cli -s .isp.blkCnt 1
+cli -s .isp.blkCnt 1
 #cli -s .nightMode.enabled true
 #cli -s .nightMode.irCutPin1 49
 #cli -s .nightMode.irCutPin2 50
@@ -28,7 +28,7 @@ fw_setenv wlandev rtl8188fu-t31-aoni-ep01j05
 #
 # Set osmem and rmem
 #
-#fw_setenv osmem 39M
-#fw_setenv rmem 25M@0x2700000
+fw_setenv osmem 39M
+fw_setenv rmem 25M@0x2700000
 #
 exit 0
