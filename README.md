@@ -25,6 +25,7 @@ Imou IPC-F22AP           SSC325       SC2239    -                NOR_?     prepa
 Qtech QVC-IPC-136W       HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   in progress
 Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   in progress
 Meari Speed 6S           SSC333       JXF37     RTL8188FU_USB    NOR_16M   video-yes, wifi-yes, motors-no
+OpenIPC GK307 v1         GK7205V300   IMX307    -                NOR_16M   preparation
 Switcam HS303            HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   in progress
 Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   in progress
 TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    in progress
