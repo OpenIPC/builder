@@ -19,7 +19,6 @@ cli -s .nightMode.irCutPin2 64
 cli -s .nightMode.backlightPin 1
 cli -s .video0.codec h264
 cli -s .video0.fps 30
-cli -s .isp.blkCnt 5
 cli -s .isp.slowShutter disabled
 #
 # front white led gpio - 0
