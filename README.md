@@ -32,6 +32,7 @@ TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    in pr
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    in progress
 Trassir TR-W2C1 v2       SSC335       GC2053    MT7601U_USB      NOR_16M   in progress
 Uniview C1L-2WN-G        SSC335DE     OS02G10   RTL8188FU_USB    NOR_16M   testing stage 2
+VStarcam C8892WIP        HI3518EV200  AR2037    MT7601U_USB      NOR_16M   in progress
 Wansview Q5 1080p        T21Z         OV2735B   RTL8188FU_USB    NOR_16M   in progress
 Wansview Q5 2K           T31L         SC2336    ATBM6032i_SDIO   NOR_8M    preparation
 Xiaomi MJSXJ02HL         HI3518EV300  JXF22     RTL8189FS_SDIO   NOR_16M   preparation

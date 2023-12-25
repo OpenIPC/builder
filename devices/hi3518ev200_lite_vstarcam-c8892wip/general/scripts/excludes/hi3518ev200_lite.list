@@ -6,12 +6,12 @@ etc/sensors/imx222_i2c_720p.ini
 etc/sensors/imx291_i2c_lvds_1080p.ini
 etc/sensors/imx323_i2c_dc_1080p.ini
 etc/sensors/imx323_spi_dc_1080p.ini
-etc/sensors/jxf22_i2c_1080p.ini
 etc/sensors/jxf23_i2c_1080p.ini
 etc/sensors/jxh62_i2c_720p.ini
 etc/sensors/jxh65_i2c_960p.ini
 etc/sensors/ov2735_i2c_1080p.ini
 etc/sensors/ov9712_i2c_720p.ini
+etc/sensors/ov9732_i2c_720p.ini
 etc/sensors/ov9750_i2c_960p.ini
 etc/sensors/sc1135_i2c_720p.ini
 etc/sensors/sc1145_i2c_720p.ini
@@ -20,10 +20,9 @@ etc/sensors/sc2035_i2c_1080p.ini
 etc/sensors/sc2135_i2c_1080p.ini
 etc/sensors/sc2235_i2c_dc_1080p.ini
 #
-etc/sensors/iq/ar0130.ini
 etc/sensors/iq/ar0230.ini
-etc/sensors/iq/default.ini
 etc/sensors/iq/imx222.ini
+etc/sensors/iq/ov9732.ini
 etc/sensors/iq/ov9750.ini
 #
 usr/lib/sensors/libsns_ar0130.so
@@ -35,7 +34,6 @@ usr/lib/sensors/libsns_imx222.so
 usr/lib/sensors/libsns_imx291.so
 usr/lib/sensors/libsns_imx323_i2c_dc.so
 usr/lib/sensors/libsns_imx323_i2c_dc_v1.so
-usr/lib/sensors/libsns_jxf22.so
 usr/lib/sensors/libsns_jxf23.so
 usr/lib/sensors/libsns_jxh62.so
 usr/lib/sensors/libsns_jxh65.so
@@ -43,6 +41,7 @@ usr/lib/sensors/libsns_mn34222.so
 usr/lib/sensors/libsns_ov2718.so
 usr/lib/sensors/libsns_ov2735.so
 usr/lib/sensors/libsns_ov9712.so
+usr/lib/sensors/libsns_ov9732.so
 usr/lib/sensors/libsns_ov9750.so
 usr/lib/sensors/libsns_ov9752.so
 usr/lib/sensors/libsns_sc1135.so
@@ -52,7 +51,5 @@ usr/lib/sensors/libsns_sc2035.so
 usr/lib/sensors/libsns_sc2135.so
 usr/lib/sensors/libsns_sc2235.so
 #
-etc/mediatek
-lib/modules/4.9.37/kernel/drivers/net/wireless
 lib/modules/4.9.37/kernel/drivers/staging
 lib/modules/4.9.37/kernel/fs/f2fs
