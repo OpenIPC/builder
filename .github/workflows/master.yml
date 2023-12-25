@@ -16,6 +16,7 @@ jobs:
           - hi3518ev200_lite_smartwares-cip-37210
           - hi3518ev200_lite_switcam-hs303
           - hi3518ev200_lite_switcam-hs303-v2
+          - hi3518ev200_lite_vstarcam-c8892wip
           - hi3518ev200_lite_qtech-qvc-ipc-136w
           - ssc30kd_lite_chinatelecom-ds-ytj5301
           - ssc325_lite_imilab-ec3-cmsxj25a
