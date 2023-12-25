@@ -1,5 +1,4 @@
 etc/sensors/ar0130_i2c_720p.ini
-etc/sensors/ar0237_i2c_dc_1080p.ini
 etc/sensors/gc1034_i2c_720p.ini
 etc/sensors/imx222_i2c_1080p.ini
 etc/sensors/imx222_i2c_720p.ini
@@ -26,7 +25,6 @@ etc/sensors/iq/ov9732.ini
 etc/sensors/iq/ov9750.ini
 #
 usr/lib/sensors/libsns_ar0130.so
-usr/lib/sensors/libsns_ar0237.so
 usr/lib/sensors/libsns_gc1034.so
 usr/lib/sensors/libsns_gc2023.so
 usr/lib/sensors/libsns_imx122.so
