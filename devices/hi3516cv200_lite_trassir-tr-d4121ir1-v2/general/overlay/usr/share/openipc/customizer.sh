@@ -12,22 +12,13 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/h
 #
 cli -s .system.staticDir /var/www/majestic
 cli -s .nightMode.enabled true
-#cli -s .nightMode.irSensorPin ??
-#cli -s .nightMode.irSensorPinInvert true
-#cli -s .nightMode.irCutPin1 ??
-#cli -s .nightMode.irCutPin2 ??
-#cli -s .nightMode.backlightPin ??
+cli -s .nightMode.irSensorPin 62
+cli -s .nightMode.irCutPin1 64
+cli -s .nightMode.irCutSingleInvert true
+cli -s .nightMode.backlightPin 63
 cli -s .video0.codec h264
 cli -s .video0.fps 30
 cli -s .isp.slowShutter disabled
 #
-# front white led gpio - 0
-# reset gpio - ?
-#
-# Set wlan device and credentials if need
-#
-#fw_setenv wlandev mt7601u-generic
-#fw_setenv wlanssid Router
-#fw_setenv wlanpass 12345678
 
 exit 0
