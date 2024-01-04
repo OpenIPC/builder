@@ -5,7 +5,7 @@
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3518ev200_lite_trassir-tr-d4121ir1-v2-nor.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3516cv200_lite_trassir-tr-d4121ir1-v2-nor.tgz'
 #
 #
 # Set custom majestic settings

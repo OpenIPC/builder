@@ -30,7 +30,7 @@ Switcam HS303            HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   in pr
 Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   in progress
 TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    in progress
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    in progress
-Trassir TR-D4121IR1 v2   HI3518EV200  AR0237    -                NOR_8M    in progress
+Trassir TR-D4121IR1 v2   HI3516CV200  AR0237    -                NOR_8M    in progress
 Trassir TR-W2C1 v2       SSC335       GC2053    MT7601U_USB      NOR_16M   in progress
 Uniview C1L-2WN-G        SSC335DE     OS02G10   RTL8188FU_USB    NOR_16M   testing stage 2
 VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   in progress

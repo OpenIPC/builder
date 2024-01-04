@@ -13,10 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         platform:
+          - hi3516cv200_lite_trassir-tr-d4121ir1-v2
           - hi3518ev200_lite_smartwares-cip-37210
           - hi3518ev200_lite_switcam-hs303
           - hi3518ev200_lite_switcam-hs303-v2
-          - hi3518ev200_lite_trassir-tr-d4121ir1-v2
           - hi3518ev200_lite_vstarcam-c8892wip
           - hi3518ev200_lite_qtech-qvc-ipc-136w
           - hi3518ev300_lite_xiaomi-mjsxj02hl
