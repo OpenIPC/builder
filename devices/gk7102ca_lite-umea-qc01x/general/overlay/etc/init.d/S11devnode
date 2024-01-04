@@ -1,0 +1,8 @@
+#!/bin/sh
+
+mknod /dev/gk_video  -m 666 c 248 0
+mknod /dev/gk_log    -m 666 c 248 249
+mknod /dev/gk_fw     -m 666 c 248 1
+mknod /dev/debug     -m 666 c 248 248
+mknod /dev/ai_dev    -m 666 c 245 0
+mknod /dev/ao_dev    -m 666 c 245 1
