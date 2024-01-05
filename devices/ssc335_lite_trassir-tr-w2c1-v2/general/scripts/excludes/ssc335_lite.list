@@ -4,6 +4,7 @@ etc/sensors/gc4653.bin
 etc/sensors/imx307.bin
 etc/sensors/imx335.bin
 etc/sensors/jxf37.bin
+etc/sensors/sc200ai.bin
 etc/sensors/sc2239.bin
 etc/sensors/sc223a.bin
 etc/sensors/sc2335.bin
@@ -18,6 +19,7 @@ lib/modules/4.9.84/sigmastar/sensor/sensor_imx307_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_imx335_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_jxf37_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_os02g10_mipi.ko
+lib/modules/4.9.84/sigmastar/sensor/sensor_sc200ai_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_sc2239_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_sc223a_mipi.ko
 lib/modules/4.9.84/sigmastar/sensor/sensor_sc2335_mipi.ko
