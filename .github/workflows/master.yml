@@ -13,6 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         platform:
+          - gk7205v200_lite_vixand-iph-5-4g
           - hi3516cv200_lite_trassir-tr-d4121ir1-v2
           - hi3518ev200_lite_smartwares-cip-37210
           - hi3518ev200_lite_switcam-hs303
