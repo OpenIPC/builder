@@ -10,7 +10,7 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/g
 #
 # Set wlan device and credentials if need
 #
-fw_setenv wlandev ec200-gk7205v200-vixand
+fw_setenv wlandev ec200n-gk7205v200-vixand
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 
