@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set_gpio() {
+	[ "$2" -eq 1 ] && gpio set $1 || gpio clear $1
+	sleep 1
+}
+
+set_mmc() {
+	mmc=/sys/devices/platform/jzmmc_v1.2.$1/present
+	[ "$(cat $mmc)" = "N" ] && echo "INSERT" > $mmc
+}
+
+# Generic ATBM603X
+if [ "$1" = "atbm603x-generic" ]; then
+	set_gpio 47 1
+	set_mmc 1
+	cp -f /usr/share/atbm60xx_conf/atbm_txpwer_dcxo_cfg.txt /tmp
+	cp -f /usr/share/atbm60xx_conf/set_rate_power.txt /tmp
+	modprobe atbm603x_wifi_sdio atbm_printk_mask=0
+	exit 0
+fi
+
+exit 1
