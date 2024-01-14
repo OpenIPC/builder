@@ -33,7 +33,9 @@ TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    in pr
 Trassir TR-D4121IR1 v2   HI3516CV200  AR0237    -                NOR_16M   done
 Trassir TR-W2C1 v2       SSC335       GC2053    MT7601U_USB      NOR_16M   done
 Umea QC012               GK7102C_A    MIS2003   RDA5995_USB      MOR_8M    wip
-Uniview C1L-2WN-G        SSC335DE     OS02G10   RTL8188FU_USB    NOR_16M   testing stage 2
+Uniview C1L-2WN-G        SSC335DE     OS02G10   RTL8188FU_USB    NOR_16M   in progress
+Vixand IPC-1             GK7205V200   none      EC200N_USB       NOR_8M    insert
+Vixand IPH-5-4G          GK7205V200   SC2239    EC200N_USB       NOR_8M    insert
 VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
 VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip
 VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in progress
