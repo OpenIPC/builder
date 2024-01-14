@@ -7,6 +7,7 @@ etc/sensor/imx327-t31.bin
 etc/sensor/jxf37-t31.bin
 etc/sensor/jxh62-t31.bin
 etc/sensor/jxq03-t31.bin
+etc/sensor/os03b10-t31.bin
 etc/sensor/sc200ai-t31.bin
 etc/sensor/sc2232h-t31.bin
 etc/sensor/sc2335-t31.bin
@@ -56,6 +57,7 @@ lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_jxf37_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_jxh62_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_jxh63_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_jxq03_t31.ko
+lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_os03b10_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_sc200ai_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_sc2232h_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_sc2335_t31.ko
