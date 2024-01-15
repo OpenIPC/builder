@@ -1,38 +1,11 @@
-diff --git a/kernel/sensors/t31/Kbuild b/kernel/sensors/t31/Kbuild
-index 5f96204..30b34f5 100644
---- a/kernel/sensors/t31/Kbuild
-+++ b/kernel/sensors/t31/Kbuild
-@@ -1,19 +1 @@
--include $(src)/sensors/$(SOC)/gc2053/Kbuild
--include $(src)/sensors/$(SOC)/gc2083/Kbuild
--include $(src)/sensors/$(SOC)/gc4023/Kbuild
--include $(src)/sensors/$(SOC)/gc4653/Kbuild
--include $(src)/sensors/$(SOC)/imx307/Kbuild
--include $(src)/sensors/$(SOC)/imx327/Kbuild
--include $(src)/sensors/$(SOC)/jxf37/Kbuild
--include $(src)/sensors/$(SOC)/jxh62/Kbuild
--include $(src)/sensors/$(SOC)/jxh63/Kbuild
--include $(src)/sensors/$(SOC)/jxq03/Kbuild
--include $(src)/sensors/$(SOC)/jxq03p/Kbuild
--include $(src)/sensors/$(SOC)/os03b10/Kbuild
--include $(src)/sensors/$(SOC)/sc200ai/Kbuild
--include $(src)/sensors/$(SOC)/sc2232h/Kbuild
--include $(src)/sensors/$(SOC)/sc2335/Kbuild
--include $(src)/sensors/$(SOC)/sc2336/Kbuild
--include $(src)/sensors/$(SOC)/sc3338/Kbuild
--include $(src)/sensors/$(SOC)/sc5235/Kbuild
--include $(src)/sensors/$(SOC)/sc4236/Kbuild
+--- a/kernel/sensors/t31/Kbuild	2024-01-15 13:08:46.859149669 +0300
++++ b/kernel/sensors/t31/Kbuild	2024-01-15 13:13:37.850203251 +0300
+@@ -12,7 +12,7 @@
+ include $(src)/sensors/$(SOC)/os03b10/Kbuild
+ include $(src)/sensors/$(SOC)/sc200ai/Kbuild
+ include $(src)/sensors/$(SOC)/sc2232h/Kbuild
+-#include $(src)/sensors/$(SOC)/sc2332/Kbuild
 +include $(src)/sensors/$(SOC)/sc2332/Kbuild
-diff --git a/kernel/sensors/t31/sc2332/Kbuild b/kernel/sensors/t31/sc2332/Kbuild
-index 12cef4b..9e9672c 100644
---- a/kernel/sensors/t31/sc2332/Kbuild
-+++ b/kernel/sensors/t31/sc2332/Kbuild
-@@ -1,7 +1,7 @@
- MODULE_NAME := sensor_sc2332_t31
- OUT := $(MODULE_NAME)
- 
--DIR=sensors/$(SOC)/sc2332
-+DIR=sensors/$(SOC)
- 
- SRCS := $(DIR)/sc2332/sc2332.c
- 
+ include $(src)/sensors/$(SOC)/sc2335/Kbuild
+ include $(src)/sensors/$(SOC)/sc2336/Kbuild
+ include $(src)/sensors/$(SOC)/sc3338/Kbuild

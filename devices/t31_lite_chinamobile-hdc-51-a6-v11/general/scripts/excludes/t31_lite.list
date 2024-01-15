@@ -13,6 +13,7 @@ etc/sensor/sc200ai-t31.bin
 etc/sensor/sc2232h-t31.bin
 etc/sensor/sc2335-t31.bin
 etc/sensor/sc3335-t31.bin
+etc/sensor/sc3336-t31.bin
 etc/sensor/sc3338-t31.bin
 etc/sensor/sc4236-t31.bin
 etc/sensor/sc5235-t31.bin
@@ -42,6 +43,7 @@ etc/sensor/sc200ai.yaml
 etc/sensor/sc2232.yaml
 etc/sensor/sc2232h.yaml
 etc/sensor/sc2335.yaml
+etc/sensor/sc2336.yaml
 etc/sensor/sc3335.yaml
 etc/sensor/sc3338.yaml
 etc/sensor/sc4236.yaml
@@ -63,6 +65,7 @@ lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_os03b10_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_sc200ai_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_sc2232h_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_sc2335_t31.ko
+lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_sc2336_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_sc3338_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_sc4236_t31.ko
 lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sensor_sc5235_t31.ko
