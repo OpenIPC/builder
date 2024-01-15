@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set_gpio() {
+        [ "$2" -eq 1 ] && gpio set $1 || gpio clear $1
+        sleep 1
+}
+
+# Generic RTL8188FU
+if [ "$1" = "rtl8188fu-generic" ]; then
+        modprobe 8188fu
+        exit 0
+fi
+
+exit 1
