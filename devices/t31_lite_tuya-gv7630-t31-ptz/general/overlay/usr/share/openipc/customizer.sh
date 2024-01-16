@@ -23,7 +23,7 @@ cli -s .video0.codec h264
 #
 # Set wlan device and credentials if need
 #
-fw_setenv wlandev atbm603x-generic
+fw_setenv wlandev atbm603x-usb-generic
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 #

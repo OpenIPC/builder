@@ -23,7 +23,7 @@ ATBM60XX_MODULE_MAKE_OPTS = \
 	KSRC=$(LINUX_DIR) \
 	CONFIG_ATBM_USB_BUS=y \
 	CONFIG_ATBM_SDIO_BUS=n \
-	CONFIG_ATBM_MODULE_NAME="atbm603x_wifi"
+	CONFIG_ATBM_MODULE_NAME="atbm603x_wifi_usb"
 
 $(eval $(kernel-module))
 $(eval $(generic-package))
