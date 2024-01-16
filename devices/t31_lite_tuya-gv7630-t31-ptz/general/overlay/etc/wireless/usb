@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set_gpio() {
+	[ "$2" -eq 1 ] && gpio set $1 || gpio clear $1
+	sleep 1
+}
+
+# Generic ATBM 603X USB
+if [ "$1" = "atbm603x-generic" ]; then
+	modprobe atbm603x_wifi
+	exit 0
+fi
+
+exit 1
