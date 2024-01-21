@@ -60,7 +60,7 @@ copy_to_tftp() {
 
 select_device() {
     AVAILABLE_DEVICES=$(ls -1 ${BUILDER_DIR}/devices | grep '_')
-    cmd="whiptail --title \"Available devices\" --menu \"Please select a device from the list below:\" 25 78 16"
+    cmd="whiptail --title \"Available devices\" --menu \"Please select a device from the list below:\" 20 70 12"
     for p in $AVAILABLE_DEVICES; do cmd="${cmd} \"$p\" \"\""; done
     DEVICE=$(eval "${cmd} 3>&1 1>&2 2>&3")
     if [ $? != 0 ]; then
@@ -100,7 +100,7 @@ echo_c 33 "\nCopying device files"
 cp -afv ${BUILDER_DIR}/devices/${DEVICE}/*  ${FIRMWARE_DIR}
 
 echo_c 33 "\nBuilding the device"
-./building.sh ${DEVICE}
+make BOARD=${DEVICE} all
 
 copy_to_archive
 # copy_to_tftp
