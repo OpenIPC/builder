@@ -10,10 +10,8 @@
 # Copy Kernel and Rootfs to Archive
 # Copy Kernel and Rootfs to TFTP server
 
-
 RELEASE=""
 DEVICE="$1"
-
 TFTP_STORAGE="root@172.17.32.17:/mnt/bigger-2tb/Rotator/TFTP"
 
 BUILDER_DIR=$(pwd)
@@ -25,6 +23,31 @@ echo_c() {
     # 30 grey, 31 red, 32 green, 33 yellow, 34 blue, 35 magenta, 36 cyan, 37 white
     t="\e[1;$1m$2\e[0m" || t="$2"
     echo -e "$t"
+}
+
+autoup_rootfs() {
+    DT=$(date +"%y.%m.%d")
+    OPENIPC_VER=$(echo OpenIPC v${DT:0:1}.${DT:1})
+    SOC=$(echo ${DEVICE} | cut -d_ -f1)
+
+    echo_c 34 "\nDownloading u-boot created by OpenIPC"
+    curl --location --output ./output/images/u-boot-${SOC}-universal.bin \
+        https://github.com/OpenIPC/firmware/releases/download/latest/u-boot-${SOC}-universal.bin
+
+    echo_c 34 "\nMaking autoupdate u-boot image"
+    ./output/host/bin/mkimage -A arm -O linux -T firmware -n "$OPENIPC_VER" \
+        -a 0x0 -e 0x50000 -d ./output/images/u-boot-${SOC}-universal.bin \
+        ./output/images/autoupdate-uboot.img
+
+    echo_c 34 "\nMaking autoupdate kernel image"
+    ./output/host/bin/mkimage -A arm -O linux -T kernel -C none -n "$OPENIPC_VER" \
+        -a 0x50000 -e 0x250000 -d ./output/images/uImage.${SOC} \
+        ./output/images/autoupdate-kernel.img
+
+    echo_c 34 "\nMaking autoupdate rootfs image"
+    ./output/host/bin/mkimage -A arm -O linux -T filesystem -n "$OPENIPC_VER" \
+        -a 0x250000 -e 0x750000 -d ./output/images/rootfs.squashfs.${SOC} \
+        ./output/images/autoupdate-rootfs.img
 }
 
 copy_to_archive() {
@@ -43,6 +66,10 @@ copy_to_archive() {
 
     echo_c 35 "\nAssembled firmware available in:"
     tree -C "${BUILDER_DIR}/archive/${DEVICE}/${TIMESTAMP}"
+
+    if $(echo ${DEVICE} | grep -q hi3518ev200_lite); then
+        autoup_rootfs
+    fi
 }
 
 copy_to_tftp() {
@@ -68,7 +95,6 @@ select_device() {
         exit 1
     fi
 }
-
 
 echo_c 37 "Experimental system for building OpenIPC firmware for known devices"
 echo_c 30 "https://openipc.org/"
