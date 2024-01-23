@@ -57,9 +57,8 @@ jobs:
           export GIT_BRANCH=${GITHUB_REF_NAME}
 
           NAME=${{matrix.platform}}
-          cp -rf devices/${NAME}/* firmware
-          cd firmware
-          make BOARD=${NAME} all
+          bash builder.sh ${NAME}
+          cd openipc
 
           NORFW=$(find output/images -name openipc*nor*)
           if [ ! -z ${NORFW} ]; then
