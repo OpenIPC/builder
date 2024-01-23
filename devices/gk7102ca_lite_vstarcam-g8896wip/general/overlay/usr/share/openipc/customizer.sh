@@ -5,7 +5,7 @@
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/gk7102ca_lite-vstarcam-g8896wip-nor.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/gk7102ca_lite_vstarcam-g8896wip-nor.tgz'
 #
 #
 # Set custom majestic settings
