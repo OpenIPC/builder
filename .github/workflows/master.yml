@@ -13,6 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         platform:
+          - gk7202v300_lite_cootli_camv0103
           - gk7205v200_lite_vixand-ipc-1
           - gk7205v200_lite_vixand-iph-5-4g
           - hi3516cv200_lite_trassir-tr-d4121ir1-v2
