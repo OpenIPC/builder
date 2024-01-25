@@ -1,7 +1,7 @@
 ![OpenIPC logo][logo]
 
 ## OpenIPC Builder
-**_Special system for building OpenIPC firmware for known devices_**
+**_Experimental system for building OpenIPC firmware for known devices_**
 - **_[Current release of firmware builds](https://github.com/OpenIPC/builder/releases/tag/latest)_**
 
 
