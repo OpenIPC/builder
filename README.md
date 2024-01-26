@@ -49,6 +49,7 @@ Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   prepa
 CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Azarton C1               T20X         JXF23     RTL8189FS_SDIO   NOR_16M   done
 Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
+JVS INGT10 GQS60EP       T10A         OV9750    -                NOR_8M    done
 ```
 
 
