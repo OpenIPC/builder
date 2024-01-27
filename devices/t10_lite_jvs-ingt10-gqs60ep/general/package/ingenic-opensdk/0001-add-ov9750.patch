@@ -1,0 +1,10 @@
+diff --git a/kernel/sensors/t20/Kbuild b/kernel/sensors/t20/Kbuild
+index 176c5ae..25145c0 100644
+--- a/kernel/sensors/t20/Kbuild
++++ b/kernel/sensors/t20/Kbuild
+@@ -7,4 +7,5 @@ include $(src)/sensors/$(SOC)/jxh62/Kbuild
+ include $(src)/sensors/$(SOC)/jxh65/Kbuild
+ include $(src)/sensors/$(SOC)/jxk02/Kbuild
+ include $(src)/sensors/$(SOC)/jxv01/Kbuild
++include $(src)/sensors/$(SOC)/ov9750/Kbuild
+ 
