@@ -62,6 +62,29 @@ Rostelecom IPC8232SWC-WE-B      =>     Uniview C1L-2WN-G
 ```
 
 
+### Requirements for registration of new devices
+
+When adding new devices, please follow a few simple rules. 
+The list of files to be added should be minimal, try not to store binary files, remember that all common files 
+and configurations should be stored in the [firmware](https://github.com/openipc/firmware) repository. 
+However, some list of files must be required.
+
+```
+processor_flavor_vendor-model-version/general/scripts/excludes/processor_flavor.list
+processor_flavor_vendor-model-version/general/overlay/usr/share/openipc/customizer.sh
+processor_flavor_vendor-model-version/general/overlay/etc/builder.msg
+processor_flavor_vendor-model-version/br-ext-chip-sigmastar/configs/processor_flavor_vendor-model-version_defconfig
+```
+
+The file names contain variables with option names - **flavor, model, processor, vendor, version**
+
+- flavor - firmware direction in the openipc system, by default try to use "lite" as much as possible
+- model - official model name from the main device manufacturer
+- processor - official name of the processor in the OpenIPC [structure](https://openipc.org/supported-hardware/full-list)
+- vendor - the name of the official equipment manufacturer; if there are several of them, a [description](https://github.com/OpenIPC/builder/tree/master#compatibility-and-clones) is created
+- version - usually this is an addition to the model, version or revision of hardware differences
+
+
 ### Preparing and using the project
 
 ```
@@ -84,4 +107,3 @@ Please **_[support our project](https://openipc.org/support-open-source)_** with
 
 
 [logo]: https://openipc.org/assets/openipc-logo-black.svg
-
