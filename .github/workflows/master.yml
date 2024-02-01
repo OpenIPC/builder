@@ -41,6 +41,7 @@ jobs:
           - t31_lite_xiaomi-mjsxj03hl
           - t31_lite_tuya-gv7630-t31-ptz
           - t31_ultimate_azarton-c1-t31x
+          - t31_lite_zte-k540
           - t10_lite_jvs-ingt10-gqs60ep
 
     steps:
