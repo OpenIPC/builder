@@ -63,6 +63,17 @@ Rostelecom IPC8232SWC-WE-B      =>     Uniview C1L-2WN-G
 ```
 
 
+### Device setup
+
+#### WiFi Settings
+Run these commands and enjoy:
+```
+fw_setenv wlanssid OpenIPC
+fw_setenv wlanpass mypassword
+reboot
+```
+
+
 ### Requirements for registration of new devices
 
 When adding new devices, please follow a few simple rules. 
