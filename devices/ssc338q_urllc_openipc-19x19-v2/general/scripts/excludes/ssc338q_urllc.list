@@ -1,0 +1,12 @@
+/etc/sensors/gc4653.bin
+/etc/sensors/imx335.bin
+#
+/lib/modules/4.9.84/sigmastar/sensor/sensor_gc4653_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor/sensor_imx335_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor/sensor_imx347_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor/sensor_sc8235_mipi.ko
+#
+/lib/modules/4.9.84/kernel/fs/lockd/*.ko
+/lib/modules/4.9.84/kernel/fs/nfs/*.ko
+/lib/modules/4.9.84/kernel/fs/nfs_common/*.ko
+/lib/modules/4.9.84/kernel/net/sunrpc/*.ko
