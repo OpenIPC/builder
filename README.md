@@ -83,10 +83,9 @@ and configurations should be stored in the [firmware](https://github.com/openipc
 However, some list of files must be required.
 
 ```
-processor_flavor_vendor-model-version/general/scripts/excludes/processor_flavor.list
-processor_flavor_vendor-model-version/general/overlay/usr/share/openipc/customizer.sh
-processor_flavor_vendor-model-version/general/overlay/etc/builder.msg
 processor_flavor_vendor-model-version/br-ext-chip-sigmastar/configs/processor_flavor_vendor-model-version_defconfig
+processor_flavor_vendor-model-version/general/overlay/usr/share/openipc/customizer.sh
+processor_flavor_vendor-model-version/general/scripts/excludes/processor_flavor.list
 ```
 
 The file names contain variables with option names - **flavor, model, processor, vendor, version**
