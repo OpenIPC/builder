@@ -1,0 +1,13 @@
+diff --git a/arch/mips/xburst/soc-t31/chip-t31/isvp/Swan/board.h b/arch/mips/xburst/soc-t31/chip-t31/isvp/Swan/board.h
+index d9058e1271..b53c252c64 100644
+--- a/arch/mips/xburst/soc-t31/chip-t31/isvp/Swan/board.h
++++ b/arch/mips/xburst/soc-t31/chip-t31/isvp/Swan/board.h
+@@ -32,7 +32,7 @@
+ /* ****************************GPIO MMC START******************************** */
+ #define GPIO_MMC_RST_N			-1
+ #define GPIO_MMC_RST_N_LEVEL	LOW_ENABLE
+-#define GPIO_MMC_CD_N			GPIO_PB(27)
++#define GPIO_MMC_CD_N			GPIO_PB(18)
+ #define GPIO_MMC_CD_N_LEVEL		LOW_ENABLE
+ #define GPIO_MMC_PWR			-1
+ #define GPIO_MMC_PWR_LEVEL		HIGH_ENABLE
