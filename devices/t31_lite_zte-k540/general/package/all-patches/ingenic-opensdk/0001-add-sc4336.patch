@@ -1,9 +1,0 @@
-diff --git a/kernel/sensors/t31/Kbuild b/kernel/sensors/t31/Kbuild
-index caf668b..07367bb 100644
---- a/kernel/sensors/t31/Kbuild
-+++ b/kernel/sensors/t31/Kbuild
-@@ -18,3 +18,4 @@ include $(src)/sensors/$(SOC)/sc2336/Kbuild
- include $(src)/sensors/$(SOC)/sc3338/Kbuild
- include $(src)/sensors/$(SOC)/sc5235/Kbuild
- include $(src)/sensors/$(SOC)/sc4236/Kbuild
-+include $(src)/sensors/$(SOC)/sc4336/Kbuild
