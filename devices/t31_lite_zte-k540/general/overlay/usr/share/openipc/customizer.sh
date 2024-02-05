@@ -13,6 +13,7 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t
 cli -s .nightMode.enabled true
 cli -s .nightMode.irCutPin1 57
 cli -s .nightMode.irCutPin2 58
+cli -s .nightMode.colorToGray true
 cli -s .nightMode.backlightPin 11
 cli -s .video0.codec h264
 cli -s .audio.speakerPin 64
@@ -20,7 +21,7 @@ cli -s .audio.speakerPin 64
 #
 # Set wlan device and credentials if need
 #
-fw_setenv wlandev atbm603x_wifi_usb
+fw_setenv wlandev atbm603x-t31-zte-k540
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 #
