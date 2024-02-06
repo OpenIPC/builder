@@ -14,6 +14,7 @@ cli -s .nightMode.enabled true
 cli -s .nightMode.irCutPin1 79
 cli -s .nightMode.irCutPin2 78
 cli -s .nightMode.backlightPin 61
+cli -s .audio.speakerPin 15
 #
 #
 # Set wlan device and credentials if need
