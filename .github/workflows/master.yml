@@ -33,6 +33,7 @@ jobs:
           - ssc335_lite_tp-link-tapo-c110-v1
           - ssc335_lite_trassir-tr-w2c1-v2
           - ssc335de_lite_uniview-c1l-2wn-g
+          - ssc337_lite_h3c-tc2101
           - ssc338q_urllc_openipc-19x19-v2
           - t20_ultimate_azarton-c1
           - t31_lite_vstarcam-cs55
