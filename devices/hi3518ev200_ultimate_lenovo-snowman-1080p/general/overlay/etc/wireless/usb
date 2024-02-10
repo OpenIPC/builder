@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# RTL8188EUS Lenovo Snowman 1080p
+if [ "$1" = "rtl8188eus-lenovo-snowman" ]; then
+        devmem 0x200f006c 32 0 
+        modprobe mac80211
+        modprobe cfg80211
+        insmod /lib/modules/4.9.37/extra/8188eu.ko
+        exit 0
+fi
+
+exit 1
