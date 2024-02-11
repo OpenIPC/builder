@@ -50,4 +50,3 @@
 /usr/lib/sensors/libsns_sc2135.so
 /usr/lib/sensors/libsns_sc2235.so
 #
-/lib/modules/4.9.37/kernel/drivers/staging/*/*.ko
