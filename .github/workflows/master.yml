@@ -44,6 +44,7 @@ jobs:
           - t31_lite_chinamobile-hdc-51-a6-v11
           - t31_lite_chinatelecom-y4h-50
           - t31_lite_xiaomi-mjsxj03hl
+          - t31_lite_xiaomi-mjsxj03hl-jxq03
           - t31_lite_tuya-gv7630-t31-ptz
           - t31_ultimate_azarton-c1-t31x
           - t31_ultimate_gcraftsman-gca50

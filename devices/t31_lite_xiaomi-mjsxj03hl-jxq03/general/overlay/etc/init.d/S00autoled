@@ -1,0 +1,41 @@
+#!/bin/sh
+
+AUTOLED_ARGS=""
+AUTOLED_PID_FILE=/var/run/autoled.pid
+
+start() {
+  printf "Starting automatic LED control: "
+  umask 077
+  start-stop-daemon -b -m -S -q -p $AUTOLED_PID_FILE \
+    --exec /usr/sbin/autoled.sh -- $AUTOLED_ARGS
+  [ $? = 0 ] && echo "OK" || echo "FAIL"
+}
+
+stop() {
+  printf "Stopping automatic LED control: "
+  start-stop-daemon -K -q -p $AUTOLED_PID_FILE
+  [ $? = 0 ] && echo "OK" || echo "FAIL"
+}
+
+restart() {
+  stop
+  start
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart | reload)
+    restart
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit $?
