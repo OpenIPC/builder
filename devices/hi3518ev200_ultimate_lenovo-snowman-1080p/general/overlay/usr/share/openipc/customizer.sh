@@ -6,7 +6,6 @@
 # Set custom upgrade url
 #
 fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3518ev200_ultimate_lenovo-snowman-1080p-nor.tgz'
-fw_setenv sensor 'sc2035'
 fw_setenv wlandev 'rtl8188eus-hi3518ev200-lenovo'
 #
 #
