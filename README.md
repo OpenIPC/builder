@@ -56,6 +56,7 @@ CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Azarton C1               T20X         JXF23     RTL8189FS_SDIO   NOR_16M   done
 Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
 JVS INGT10 GQS60EP       T10A         OV9750    -                NOR_8M    done
+Lenovo Snowman 1080P     HI3518EV200  SC2035    RTL8188EUS_USB   NOR_16M   in progress, LightSensor-no
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
 ```
