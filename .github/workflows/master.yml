@@ -19,7 +19,6 @@ jobs:
           - gk7205v210_lite_vixand-ivg-g3s
           - gk7205v210_lite_vixand-ivg-g4f-a
           - hi3516cv200_lite_trassir-tr-d4121ir1-v2
-	  - hi3518ev200_lite_lenovo-snowman-1080p
           - hi3518ev200_lite_smartwares-cip-37210
           - hi3518ev200_lite_switcam-hs303
           - hi3518ev200_lite_switcam-hs303-v2
