@@ -19,6 +19,7 @@ Aoni EP01J05             T31L         ?         RTL8188FU_USB    NOR_16M   new
 ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no
 ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
 Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in progress
+G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
 Imilab EC3 CMSXJ25A      SSC325       GC2053    MT7603UN_?       NOR_16M   in progress
 Imou IPC-C22EP-S2        SSC325DE     SC2239    RTL8188FU_USB    NAND      testing stage 1
 Imou IPC-C22EP-S2 ?      SSC325DE     SC2335    RTL8188FU_USB    NAND      wait driver
@@ -47,6 +48,7 @@ VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in pr
 Wansview Q5 1080p        T21Z         OV2735B   RTL8188FU_USB    NOR_16M   in progress
 Wansview Q5 2K           T31L         SC2336    ATBM6031_SDIO    NOR_8M    done
 Xiaomi MJSXJ02HL         HI3518EV300  JXF22     RTL8189FS_SDIO   NOR_16M   preparation
+Xiaomi MJSXJ03HL         T31N         JXQ03     RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ03HL         T31N         JXQ03P    RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   preparation
 X-06S v2.2               T21          JXH62     RTL8188FU_USB    NOR_8M    in progress

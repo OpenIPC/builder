@@ -5,7 +5,7 @@
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/ssc338q_fpv_urllc_openipc-19x19-v2-nor.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/ssc338q_fpv_openipc-urllc-19x19-v2-nor.tgz'
 #
 #
 # Set custom majestic settings

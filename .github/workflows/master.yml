@@ -36,7 +36,7 @@ jobs:
           - ssc335_lite_trassir-tr-w2c1-v2
           - ssc335de_lite_uniview-c1l-2wn-g
           - ssc337_lite_h3c-tc2101
-          - ssc338q_fpv_urllc_openipc-19x19-v2
+          - ssc338q_fpv_openipc-urllc-19x19-v2
           - t20_ultimate_azarton-c1
           - t31_lite_vstarcam-cs55
           - t21_lite_x-06s
@@ -46,8 +46,10 @@ jobs:
           - t31_lite_chinamobile-hdc-51-a6-v11
           - t31_lite_chinatelecom-y4h-50
           - t31_lite_xiaomi-mjsxj03hl
+          - t31_lite_xiaomi-mjsxj03hl-jxq03
           - t31_lite_tuya-gv7630-t31-ptz
           - t31_ultimate_azarton-c1-t31x
+          - t31_ultimate_gcraftsman-gca50
           - t31_lite_zte-k540
           - t10_lite_jvs-ingt10-gqs60ep
 
