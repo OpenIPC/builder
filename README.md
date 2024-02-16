@@ -59,6 +59,7 @@ JVS INGT10 GQS60EP       T10A         OV9750    -                NOR_8M    done
 Lenovo Snowman 1080P     HI3518EV200  SC2035    RTL8188EUS_USB   NOR_16M   in progress, LightSensor-no
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
+Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
 ```
 
 
