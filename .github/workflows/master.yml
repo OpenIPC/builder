@@ -55,7 +55,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Prepare
         run: |
@@ -85,7 +85,7 @@ jobs:
           fi
 
       - name: Upload
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@master
         with:
           tag_name: latest
           files: |
