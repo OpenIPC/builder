@@ -54,16 +54,16 @@ jobs:
           - t10_lite_jvs-ingt10-gqs60ep
 
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Prepare
+      - name: Prepare firmware
         run: |
           echo "8.8.8.8 invisible-mirror.net" | sudo tee -a /etc/hosts
           echo "8.8.8.8 distfiles.dereferenced.org" | sudo tee -a /etc/hosts
           git clone https://github.com/openipc/firmware --depth 1
 
-      - name: Build
+      - name: Build firmware
         run: |
           export GIT_HASH=$(git rev-parse --short ${GITHUB_SHA})
           export GIT_BRANCH=${GITHUB_REF_NAME}
@@ -84,10 +84,18 @@ jobs:
             echo NANDFW=${GITHUB_WORKSPACE}/${NAME}-nand.tgz >> ${GITHUB_ENV}
           fi
 
-      - name: Upload
+      - name: Upload firmware
         uses: softprops/action-gh-release@master
         with:
           tag_name: latest
           files: |
             ${{env.NORFW}}
             ${{env.NANDFW}}
+
+      - name: Send binary
+        run: |
+          TG0=$(-s -o /dev/null -w %{http_code})
+          TG1=${{secrets.TELEGRAM_TOKEN_BOT_OPENIPC}}
+          TG2=${{secrets.TELEGRAM_CHANNEL_OPENIPC_DEV}}
+          HTTP=$(curl ${TG0} https://api.telegram.org/bot${TG1}/sendDocument -F chat_id=${TG2} -F document=@${NORFW})
+          echo Telegram response: ${HTTP}
