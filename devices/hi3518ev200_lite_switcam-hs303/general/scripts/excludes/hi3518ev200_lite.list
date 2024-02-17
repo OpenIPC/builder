@@ -53,6 +53,6 @@
 /usr/lib/sensors/libsns_sc2135.so
 /usr/lib/sensors/libsns_sc2235.so
 #
-/lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek/*/*.ko
-/lib/modules/4.9.37/kernel/drivers/staging/*/*.ko
-/lib/modules/4.9.37/kernel/fs/f2fs/*.ko
+/lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek/mt7601u/mt7601u.ko
+/lib/modules/4.9.37/kernel/drivers/staging/rtl8188eu/r8188eu.ko
+/lib/modules/4.9.37/kernel/fs/f2fs/f2fs.ko
