@@ -1,5 +1,5 @@
-/etc/sensors/60fps
-/etc/sensors/WDR
+/etc/sensors/60fps/*.ini
+/etc/sensors/WDR/*.ini
 /etc/sensors/4l_sc223a_i2c_1080p.ini
 /etc/sensors/5M_imx335.ini
 /etc/sensors/bt656_720p.ini
@@ -14,7 +14,8 @@
 /etc/sensors/sc2335_i2c_1080p.ini
 /etc/sensors/smtsec_imx307_i2c_4l_1080p.ini
 #
-/etc/sensors/iq
+/etc/sensors/iq/imx335.ini
+/etc/sensors/iq/sc2232.ini
 #
 /usr/lib/sensors/libsns_bt656.so
 /usr/lib/sensors/libsns_f23.so
