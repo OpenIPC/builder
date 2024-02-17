@@ -4,6 +4,12 @@ on:
   - cron: '0 3 * * *'
   workflow_dispatch:
 
+env:
+  TAG_NAME: latest
+  TG_TOKEN: ${{secrets.TELEGRAM_TOKEN_BOT_OPENIPC}}
+  TG_CHANNEL: ${{secrets.TELEGRAM_CHANNEL_OPENIPC_DEV}}
+  TG_OPTIONS: -s -o /dev/null -w %{http_code}
+
 jobs:
   buildroot:
     name: Firmware
@@ -94,8 +100,8 @@ jobs:
 
       - name: Send binary
         run: |
-          TG0=$(-s -o /dev/null -w %{http_code})
-          TG1=${{secrets.TELEGRAM_TOKEN_BOT_OPENIPC}}
-          TG2=${{secrets.TELEGRAM_CHANNEL_OPENIPC_DEV}}
-          HTTP=$(curl ${TG0} https://api.telegram.org/bot${TG1}/sendDocument -F chat_id=${TG2} -F document=@${NORFW})
+          TG_MSG="Commit: ${GIT_HASH}\nBranch: ${GIT_BRANCH}\nTag: ${TAG_NAME}\nTime: ${TIME}\n\n"
+          TG_ICON="\xE2\x9C\x85 GitHub Actions"
+          TG_HEADER=$(echo -e ${TG_MSG}${TG_ICON})
+          HTTP=$(curl ${TG_OPTIONS} -H "Content-Type: multipart/form-data" -X POST https://api.telegram.org/bot${TG_TOKEN}/sendDocument -F chat_id=${TG_CHANNEL} -F caption="${TG_HEADER}" -F document=@${NORFW})
           echo Telegram response: ${HTTP}
