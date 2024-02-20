@@ -39,6 +39,8 @@
 /usr/lib/sensors/libsns_sp2305.so
 #
 /lib/modules/4.9.37/hisilicon/camhi-motor.ko
-/lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek/*/*.ko
-/lib/modules/4.9.37/kernel/drivers/staging/*/*.ko
+/lib/modules/4.9.37/kernel/drivers/i2c/busses/*.ko
+/lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek/mt7601u/*.ko
+/lib/modules/4.9.37/kernel/drivers/staging/rtl8188eu/*.ko
 /lib/modules/4.9.37/kernel/fs/f2fs/*.ko
+
