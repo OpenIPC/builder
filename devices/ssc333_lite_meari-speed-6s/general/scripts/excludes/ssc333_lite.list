@@ -30,8 +30,8 @@
 /lib/modules/4.9.84/sigmastar/sensor/sensor_sc3338_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor/sensor_sc401ai_mipi.ko
 #
-/lib/modules/4.9.84/kernel/fs/lockd/*.ko
-/lib/modules/4.9.84/kernel/fs/nfs/*.ko
-/lib/modules/4.9.84/kernel/fs/nfs_common/*.ko
-/lib/modules/4.9.84/kernel/net/sunrpc/*.ko
-
+/lib/modules/4.9.84/kernel/fs/lockd/lockd.ko
+/lib/modules/4.9.84/kernel/fs/nfs/nfs.ko
+/lib/modules/4.9.84/kernel/fs/nfs/nfsv3.ko
+/lib/modules/4.9.84/kernel/fs/nfs_common/grace.ko
+/lib/modules/4.9.84/kernel/net/sunrpc/sunrpc.ko
