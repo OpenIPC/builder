@@ -60,6 +60,7 @@ Lenovo Snowman 1080P     HI3518EV200  SC2035    RTL8188EUS_USB   NOR_16M   in pr
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
 Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
+4G Camera XG521 V1.2     GK7202V300   GC1054    EC800E-CN_USB    NOR_8M    done
 ```
 
 
