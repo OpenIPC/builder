@@ -46,7 +46,7 @@ jobs:
           - ssc338q_fpv_openipc-urllc-19x19-v2
           - t20_ultimate_azarton-c1
           - t31_lite_vstarcam-cs55
-          - t31_lite_chinamobile-hdc-51-a5-v12
+          - t21_lite_chinamobile-hdc-51-a5-v12
           - t21_lite_x-06s
           - t21_lite_wansview-q5-1080p
           - t31_lite_wansview-q5-2k
