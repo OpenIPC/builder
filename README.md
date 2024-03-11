@@ -16,18 +16,26 @@
 
 ```
 Aoni EP01J05             T31L         ?         RTL8188FU_USB    NOR_16M   new
+Azarton C1               T20X         JXF23     RTL8189FS_SDIO   NOR_16M   done
+Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
+Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
 ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no
 ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
+CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   in progress
+CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in progress
 G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
+H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
 Imilab EC3 CMSXJ25A      SSC325       GC2053    MT7603UN_?       NOR_16M   in progress
 Imou IPC-C22EP-S2        SSC325DE     SC2239    RTL8188FU_USB    NAND      testing stage 1
 Imou IPC-C22EP-S2 ?      SSC325DE     SC2335    RTL8188FU_USB    NAND      wait driver
 Imou IPC-F22AP           SSC325       SC2239    -                NOR_?     preparation
-Qtech QVC-IPC-136W       HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   in progress
-Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   in progress
+JVS INGT10 GQS60EP       T10A         OV9750    -                NOR_8M    done
+Lenovo Snowman 1080P     HI3518EV200  SC2035    RTL8188EUS_USB   NOR_16M   in progress, LightSensor-no
 Meari Speed 6S           SSC333       JXF37     RTL8188FU_USB    NOR_16M   video-yes, wifi-yes, motors-no
 OpenIPC URLLC 19x19 v2   SSC338Q      IMX415    External         NOR_16M   new
+Qtech QVC-IPC-136W       HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   in progress
+Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   in progress
 Switcam HS303            HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   in progress
 Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   in progress
 TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    in progress
@@ -47,19 +55,12 @@ VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip
 VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in progress
 Wansview Q5 1080p        T21Z         OV2735B   RTL8188FU_USB    NOR_16M   in progress
 Wansview Q5 2K           T31L         SC2336    ATBM6031_SDIO    NOR_8M    done
+X-06S v2.2               T21          JXH62     RTL8188FU_USB    NOR_8M    in progress
 Xiaomi MJSXJ02HL         HI3518EV300  JXF22     RTL8189FS_SDIO   NOR_16M   preparation
 Xiaomi MJSXJ03HL         T31N         JXQ03     RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ03HL         T31N         JXQ03P    RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   preparation
-X-06S v2.2               T21          JXH62     RTL8188FU_USB    NOR_8M    in progress
-CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
-Azarton C1               T20X         JXF23     RTL8189FS_SDIO   NOR_16M   done
-Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
-JVS INGT10 GQS60EP       T10A         OV9750    -                NOR_8M    done
-Lenovo Snowman 1080P     HI3518EV200  SC2035    RTL8188EUS_USB   NOR_16M   in progress, LightSensor-no
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
-H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
-Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
 4G Camera XG521 V1.2     GK7202V300   GC1054    EC800E-CN_USB    NOR_8M    done
 ```
 
