@@ -43,7 +43,7 @@ jobs:
           - ssc335_lite_trassir-tr-w2c1-v2
           - ssc335de_lite_uniview-c1l-2wn-g
           - ssc337_lite_h3c-tc2101
-          - ssc338q_fpv_openipc-urllc-19x19-v2
+          - ssc338q_fpv_openipc-urllc-aio
           - t20_ultimate_azarton-c1
           - t31_lite_vstarcam-cs55
           - t21_lite_chinamobile-hdc-51-a5-v12
