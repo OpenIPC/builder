@@ -20,6 +20,46 @@ jobs:
       matrix:
         platform:
           - gk7202v300_lite_cootli_camv0103
+          - gk7202v300_lite_xg521
+          - gk7205v200_lite_vixand-ipc-1
+          - gk7205v200_lite_vixand-iph-5-4g
+          - gk7205v210_lite_vixand-ivg-g3s
+          - gk7205v210_lite_vixand-ivg-g4f-a
+          - hi3516cv200_lite_trassir-tr-d4121ir1-v2
+          - hi3518ev200_lite_smartwares-cip-37210
+          - hi3518ev200_lite_switcam-hs303
+          - hi3518ev200_lite_switcam-hs303-v2
+          - hi3518ev200_lite_vstarcam-c8892wip
+          - hi3518ev200_lite_qtech-qvc-ipc-136w
+          - hi3518ev300_lite_xiaomi-mjsxj02hl
+          - hi3518ev200_ultimate_lenovo-snowman-1080p
+          - ssc30kd_lite_chinatelecom-ds-ytj5301
+          - ssc325_lite_imilab-ec3-cmsxj25a
+          - ssc325de_lite_imou-c22ep-s2
+          - ssc333_lite_meari-speed-6s
+          - ssc333_lite_tp-link-tapo-c110-v2
+          - ssc333_lite_babysense-see-hd-ip206
+          - ssc335_lite_tp-link-tapo-c110-v1
+          - ssc335_lite_trassir-tr-w2c1-v2
+          - ssc335de_lite_uniview-c1l-2wn-g
+          - ssc337_lite_h3c-tc2101
+          - ssc338q_fpv_openipc-urllc-aio
+          - t20_ultimate_azarton-c1
+          - t31_lite_vstarcam-cs55
+          - t21_lite_chinamobile-hdc-51-a5-v12
+          - t21_lite_x-06s
+          - t21_lite_wansview-q5-1080p
+          - t31_lite_wansview-q5-2k
+          - t31_lite_aoni-ep01j05
+          - t31_lite_chinamobile-hdc-51-a6-v11
+          - t31_lite_chinatelecom-y4h-50
+          - t31_lite_xiaomi-mjsxj03hl
+          - t31_lite_xiaomi-mjsxj03hl-jxq03
+          - t31_lite_tuya-gv7630-t31-ptz
+          - t31_ultimate_azarton-c1-t31x
+          - t31_ultimate_gcraftsman-gca50
+          - t31_lite_zte-k540
+          - t10_lite_jvs-ingt10-gqs60ep
 
     steps:
       - name: Checkout source
