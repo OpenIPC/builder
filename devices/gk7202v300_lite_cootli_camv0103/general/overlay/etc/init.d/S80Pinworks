@@ -1,0 +1,17 @@
+#!/bin/sh
+
+case "$1" in
+        start)
+
+            # Unmuxing GPIO12, GPIO14, GPIO15 (motor H connector. pins 5, 4, 3)
+            devmem 0x120c0010 32 0x1e02
+            devmem 0x120c0018 32 0x1d02
+            devmem 0x120c001c 32 0x1402
+
+            # Unpower motor winding (GPIO13 is HI after kernel modules load)
+			gpio clear 13
+			gpio unexport 13
+
+esac
+
+exit 0
