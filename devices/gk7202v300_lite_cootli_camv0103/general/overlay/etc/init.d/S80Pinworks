@@ -8,9 +8,9 @@ case "$1" in
             devmem 0x120c0018 32 0x1d02
             devmem 0x120c001c 32 0x1402
 
-            # Unpower motor winding (GPIO13 is HI after kernel modules load)
-			gpio clear 13
-			gpio unexport 13
+            # Unpower motors winding (GPIO13 is HI after kernel modules load)
+            gpio clear 13
+            gpio unexport 13
 
 esac
 

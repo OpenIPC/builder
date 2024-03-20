@@ -23,7 +23,6 @@ cli -s .nightMode.irCutPin2 58
 cli -s .nightMode.backlightPin 16
 cli -s .nightMode.minThreshold 2000
 cli -s .nightMode.maxThreshold 17000
-cli -s .audio.speakerPin 51
 cli -s .audio.enabled true
 cli -s .audio.outputEnabled true
 cli -s .audio.speakerPin 51
