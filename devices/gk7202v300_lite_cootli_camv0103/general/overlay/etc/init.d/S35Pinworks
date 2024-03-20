@@ -3,17 +3,17 @@
 case "$1" in
         start)
 
-			# Bring power to SD CARD (GPIO70)
-			gpio clear 70
-			gpio unexport 70
+            # Bring power to SD CARD (GPIO70)
+            gpio clear 70
+            gpio unexport 70
 
-			# same thru devmem
-			#devmem 0x120B8400 32 0x40		# set GPIO8_6 to output
-			#devmem 0x120B8100 32 0x00		# set GPIO8_6 to LO
+            # same thru devmem
+            #devmem 0x120B8400 32 0x40		# set GPIO8_6 to output
+            #devmem 0x120B8100 32 0x00		# set GPIO8_6 to LO
 
-			# bumping SDHCI driver
-			echo 10010000.sdhci > /sys/bus/platform/drivers/sdhci-goke/unbind
-			echo 10010000.sdhci > /sys/bus/platform/drivers/sdhci-goke/bind
+            # bumping SDHCI driver
+            echo 10010000.sdhci > /sys/bus/platform/drivers/sdhci-goke/unbind
+            echo 10010000.sdhci > /sys/bus/platform/drivers/sdhci-goke/bind
 
 esac
 
