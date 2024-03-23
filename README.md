@@ -37,7 +37,7 @@ OpenIPC URLLC 19x19 v2   SSC338Q      IMX415    External         NOR_16M   new
 Qtech QVC-IPC-136W       HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   in progress
 Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   in progress
 Switcam HS303            HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   in progress
-Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   in progress
+Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
 TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    in progress
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    in progress
 Trassir TR-D4121IR1 v2   HI3516CV200  AR0237    -                NOR_16M   done
