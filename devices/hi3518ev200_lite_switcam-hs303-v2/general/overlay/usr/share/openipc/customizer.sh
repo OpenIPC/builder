@@ -16,6 +16,7 @@ fw_setenv wlandev rtl8188eus-switcam-hs303v2
 #
 cli -s .system.staticDir /var/www/majestic
 
+cli -s .isp.blkCnt 5
 cli -s .isp.iqProfile /etc/sensors/iq/ov9732.ini
 
 cli -s .nightMode.enabled true
