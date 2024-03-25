@@ -107,7 +107,6 @@ The file names contain variables with option names - **flavor, model, processor,
 - vendor - the name of the official equipment manufacturer; if there are several of them, a [description](https://github.com/OpenIPC/builder/tree/master#compatibility-and-clones) is created
 - version - usually this is an addition to the model, version or revision of hardware differences
 
-
 ### Preparing and using the project
 
 ```
@@ -119,6 +118,12 @@ cd builder
 ./builder.sh
 ```
 
+### Create firmware with built-in credentials
+- Usage: `repack.sh [uboot] [firmware] [ssid] [pass]`
+```
+sh repack.sh ssc337de ssc337de_ultimate_foscam-x5-nor router password
+```
+
 ### Existing problems
 
 - On some devices NOR flash 8M is small, and the WiFi driver is very large and the QR scanner currently does not fit into the firmware
@@ -127,6 +132,5 @@ cd builder
 ### Technical support and donations
 
 Please **_[support our project](https://openipc.org/support-open-source)_** with donations or orders for development or maintenance. Thank you!
-
 
 [logo]: https://openipc.org/assets/openipc-logo-black.svg

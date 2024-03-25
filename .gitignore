@@ -4,6 +4,8 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 # Assembly folders
-/archive/
-/cache/
-/openipc/
+archive
+cache
+openipc
+output
+*.bin
