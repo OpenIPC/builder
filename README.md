@@ -26,6 +26,7 @@ CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in progress
 G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
+TP-Link Tapo C110 v1     SSC337       SC3335    SSW101B_USB      NOR_8M    done
 Imilab EC3 CMSXJ25A      SSC325       GC2053    MT7603UN_?       NOR_16M   in progress
 Imou IPC-C22EP-S2        SSC325DE     SC2239    RTL8188FU_USB    NAND      testing stage 1
 Imou IPC-C22EP-S2 ?      SSC325DE     SC2335    RTL8188FU_USB    NAND      wait driver
@@ -38,8 +39,8 @@ Qtech QVC-IPC-136W       HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   in pr
 Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   in progress
 Switcam HS303            HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   in progress
 Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
-TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    in progress
-TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    in progress
+TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    done
+TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    done
 Trassir TR-D4121IR1 v2   HI3516CV200  AR0237    -                NOR_16M   done
 Trassir TR-W2C1 v2       SSC335       GC2053    MT7601U_USB      NOR_16M   done
 Tuya GV7630-T31-PTZ      T31L         SC2336    ATBM6012B_USB    NOR_8M    in progress
