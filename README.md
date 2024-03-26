@@ -24,6 +24,7 @@ ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
 CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   in progress
 CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in progress
+Foscam X5                SSC337DE     GC4653    RTL8188FU_USB    NOR_16M   done
 G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
 Imilab EC3 CMSXJ25A      SSC325       GC2053    MT7603UN_?       NOR_16M   in progress
