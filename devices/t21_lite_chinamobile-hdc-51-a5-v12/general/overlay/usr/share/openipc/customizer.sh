@@ -14,8 +14,7 @@ cli -s .system.webAdmin disabled
 cli -s .system.staticDir /var/www/majestic
 cli -s .isp.blkCnt 1
 #cli -s .nightMode.enabled true
-#cli -s .nightMode.irCutPin1 ??
-#cli -s .nightMode.irCutPin2 ??
+cli -s .nightMode.irCutPin1 50
 #cli -s .nightMode.backlightPin ??
 cli -s .video0.codec h264
 #
