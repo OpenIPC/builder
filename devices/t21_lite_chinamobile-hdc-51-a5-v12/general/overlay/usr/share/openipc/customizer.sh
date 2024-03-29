@@ -5,7 +5,7 @@
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t31_lite_chinamobile-hdc-51-a5-v12-nor.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t21_lite_chinamobile-hdc-51-a5-v12-nor.tgz'
 #
 #
 # Set custom majestic settings
