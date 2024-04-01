@@ -55,6 +55,7 @@ Vixand IVG-G4F-A         GK7205V210   SC223A    -                NOR_16M   !
 Vixand IVG-G6S           GK7205V300   IMX335    -                NOR_16M   !
 VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
 VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip
+VStarcam C43S(B)         SSC333       JXF37     MT7601U_USB      NOR_16M   in progress
 VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in progress
 Wansview Q5 1080p        T21Z         OV2735B   RTL8188FU_USB    NOR_16M   in progress
 Wansview Q5 2K           T31L         SC2336    ATBM6031_SDIO    NOR_8M    done
