@@ -45,6 +45,7 @@ jobs:
           - ssc337de_ultimate_foscam-x5
           - ssc338q_fpv_openipc-urllc-aio
           - t20_ultimate_azarton-c1
+          - t20_lite_ec37-t11
           - t31_lite_vstarcam-cs55
           - t21_lite_chinamobile-hdc-51-a5-v12
           - t21_lite_smartwares-cip-37210at
