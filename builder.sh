@@ -10,10 +10,7 @@
 # Copy Kernel and Rootfs to Archive
 # Copy Kernel and Rootfs to TFTP server
 
-RELEASE=""
 DEVICE="$1"
-TFTP_STORAGE="root@172.17.32.17:/mnt/bigger-2tb/Rotator/TFTP"
-
 BUILDER_DIR=$(pwd)
 FIRMWARE_DIR="${BUILDER_DIR}/openipc"
 TIMESTAMP=$(date +"%Y%m%d%H%M")
@@ -60,7 +57,7 @@ copy_to_archive() {
         ${FIRMWARE_DIR}/output/images/openipc.*.tgz \
         ${BUILDER_DIR}/archive/${DEVICE}/${TIMESTAMP}
 
-    if [ -f "${FIRMWARE_DIR}/output/images/autoupdate-kernel.img" ] ; then
+    if [ -f "${FIRMWARE_DIR}/output/images/autoupdate-kernel.img" ]; then
         cp -a ${FIRMWARE_DIR}/output/images/autoupdate* ${BUILDER_DIR}/archive/${DEVICE}/${TIMESTAMP}
     fi
 
@@ -80,7 +77,7 @@ copy_to_tftp() {
         ${FIRMWARE_DIR}/output/images/openipc.*.tgz \
         ${TFTP_STORAGE}
 
-    if [ -f "${FIRMWARE_DIR}/output/images/autoupdate-kernel.img" ] ; then
+    if [ -f "${FIRMWARE_DIR}/output/images/autoupdate-kernel.img" ]; then
         scp -r ${FIRMWARE_DIR}/output/images/autoupdate* ${TFTP_STORAGE}
     fi
 }
@@ -110,7 +107,7 @@ sleep 3
 echo_c 33 "\nUpdating Builder"
 git pull
 
-rm -rf openipc  # Weed work with this command
+rm -rf openipc
 if [ ! -d "$FIRMWARE_DIR" ]; then
     echo_c 33 "\nDownloading Firmware"
     git clone --depth=1 https://github.com/OpenIPC/firmware.git "$FIRMWARE_DIR"
@@ -126,9 +123,8 @@ echo_c 33 "\nCopying device files"
 cp -afv ${BUILDER_DIR}/devices/${DEVICE}/*  ${FIRMWARE_DIR}
 
 echo_c 33 "\nBuilding the device"
-make BOARD=${DEVICE} all
+make BOARD=${DEVICE}
 
 copy_to_archive
-# copy_to_tftp
 echo_c 35 "\nDone"
 cd "$BUILDER_DIR"

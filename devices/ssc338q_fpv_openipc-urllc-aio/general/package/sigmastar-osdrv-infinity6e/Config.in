@@ -1,0 +1,4 @@
+config BR2_PACKAGE_SIGMASTAR_OSDRV_INFINITY6E
+	bool "sigmastar-osdrv-infinity6e"
+	help
+	  Sigmastar infinity6e kernel modules
