@@ -12,7 +12,6 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t
 #
 cli -s .system.staticDir /var/www/majestic
 #cli -s .isp.blkCnt 1
-#cli -s .nightMode.enabled true
 #cli -s .nightMode.irCutPin1 49
 #cli -s .nightMode.irCutPin2 50
 #cli -s .nightMode.backlightPin 60

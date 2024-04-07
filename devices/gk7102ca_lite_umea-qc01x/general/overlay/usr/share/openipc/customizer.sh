@@ -12,8 +12,8 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/g
 #
 #cli -s .system.webAdmin disabled
 #cli -s .system.staticDir /var/www/majestic
-#cli -s .nightMode.enabled true
-#cli -s .nightMode.irSensorPin 23
+#cli -s .nightMode.lightMonitor true
+#cli -s .nightMode.lightSensorPin 23
 #cli -s .nightMode.irCutPin1 17
 #cli -s .nightMode.irCutPin2 14
 #cli -s .nightMode.backlightPin 24

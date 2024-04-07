@@ -14,7 +14,6 @@ cli -s .system.webAdmin disabled
 cli -s .system.staticDir /var/www/majestic
 cli -s .isp.blkCnt 1
 cli -s .audio.speakerPin 7
-cli -s .nightMode.enabled true
 cli -s .nightMode.irCutPin1 58
 cli -s .nightMode.irCutPin2 57
 cli -s .nightMode.backlightPin 11

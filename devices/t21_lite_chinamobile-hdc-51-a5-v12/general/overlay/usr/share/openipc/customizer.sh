@@ -11,11 +11,11 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t
 # Set custom majestic settings
 #
 cli -s .isp.blkCnt 1
-cli -s .nightMode.lightMonitor true
 cli -s .nightMode.lightSensorInvert true
 cli -s .nightMode.irCutPin1 50
 cli -s .nightMode.irCutSingleInvert true
 cli -s .nightMode.adcReadout true
+cli -s .nightMode.lightMonitor true
 cli -s .nightMode.minThreshold 100
 cli -s .nightMode.maxThreshold 500
 cli -s .video0.codec h264

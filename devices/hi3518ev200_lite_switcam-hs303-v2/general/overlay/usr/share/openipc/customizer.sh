@@ -19,10 +19,10 @@ cli -s .system.staticDir /var/www/majestic
 cli -s .isp.blkCnt 5
 cli -s .isp.iqProfile /etc/sensors/iq/ov9732.ini
 
-cli -s .nightMode.enabled true
 cli -s .nightMode.irCutPin1 2
-cli -s .nightmode.irSensorPin 62
-cli -s .nightmode.irSensorPinInvert true
+cli -s .nightMode.lightMonitor true
+cli -s .nightmode.lightSensorPin 62
+cli -s .nightmode.lightSensorInvert true
 cli -s .nightMode.backlightPin 56
 
 cli -s .audio.enabled true
