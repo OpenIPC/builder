@@ -12,9 +12,7 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/g
 #
 #cli -s .system.webAdmin disabled
 #cli -s .system.staticDir /var/www/majestic
-#cli -s .nightMode.irCutPin1 8
-#cli -s .nightMode.irCutPin2 9
-#cli -s .nightMode.backlightPin 14
+cli -s .isp.sensorConfig /etc/sensors/bt656_ahd_1920x1080_25fps.ini
 #cli -s .nightMode.lightMonitor true
 #cli -s .nightMode.minThreshold 2000
 #cli -s .nightMode.maxThreshold 14000
@@ -23,6 +21,10 @@ cli -s .video0.codec h264
 #
 #
 # Set wlan device and credentials if need
+#
+fw_setenv totalmem 128M
+fw_setenv osmem 64M
+fw_setenv sensor bt656
 #
 #fw_setenv wlandev unknown
 #fw_setenv wlanssid Router

@@ -2,6 +2,7 @@
 /etc/sensors/4l_sc223a_i2c_1080p.ini
 /etc/sensors/5M_imx335.ini
 /etc/sensors/bt656_720p.ini
+/etc/sensors/gc1054_i2c_720p.ini
 /etc/sensors/gc2053_i2c_1080p.ini
 /etc/sensors/gc4653_i2c_4M.ini
 /etc/sensors/imx307_i2c_2l_1080p.ini
@@ -18,6 +19,8 @@
 /etc/sensors/60fps/720p_imx307_i2c_2l.ini
 /etc/sensors/WDR/5M_imx335.ini
 /etc/sensors/WDR/imx335_i2c_4M.ini
+/etc/sensors/iq/default.ini
+/etc/sensors/iq/imx307.ini
 /etc/sensors/iq/imx335.ini
 /etc/sensors/iq/sc2232.ini
 #
