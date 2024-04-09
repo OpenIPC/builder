@@ -62,6 +62,7 @@ VStarcam C43S(B)         SSC333       JXF37     MT7601U_USB      NOR_16M   in pr
 VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in progress
 Wansview Q5 1080p        T21Z         OV2735B   RTL8188FU_USB    NOR_16M   in progress
 Wansview Q5 2K           T31L         SC2336    ATBM6031_SDIO    NOR_8M    done
+Wyze V3 (WYZEC3B)        T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
 X-06S v2.2               T21          JXH62     RTL8188FU_USB    NOR_8M    in progress
 Xiaomi MJSXJ02HL         HI3518EV300  JXF22     RTL8189FS_SDIO   NOR_16M   preparation
 Xiaomi MJSXJ03HL         T31N         JXQ03     RTL8189FS_SDIO   NOR_16M   done
