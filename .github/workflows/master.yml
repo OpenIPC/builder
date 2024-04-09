@@ -3,6 +3,10 @@ on:
   schedule:
     - cron: '0 3 * * *'
   workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform
+        required: false
 
 env:
   TAG_NAME: latest
@@ -77,13 +81,23 @@ jobs:
           echo CACHE_DATE=$(date +%m) >> ${GITHUB_ENV}
           git clone https://github.com/openipc/firmware --depth 1
 
+      - name: Dispatch platform
+        run: |
+          INPUT=${{inputs.platform}}
+          MATRIX=$(echo ${{matrix.platform}} | cut -d_ -f1)
+          if [ -z ${INPUT} ] || [ ${INPUT} = ${MATRIX} ]; then
+            echo RUN=${MATRIX} >> ${GITHUB_ENV}
+          fi
+
       - name: Setup ccache
+        if: env.RUN
         uses: actions/cache@v4
         with:
           path: /tmp/ccache
           key: ${{matrix.platform}}-${{env.CACHE_DATE}}
 
       - name: Build firmware
+        if: env.RUN
         run: |
           export GIT_HASH=$(git rev-parse --short ${GITHUB_SHA})
           export GIT_BRANCH=${GITHUB_REF_NAME}
@@ -113,6 +127,7 @@ jobs:
           fi
 
       - name: Upload firmware
+        if: env.NORFW
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
@@ -121,6 +136,7 @@ jobs:
             ${{env.NANDFW}}
 
       - name: Send binary
+        if: env.NORFW
         run: |
           TG_MSG="Commit: ${GIT_HASH}\nBranch: ${GIT_BRANCH}\nTag: ${TAG_NAME}\nTime: ${TIME}\n\n"
           TG_ICON="\xE2\x9C\x85 GitHub Actions"
