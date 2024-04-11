@@ -126,8 +126,12 @@ jobs:
             echo NANDFW=${GITHUB_WORKSPACE}/${NAME}-nand.tgz >> ${GITHUB_ENV}
           fi
 
+          if [ -z ${NORFW} ] && [ -z ${NANDFW} ]; then
+            exit 1
+          fi
+
       - name: Upload firmware
-        if: env.NORFW
+        if: env.NORFW || env.NANDFW
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
