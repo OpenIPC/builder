@@ -16,4 +16,7 @@ cli -s .audio.speakerPinInvert true
 # Set wlan settings
 fw_setenv wlandev rtl8188fu-ssc337de-foscam
 
+# Set ptz profile
+fw_setenv ptz ssc337de-foscam
+
 exit 0
