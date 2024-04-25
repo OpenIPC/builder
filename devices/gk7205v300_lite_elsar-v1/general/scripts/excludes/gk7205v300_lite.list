@@ -40,9 +40,9 @@
 /usr/lib/sensors/libsns_sc3335.so
 #
 /lib/modules/4.9.37/kernel/drivers/i2c/busses/i2c-tiny-usb.ko
-/lib/modules/4.9.37/kernel/drivers/scsi/scsi_mod.ko
+#/lib/modules/4.9.37/kernel/drivers/scsi/scsi_mod.ko
 /lib/modules/4.9.37/kernel/drivers/scsi/scsi_transport_fc.ko
-/lib/modules/4.9.37/kernel/drivers/scsi/sd_mod.ko
+#/lib/modules/4.9.37/kernel/drivers/scsi/sd_mod.ko
 /lib/modules/4.9.37/kernel/drivers/usb/gadget/libcomposite.ko
 /lib/modules/4.9.37/kernel/drivers/usb/gadget/function/u_ether.ko
 /lib/modules/4.9.37/kernel/drivers/usb/gadget/function/u_serial.ko
@@ -50,4 +50,5 @@
 /lib/modules/4.9.37/kernel/drivers/usb/gadget/function/usb_f_ecm.ko
 /lib/modules/4.9.37/kernel/drivers/usb/gadget/function/usb_f_mass_storage.ko
 /lib/modules/4.9.37/kernel/drivers/usb/gadget/function/usb_f_rndis.ko
+#/lib/modules/4.9.37/kernel/drivers/usb/storage/usb-storage.ko
 /lib/modules/4.9.37/kernel/fs/f2fs/f2fs.ko
