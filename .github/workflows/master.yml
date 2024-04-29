@@ -26,7 +26,6 @@ jobs:
           - gk7205v200_lite_vixand-iph-5-4g
           - gk7205v210_lite_vixand-ivg-g3s
           - gk7205v210_lite_vixand-ivg-g4f-a
-          - gk7205v300_lite_elsar-v1
           - hi3516cv200_lite_trassir-tr-d4121ir1-v2
           - hi3518ev200_lite_smartwares-cip-37210
           - hi3518ev200_lite_switcam-hs303
