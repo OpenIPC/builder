@@ -47,6 +47,7 @@ TP-Link Tapo C110 v1     SSC337       SC3335    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C310 v1     SSC325       SC3335    RTL8192EU_USB    NOR_8M    in progress
 Trassir TR-D4121IR1 v2   HI3516CV200  AR0237    -                NOR_16M   done
+Trassir TR-W2C1 v1       SSC325       GC2053    MT7601U_USB      NOR_16M   done
 Trassir TR-W2C1 v2       SSC335       GC2053    MT7601U_USB      NOR_16M   done
 Tuya GV7630-T31-PTZ      T31L         SC2336    ATBM6012B_USB    NOR_8M    in progress
 Umea QC012               GK7102C_A    MIS2003   RDA5995_USB      MOR_8M    wip
