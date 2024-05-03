@@ -56,6 +56,7 @@ Vixand IPC-1             GK7205V200   none      EC200N_USB       NOR_8M    inser
 Vixand IPH-5-4G          GK7205V200   SC2239    EC200N_USB       NOR_8M    insert
 Vixand IVG-G3S           GK7205V210   IMX307    -                NOR_16M   !
 Vixand IVG-G4F-A         GK7205V210   SC223A    -                NOR_16M   !
+Vixand IVG-G4F-A-W       GK7205V210   SC223A    ATBM6032i_USB    NOR_16M   w/ext wifi board
 Vixand IVG-G6S           GK7205V300   IMX335    -                NOR_16M   !
 VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
 VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip
