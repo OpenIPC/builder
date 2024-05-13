@@ -29,6 +29,7 @@ cli -s .audio.srate 48000
 fw_setenv wlandev rtl8189fs-generic
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
+fw_setenv extras nogmac
 #
 #
 # Set osmem and rmem
