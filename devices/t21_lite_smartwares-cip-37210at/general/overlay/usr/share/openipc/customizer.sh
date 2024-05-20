@@ -12,6 +12,7 @@ cli -s .nightMode.backlightPin 69
 cli -s .nightMode.minThreshold 800
 cli -s .nightMode.maxThreshold 1200
 cli -s .nightMode.adcReadout true
+cli -s .audio.speakerPin 63
 
 # Set wlan settings
 fw_setenv wlandev rtl8188fu-t21-smartwares
