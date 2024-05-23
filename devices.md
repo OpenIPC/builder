@@ -22,6 +22,18 @@ XM  IVG-G3S    GK7205V210   IMX307    ATBM6032i_USB    NOR_16M   w/ext wifi boar
 
 ```
 - uImage: [1814KB/2048KB]
+- rootfs.squashfs: [5080KB/5120KB]
+- Build time: 07:18
+Copying files to local archive
+
+Assembled firmware available in:
+/mnt/EXT/projii/builder/archive/gk7205v200_lite_aka-ch-v1/202405231116
+├── openipc.gk7205v200-nor-lite.tgz
+├── rootfs.gk7205v200.tar
+├── rootfs.squashfs.gk7205v200
+└── uImage.gk7205v200
+
+- uImage: [1814KB/2048KB]
 - rootfs.squashfs: [5048KB/5120KB]
 - Build time: 04:35
 Copying files to local archive
