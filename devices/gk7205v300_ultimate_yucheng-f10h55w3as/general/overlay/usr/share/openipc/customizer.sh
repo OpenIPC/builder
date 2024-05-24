@@ -13,8 +13,8 @@ fw_setenv upgrade https://upgrade.off
 #
 cli -s .system.webAdmin disabled
 cli -s .system.staticDir /var/www/majestic
-cli -s .nightMode.irCutPin1 15
-cli -s .nightMode.irCutPin2 14
+cli -s .nightMode.irCutPin1 10
+cli -s .nightMode.irCutPin2 11
 cli -s .nightMode.monitorDelay 20
 cli -s .nightMode.lightMonitor true
 cli -s .nightMode.minThreshold 2000
@@ -28,7 +28,7 @@ cli -s .jpeg.qfactor 80
 #
 # Set wlan device and credentials if need
 #
-fw_setenv wlandev mt7601u-gk7205v200-camhi
+fw_setenv wlandev mt7601u-gk7205v300-camhi
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 
