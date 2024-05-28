@@ -4,17 +4,15 @@
 #
 #
 # Set custom upgrade url
-#
-#fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t31_lite_aoni-ep01j05-nor.tgz'
-fw_setenv upgrade https://upgrade.off
+fw_setenv upgrade 'https://github.com/akhud78/builder/releases/download/latest/gk7205v300_ultimate_yucheng-f10h55w3as-nor.tgz'
 #
 #
 # Set custom majestic settings
 #
 cli -s .system.webAdmin disabled
 cli -s .system.staticDir /var/www/majestic
-cli -s .nightMode.irCutPin1 10
-cli -s .nightMode.irCutPin2 11
+cli -s .nightMode.irCutPin1 11
+cli -s .nightMode.irCutPin2 10
 cli -s .nightMode.monitorDelay 20
 cli -s .nightMode.lightMonitor true
 cli -s .nightMode.minThreshold 2000
@@ -33,7 +31,7 @@ fw_setenv wlandev mt7601u-gk7205v300-camhi
 #fw_setenv wlanpass 12345678
 
 fw_setenv netaddr_fallback 192.168.1.10
-# fw_setenv gpio_reset 52
+fw_setenv gpio_reset 42
 
 adduser viewer -s /bin/false -D -H
 echo viewer:123456 | chpasswd

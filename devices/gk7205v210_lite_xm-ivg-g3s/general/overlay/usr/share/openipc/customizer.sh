@@ -4,9 +4,7 @@
 #
 #
 # Set custom upgrade url
-#
-#fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/gk7205v200_lite_vixand-ivg-g3s-nor.tgz'
-fw_setenv upgrade https://upgrade.off
+fw_setenv upgrade 'https://github.com/akhud78/builder/releases/download/latest/gk7205v210_lite_xm-ivg-g3s-nor.tgz'
 #
 #
 # Set custom majestic settings
@@ -37,6 +35,5 @@ fw_setenv gpio_reset 52
 
 adduser viewer -s /bin/false -D -H
 echo viewer:123456 | chpasswd
-#
 
 exit 0

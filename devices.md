@@ -18,16 +18,19 @@ XM       IVG-G3S     GK7205V210  IMX307  ATBM6032i_USB  NOR_16M   w/ext wifi boa
 # firstboot
 ```
 ### Images
+- [releases](https://github.com/akhud78/builder/releases)
 
 #### YUCHENG F10H55W3AS
+- gk7205v300_ultimate_yucheng-f10h55w3as-nor.tgz
+
 ```
 - uImage: [1816KB/2048KB]
 - rootfs.squashfs: [6348KB/8192KB]
-- Build time: 10:51
+- Build time: 05:24
 Copying files to local archive
 
 Assembled firmware available in:
-/mnt/EXT/projii/builder/archive/gk7205v300_ultimate_yucheng-f10h55w3as/202405241407
+/mnt/IOTA/DATA/proj/builder/archive/gk7205v300_ultimate_yucheng-f10h55w3as/202405281101
 ├── openipc.gk7205v300-nor-ultimate.tgz
 ├── rootfs.gk7205v300.tar
 ├── rootfs.squashfs.gk7205v300
@@ -50,12 +53,12 @@ Assembled firmware available in:
 #### AKA CH v2
 ```
 - uImage: [1814KB/2048KB]
-- rootfs.squashfs: [4484KB/5120KB]
-- Build time: 07:08
+- rootfs.squashfs: [4584KB/5120KB]
+- Build time: 04:37
 Copying files to local archive
 
 Assembled firmware available in:
-/mnt/EXT/projii/builder/archive/gk7205v200_lite_aka-ch-v2/202405241436
+/mnt/IOTA/DATA/proj/builder/archive/gk7205v200_lite_aka-ch-v2/202405272031
 ├── openipc.gk7205v200-nor-lite.tgz
 ├── rootfs.gk7205v200.tar
 ├── rootfs.squashfs.gk7205v200
@@ -90,14 +93,15 @@ Assembled firmware available in:
 └── uImage.t31
 ```
 #### XM IVG-G3S
+- gk7205v210_lite_xm-ivg-g3s-nor.tgz
 ```
 - uImage: [1814KB/2048KB]
 - rootfs.squashfs: [4968KB/5120KB]
-- Build time: 06:05
+- Build time: 04:38
 Copying files to local archive
 
 Assembled firmware available in:
-/mnt/IOTA/DATA/proj/builder/archive/gk7205v210_lite_xm-ivg-g3s/202405161511
+/mnt/IOTA/DATA/proj/builder/archive/gk7205v210_lite_xm-ivg-g3s/202405281200
 ├── openipc.gk7205v210-nor-lite.tgz
 ├── rootfs.gk7205v210.tar
 ├── rootfs.squashfs.gk7205v210
