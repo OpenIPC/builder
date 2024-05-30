@@ -3,12 +3,13 @@
 ### List of known and supported devices
 
 ```
-YUCHENG  F10H55W3AS  GK7205V300  IMX335  MT7601U_USB    NOR_16M   in progress
-AKA      CH v1       GK7205V200  IMX307  RTL8733BU      NOR_16M   in progress
-AKA      CH v2       GK7205V200  IMX307  MT7601U_USB    NOR_16M   in progress
-AKA      CH-T31 v1   T31L        GC2083  MT7601U_USB    NOR_8M    in progress
-AKA      CH-T31 v2   T31L        GC2083  RTL8188EU_USB  NOR_8M    in progress
-XM       IVG-G3S     GK7205V210  IMX307  ATBM6032i_USB  NOR_16M   w/ext wifi board
+XM       IVG-HP203Y-AE HI3516CV300 IMX291                 NOR_16M   in progress
+YUCHENG  F10H55W3AS    GK7205V300  IMX335  MT7601U_USB    NOR_16M   in progress
+AKA      CH v1         GK7205V200  IMX307  RTL8733BU      NOR_16M   in progress
+AKA      CH v2         GK7205V200  IMX307  MT7601U_USB    NOR_16M   in progress
+AKA      CH-T31 v1     T31L        GC2083  MT7601U_USB    NOR_8M    in progress
+AKA      CH-T31 v2     T31L        GC2083  RTL8188EU_USB  NOR_8M    in progress
+XM       IVG-G3S       GK7205V210  IMX307  ATBM6032i_USB  NOR_16M   w/ext wifi board
 ```
 ### Upgrading from a SD card
 ```
@@ -20,17 +21,42 @@ XM       IVG-G3S     GK7205V210  IMX307  ATBM6032i_USB  NOR_16M   w/ext wifi boa
 ### Images
 - [releases](https://github.com/akhud78/builder/releases)
 
-#### YUCHENG F10H55W3AS
-- gk7205v300_ultimate_yucheng-f10h55w3as-nor.tgz
+#### XM IVG-HP203Y-AE
+`./builder.sh hi3516cv300_ultimate_xm_ivg_hp203y_ae`
+
+- hi3516cv300_ultimate_xm-ivg-hp203y-ae-nor.tgz
 
 ```
-- uImage: [1816KB/2048KB]
-- rootfs.squashfs: [6348KB/8192KB]
-- Build time: 05:24
+- uImage: [1727KB/2048KB]
+- rootfs.squashfs: [6396KB/8192KB]
+- uImage: [1727KB/4096KB]
+- rootfs.ubi: [13696KB/16384KB]
+- Build time: 05:37
 Copying files to local archive
 
 Assembled firmware available in:
-/mnt/IOTA/DATA/proj/builder/archive/gk7205v300_ultimate_yucheng-f10h55w3as/202405281101
+/mnt/IOTA/DATA/proj/builder/archive/hi3516cv300_ultimate_xm_ivg_hp203y_ae/202405291849
+├── openipc.hi3516cv300-nand-ultimate.tgz
+├── openipc.hi3516cv300-nor-ultimate.tgz
+├── rootfs.hi3516cv300.tar
+├── rootfs.squashfs.hi3516cv300
+└── uImage.hi3516cv300
+```
+
+#### YUCHENG F10H55W3AS
+- gk7205v300_ultimate_yucheng-f10h55w3as-nor.tgz
+- iptables + NAT
+
+`./builder.sh gk7205v300_ultimate_yucheng-f10h55w3as`
+
+```
+- uImage: [1855KB/2048KB]
+- rootfs.squashfs: [6348KB/8192KB]
+- Build time: 05:22
+Copying files to local archive
+
+Assembled firmware available in:
+/mnt/IOTA/DATA/proj/builder/archive/gk7205v300_ultimate_yucheng-f10h55w3as/202405301520
 ├── openipc.gk7205v300-nor-ultimate.tgz
 ├── rootfs.gk7205v300.tar
 ├── rootfs.squashfs.gk7205v300

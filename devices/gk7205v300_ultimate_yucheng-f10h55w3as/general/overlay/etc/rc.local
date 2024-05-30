@@ -13,5 +13,7 @@
 
 /usr/sbin/resetd &
 
+logger -p debug -t "$0" "$?"
+
 exit 0
 

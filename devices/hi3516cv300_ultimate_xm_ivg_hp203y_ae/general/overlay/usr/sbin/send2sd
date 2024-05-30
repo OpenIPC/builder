@@ -1,0 +1,29 @@
+#!/bin/sh
+# Save JPG to SD card
+# enable: cli -s .jpeg.send2sd true
+# disable: cli -s .jpeg.send2sd false
+
+SD="/mnt/mmcblk0p1"
+FILE="/tmp/snapshot4sd.jpg"
+
+# Check yaml option
+[ "`cli -g .jpeg.send2sd`" != "true" ] && exit 1
+
+# Check if a SD card is mounted
+mountpoint -q $SD
+[ $? -ne 0 ] && exit 2
+
+wget -q -T1 localhost/image.jpg -O "$FILE"
+
+[ $? -ne 0 ] && log "Cannot get a snapshot" && exit 3
+[ ! -f "$FILE" ] && log "Cannot find a snapshot" && exit 4
+
+DIR="$SD/$(date +'d%d/h%H')"
+if [ ! -d "$DIR" ]; then
+    mkdir -p "$DIR"
+fi
+
+cp $FILE "$DIR/$(date +'d%dh%H%M').jpg"
+[ $? -ne 0 ] && log "Cannot copy snapshot" && exit 5
+
+exit 0
