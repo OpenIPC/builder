@@ -1,0 +1,73 @@
+/etc/sensors/ar0130_i2c_720p.ini
+/etc/sensors/gc1034_i2c_720p.ini
+/etc/sensors/imx222_i2c_1080p.ini
+/etc/sensors/imx222_i2c_720p.ini
+/etc/sensors/imx291_i2c_lvds_1080p.ini
+/etc/sensors/imx323_i2c_dc_1080p.ini
+/etc/sensors/imx323_spi_dc_1080p.ini
+/etc/sensors/jxf22_i2c_1080p.ini
+/etc/sensors/jxf23_i2c_1080p.ini
+/etc/sensors/jxh62_i2c_720p.ini
+/etc/sensors/jxh65_i2c_960p.ini
+/etc/sensors/ov2735_i2c_1080p.ini
+/etc/sensors/ov9712_i2c_720p.ini
+/etc/sensors/ov9732_i2c_720p.ini
+/etc/sensors/ov9750_i2c_960p.ini
+/etc/sensors/sc1135_i2c_720p.ini
+/etc/sensors/sc1145_i2c_720p.ini
+/etc/sensors/sc1235_i2c_dc_960p.ini
+/etc/sensors/sc2135_i2c_1080p.ini
+/etc/sensors/sc2235_i2c_dc_1080p.ini
+/etc/sensors/ar0237_i2c_dc_1080p.ini
+#
+/etc/sensors/iq/ar0230.ini
+/etc/sensors/iq/imx222.ini
+/etc/sensors/iq/ov9732.ini
+/etc/sensors/iq/ov9750.ini
+#
+/usr/lib/sensors/libsns_ar0130.so
+/usr/lib/sensors/libsns_gc1034.so
+/usr/lib/sensors/libsns_gc2023.so
+/usr/lib/sensors/libsns_imx122.so
+/usr/lib/sensors/libsns_imx222.so
+/usr/lib/sensors/libsns_imx291.so
+/usr/lib/sensors/libsns_imx323_i2c_dc.so
+/usr/lib/sensors/libsns_imx323_i2c_dc_v1.so
+/usr/lib/sensors/libsns_jxf22.so
+/usr/lib/sensors/libsns_jxf23.so
+/usr/lib/sensors/libsns_jxh62.so
+/usr/lib/sensors/libsns_jxh65.so
+/usr/lib/sensors/libsns_mn34222.so
+/usr/lib/sensors/libsns_ov2718.so
+/usr/lib/sensors/libsns_ov2735.so
+/usr/lib/sensors/libsns_ov9712.so
+/usr/lib/sensors/libsns_ov9732.so
+/usr/lib/sensors/libsns_ov9750.so
+/usr/lib/sensors/libsns_ov9752.so
+/usr/lib/sensors/libsns_sc1135.so
+/usr/lib/sensors/libsns_sc1145.so
+/usr/lib/sensors/libsns_sc1235.so
+/usr/lib/sensors/libsns_sc2135.so
+/usr/lib/sensors/libsns_sc2235.so
+#
+# OpenCV4
+# /usr/lib/libopencv_dnn.so.4.9.0
+# /usr/lib/libopencv_gapi.so.4.9.0
+# /usr/lib/libopencv_calib3d.so.4.9.0
+# /usr/lib/libopencv_objdetect.so.4.9.0
+# /usr/lib/libopencv_flann.so.4.9.0
+# /usr/lib/libopencv_features2d.so.4.9.0
+# /usr/lib/libopencv_ml.so.4.9.0
+#
+# OpenCV3
+# /usr/lib/libopencv_core.so.3.4.19
+# /usr/lib/libopencv_imgcodecs.so.3.4.19
+# /usr/lib/libturbojpeg.so.0.2.0
+# /usr/lib/libjpeg.so.8.2.2
+# /usr/lib/libstdc++.so.6.0.32
+# /usr/lib/libopencv_imgproc.so.3.4.19
+/usr/lib/libopencv_calib3d.so.3.4.19
+/usr/lib/libopencv_features2d.so.3.4.19
+/usr/lib/libopencv_ml.so.3.4.19
+/usr/lib/libopencv_flann.so.3.4.19
+/usr/lib/libopencv_objdetect.so.3.4.19

@@ -37,6 +37,8 @@ fw_setenv netaddr_fallback 192.168.1.10
 
 adduser viewer -s /bin/false -D -H
 echo viewer:123456 | chpasswd
-#
+
+# fix sd card format
+sed -i 's/exfat/vfat/g' /var/www/cgi-bin/fw-sdcard.cgi
 
 exit 0
