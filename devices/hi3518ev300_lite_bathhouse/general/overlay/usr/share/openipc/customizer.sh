@@ -5,7 +5,8 @@
 #
 # Set custom upgrade url
 #
-#fw_setenv upgrade 'https://natrium.zftlab.org/firmware/elsar/openipc.gk7205v200-nor-ultimate.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3518ev300_lite_bathhouse-nor.tgz'
+fw_setenv wlandev rtl8188fu-generic
 #
 #
 # Set custom majestic settings
@@ -26,7 +27,6 @@ cli -s .audio.srate 48000
 #
 # Set wlan device and credentials if need
 #
-#fw_setenv wlandev unknown
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 #
