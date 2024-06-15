@@ -91,8 +91,8 @@ Rostelecom IPC8232SWC-WE-B      =>     Uniview C1L-2WN-G
 #### WiFi Settings
 Run these commands and enjoy:
 ```
-fw_setenv wlanssid OpenIPC
-fw_setenv wlanpass mypassword
+fw_setenv wlanssid 'OpenIPC'
+fw_setenv wlanpass 'mypassword'
 reboot
 ```
 
