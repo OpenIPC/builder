@@ -19,6 +19,7 @@ Aoni EP01J05             T31L         ?         RTL8188FU_USB    NOR_16M   new
 Azarton C1               T20X         JXF23     RTL8189FS_SDIO   NOR_16M   done
 Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
 Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
+Bathhouse                HI3518EV300  ?         RTL8188FU_USB    NOR_8M    research
 ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no
 ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
 CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   in progress
@@ -90,8 +91,8 @@ Rostelecom IPC8232SWC-WE-B      =>     Uniview C1L-2WN-G
 #### WiFi Settings
 Run these commands and enjoy:
 ```
-fw_setenv wlanssid OpenIPC
-fw_setenv wlanpass mypassword
+fw_setenv wlanssid 'OpenIPC'
+fw_setenv wlanpass 'mypassword'
 reboot
 ```
 

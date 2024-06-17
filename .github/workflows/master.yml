@@ -33,6 +33,7 @@ jobs:
           - hi3518ev200_lite_switcam-hs303-v2
           - hi3518ev200_lite_vstarcam-c8892wip
           - hi3518ev200_lite_qtech-qvc-ipc-136w
+          - hi3518ev300_lite_bathhouse
           - hi3518ev300_lite_xiaomi-mjsxj02hl
           - hi3518ev200_ultimate_lenovo-snowman-1080p
           - ssc30kd_lite_chinatelecom-ds-ytj5301
