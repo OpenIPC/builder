@@ -64,10 +64,18 @@
 # /usr/lib/libopencv_imgcodecs.so.3.4.19
 # /usr/lib/libturbojpeg.so.0.2.0
 # /usr/lib/libjpeg.so.8.2.2
-# /usr/lib/libstdc++.so.6.0.32
 # /usr/lib/libopencv_imgproc.so.3.4.19
+/usr/lib/libopencv_calib3d.so
+/usr/lib/libopencv_calib3d.so.3.4
 /usr/lib/libopencv_calib3d.so.3.4.19
-/usr/lib/libopencv_features2d.so.3.4.19
+# /usr/lib/libopencv_features2d.so.3.4.19
+/usr/lib/libopencv_ml.so
+/usr/lib/libopencv_ml.so.3.4
 /usr/lib/libopencv_ml.so.3.4.19
+/usr/lib/libopencv_flann.so
+/usr/lib/libopencv_flann.so.3.4
 /usr/lib/libopencv_flann.so.3.4.19
-/usr/lib/libopencv_objdetect.so.3.4.19
+# /usr/lib/libopencv_objdetect.so.3.4.19
+
+/usr/lib/libstdc++.so.6.0.32-gdb.py
+#
