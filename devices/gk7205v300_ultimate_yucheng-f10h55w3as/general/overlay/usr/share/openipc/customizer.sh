@@ -19,7 +19,7 @@ cli -s .nightMode.minThreshold 2000
 cli -s .nightMode.maxThreshold 20000
 #
 cli -s .video0.codec h264
-cli -s .video0.size 1024x576
+# cli -s .video0.size 1024x576
 cli -s .mjpeg.size 640x360
 cli -s .jpeg.qfactor 80
 #

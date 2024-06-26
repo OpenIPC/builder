@@ -53,16 +53,8 @@ XM       IVG-G3S         GK7205V210  IMX307  ATBM6032i_USB  NOR_16M   w/ext wifi
 
 ```
 - uImage: [1855KB/2048KB]
-- rootfs.squashfs: [7928KB/8192KB]
-- archive/gk7205v300_ultimate_yucheng-f10h55w3as-dev/202406171726
-
-- uImage: [1855KB/2048KB]
-- rootfs.squashfs: [7924KB/8192KB]
-- archive/gk7205v300_ultimate_yucheng-f10h55w3as-dev/202406071031
-
-- uImage: [1855KB/2048KB]
-- rootfs.squashfs: [7780KB/8192KB]
-- archive/gk7205v300_ultimate_yucheng-f10h55w3as-dev/202406071000
+- rootfs.squashfs: [7644KB/8192KB]
+- archive/gk7205v300_ultimate_yucheng-f10h55w3as-dev/202406211446
 ```
 
 #### YUCHENG F10H55W3AS
@@ -72,16 +64,11 @@ XM       IVG-G3S         GK7205V210  IMX307  ATBM6032i_USB  NOR_16M   w/ext wifi
 `$ ./builder.sh gk7205v300_ultimate_yucheng-f10h55w3as`
 
 ```
-- uImage: [1855KB/2048KB]
-- rootfs.squashfs: [5640KB/8192KB]
-- archive/gk7205v300_ultimate_yucheng-f10h55w3as/202406061408
+- uImage: [1816KB/2048KB]
+- rootfs.squashfs: [6260KB/8192KB]
+- archive/gk7205v300_ultimate_yucheng-f10h55w3as/202406211652
 ```
-- iptables + NAT
-```
-- uImage: [1855KB/2048KB]
-- rootfs.squashfs: [6348KB/8192KB]
-- archive/gk7205v300_ultimate_yucheng-f10h55w3as/202405301520
-```
+
 #### AKA CH v1
 ```
 - uImage: [1814KB/2048KB]
