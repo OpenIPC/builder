@@ -4,7 +4,7 @@
 #
 #
 # Set custom upgrade url
-fw_setenv upgrade 'https://github.com/akhud78/builder/releases/download/latest/gk7205v300_ultimate_yucheng-f10h55w3as-nor.tgz'
+fw_setenv upgrade 'https://github.com/akhud78/builder/releases/download/latest/gk7205v300_ultimate_yucheng-f10h55w3as-dev-nor.tgz'
 #
 #
 # Set custom majestic settings
@@ -19,9 +19,9 @@ cli -s .nightMode.minThreshold 2000
 cli -s .nightMode.maxThreshold 20000
 #
 cli -s .video0.codec h264
-# cli -s .mjpeg.size 640x360
+cli -s .mjpeg.size 640x360
 cli -s .jpeg.qfactor 80
-cli -s .jpeg.size 1024x576
+# cli -s .jpeg.size 1024x576
 #
 #
 # Set wlan device and credentials if need
@@ -31,6 +31,7 @@ fw_setenv wlandev mt7601u-gk7205v300-camhi
 #fw_setenv wlanpass 12345678
 
 fw_setenv netaddr_fallback 192.168.1.10
+#fw_setenv ethaddr 00:AA:0A:AC:25:86
 fw_setenv gpio_reset 42
 
 adduser viewer -s /bin/false -D -H
