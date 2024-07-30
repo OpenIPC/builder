@@ -140,6 +140,9 @@ sh repack.sh ssc337de ssc337de_ultimate_foscam-x5-nor router password
 
 - On some devices NOR flash 8M is small, and the WiFi driver is very large and the QR scanner currently does not fit into the firmware
 
+### Additional information
+
+- https://github.com/OpenIPC/wiki/blob/master/en/guide-supported-devices.md
 
 ### Technical support and donations
 
