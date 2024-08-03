@@ -1,14 +1,14 @@
 #!/bin/sh
 
-gpio=1  # RED led, hi3518ev200_lite_switcam-hs303-v3
+gpio=?  # COLOR led, hi3518ev200_lite_switcam-hs303-v1
 n=0
 
-gpio clear ${gpio} | logger -t gpio
+# gpio clear ${gpio} | logger -t gpio
 
 while true ; do
     if [ "$n" -ge 30 ]; then
         logger -t qrscan "Recognition timeout exceeded, reboot camera and try again..."
-        gpio set ${gpio} | logger -t gpio
+#        gpio set ${gpio} | logger -t gpio
         exit 1
     fi
     timeout 1 wget -q -O /tmp/image.jpg http://127.0.0.1/image.jpg

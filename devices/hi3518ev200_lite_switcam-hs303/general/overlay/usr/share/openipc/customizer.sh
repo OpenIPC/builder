@@ -20,8 +20,8 @@ cli -s .video0.codec h264
 cli -s .video0.fps 20
 cli -s .audio.enabled true
 cli -s .audio.volume 40
-cli -s .audio.srate 8000
-cli -s .audio.codec alaw
+cli -s .audio.srate 48000
+cli -s .audio.codec opus
 cli -s .audio.outputEnabled true
 cli -s .audio.outputVolume 80
 cli -s .audio.speakerPin 32
