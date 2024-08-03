@@ -28,7 +28,7 @@ cli -s .audio.speakerPinInvert true
 #
 # Set wlan device and credentials if need
 #
-#  fw_setenv wlandev rtl8188eu-hi3518ev200-qvc-ipc-136w
+fw_setenv wlandev rtl8188fu-switcam-hs303
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 #
