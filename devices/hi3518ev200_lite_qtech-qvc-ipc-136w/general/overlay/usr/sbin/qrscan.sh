@@ -13,7 +13,7 @@ while true ; do
     fi
     timeout 1 wget -q -O /tmp/image.jpg http://127.0.0.1/image.jpg
     data=$(qrscan -p /tmp/image.jpg)
-    if [[ -n "$data" ]]; then
+    if [[ -n "$data" ]] && $(echo "$data" | grep -q wlan); then
         fw_setenv $(echo $data | cut -d " " -f 1 | sed 's/=/ /')
         fw_setenv $(echo $data | cut -d " " -f 2 | sed 's/=/ /')
         logger -t qrscan "Recognition successfully, wlanssid and wlanpass is writed to env. Reboot required."
