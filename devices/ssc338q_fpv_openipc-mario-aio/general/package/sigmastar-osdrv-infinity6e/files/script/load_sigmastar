@@ -67,6 +67,6 @@ echo -e "\n\e[1;32mSensor assigned - $SENSOR\e[0m\n" | logger -s -t OpenIPC
 set_sensor
 
 # Custom settings
-gpio clear 29
+gpio set 29
 
 exit 0
