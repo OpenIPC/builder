@@ -25,6 +25,7 @@ ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
 CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   in progress
 CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in progress
+Emax Wyvern Link         SSC338Q      IMX415                     NOR_16M   done
 Foscam X5                SSC337DE     GC4653    RTL8188FU_USB    NOR_16M   done
 G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
 EC37-T11                 T20L         SC2232    RTL8188FU_USB    MOR_16M   in progress
@@ -39,8 +40,12 @@ Imou IPC-F22AP           SSC325       SC2239    -                NOR_?     prepa
 JVS INGT10 GQS60EP       T10A         OV9750    -                NOR_8M    done
 Lenovo Snowman 1080P     HI3518EV200  SC2035    RTL8188EUS_USB   NOR_16M   in progress, LightSensor-no
 Meari Speed 6S           SSC333       JXF37     RTL8188FU_USB    NOR_16M   video-yes, wifi-yes, motors-no
-OpenIPC URLLC 19x19 v2   SSC338Q      IMX415    External         NOR_16M   new
+OpenIPC AIO Mario        SSC338Q      IMX335    RTL8812AU_USB    NOR_16M   done
+OpenIPC AIO Thinker      SSC338Q      IMX335                     NOR_16M   in progress
+OpenIPC AIO UltraSight   SSC338Q      IMX415    RTL8812AU_USB    NOR_16M   done
+OpenIPC URLLC            SSC338Q                                 NOR_16M   done
 Qtech QVC-IPC-136W       HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
+RunCam WiFiLink          SSC338Q      IMX415                     NOR_16M   done
 Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   in progress
 Smartwares CIP-37210AT   T21N         JXF37     RTL8188FU_USB    NOR_16M   done
 Switcam HS303 (v1)       HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   testing now
