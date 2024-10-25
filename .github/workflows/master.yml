@@ -86,10 +86,6 @@ jobs:
         run: |
           echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
           echo CACHE_DATE=$(date +%m) >> ${GITHUB_ENV}
-          git clone https://github.com/openipc/firmware --depth 1
-
-      - name: Dispatch platform
-        run: |
           INPUT=${{inputs.platform}}
           MATRIX=$(echo ${{matrix.platform}} | cut -d_ -f1)
           if [ -z ${INPUT} ] || [ ${INPUT} = ${MATRIX} ]; then
