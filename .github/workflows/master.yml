@@ -53,6 +53,7 @@ jobs:
           - ssc337_lite_h3c-tc2101
           - ssc337_lite_tp-link-tapo-c110-v1
           - ssc337de_ultimate_foscam-x5
+          - ssc338q_fpv_caddx-fly
           - ssc338q_fpv_emax-wyvern-link
           - ssc338q_fpv_openipc-urllc-aio
           - ssc338q_fpv_openipc-mario-aio
