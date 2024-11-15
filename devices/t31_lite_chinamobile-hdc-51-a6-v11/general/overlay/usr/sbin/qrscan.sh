@@ -1,6 +1,6 @@
 #!/bin/sh
 
-gpio=??  # ??? led, t31_lite_chinamobile-hdc-51-a6-v11
+gpio=53  # BLUE led, t31_lite_chinamobile-hdc-51-a6-v11
 n=0
 
 gpio clear ${gpio} | logger -t gpio
