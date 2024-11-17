@@ -22,8 +22,6 @@ cli -s .audio.volume 50
 cli -s .audio.outputEnabled true
 cli -s .audio.outputVolume 80
 cli -s .audio.speakerPin 63
-cli -s .motionDetect.enabled true
-cli -s .motionDetect.visualize true
 #
 #
 # Set wlan device and credentials if need
