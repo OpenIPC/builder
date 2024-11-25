@@ -53,6 +53,7 @@ Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
 TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    done
 TP-Link Tapo C110 v1     SSC337       SC3335    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    done
+TP-Link Tapo C110 v26    SSC333       ?         ?                NOR_?     done
 TP-Link Tapo C310 v1     SSC325       SC3335    RTL8192EU_USB    NOR_8M    in progress
 Trassir TR-D4121IR1 v2   HI3516CV200  AR0237    -                NOR_16M   done
 Trassir TR-W2C1 v1       SSC325       GC2053    MT7601U_USB      NOR_16M   done

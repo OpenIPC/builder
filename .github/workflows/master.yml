@@ -44,6 +44,7 @@ jobs:
           - ssc325de_lite_imou-c22ep-s2
           - ssc333_lite_meari-speed-6s
           - ssc333_lite_tp-link-tapo-c110-v2
+          - ssc333_lite_tp-link-tapo-c110-v26
           - ssc333_lite_babysense-see-hd-ip206
           - ssc333_lite_vstarcam-c43s_b
           - ssc335_lite_tp-link-tapo-c110-v1
