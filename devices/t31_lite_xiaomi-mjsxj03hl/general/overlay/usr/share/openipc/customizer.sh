@@ -31,7 +31,7 @@ fw_setenv wlandev rtl8189fs-generic
 #
 # Set osmem and rmem
 #
-fw_setenv osmem 39M
-fw_setenv rmem 25M@0x2700000
+fw_setenv osmem 32M
+fw_setenv rmem 32M@0x2000000
 #
 exit 0
