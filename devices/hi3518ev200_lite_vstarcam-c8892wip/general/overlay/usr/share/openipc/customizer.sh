@@ -10,7 +10,6 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/h
 #
 # Set custom majestic settings
 #
-cli -s .system.staticDir /var/www/majestic
 cli -s .nightMode.lightMonitor true
 cli -s .nightMode.lightSensorPin 62
 cli -s .nightMode.lightSensorInvert true
