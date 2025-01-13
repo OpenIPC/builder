@@ -60,7 +60,7 @@ Trassir TR-W2C1 v1       SSC325       GC2053    MT7601U_USB      NOR_16M   done
 Trassir TR-W2C1 v2       SSC335       GC2053    MT7601U_USB      NOR_16M   done
 Tuya GV7630-T31-PTZ      T31L         SC2336    ATBM6012B_USB    NOR_8M    in progress
 Umea QC012               GK7102C_A    MIS2003   RDA5995_USB      MOR_8M    wip
-Uniview C1L-2WN-G        SSC335DE     OS02G10   RTL8188FU_USB    NOR_16M   in progress
+Uniview C1L-2WN-G-RU     SSC335DE     OS02G10   RTL8188FU_USB    NOR_16M   in progress
 Vixand IPC-1             GK7205V200   none      EC200N_USB       NOR_8M    insert
 Vixand IPH-5-4G          GK7205V200   SC2239    EC200N_USB       NOR_8M    insert
 Vixand IVG-G3S           GK7205V210   IMX307    -                NOR_16M   !
@@ -90,7 +90,7 @@ Many devices sold in online stores are clones of original devices or, more often
 
 ```
 Switcam HS303 v3                =>     Qtech QVC-IPC-136W
-Rostelecom IPC8232SWC-WE-B      =>     Uniview C1L-2WN-G
+Rostelecom IPC8232SWC-WE-B      =>     Uniview C1L-2WN-G-RU
 ```
 
 
