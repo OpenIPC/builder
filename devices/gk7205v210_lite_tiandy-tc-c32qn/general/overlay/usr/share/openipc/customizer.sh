@@ -10,6 +10,10 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/g
 #
 # Set custom majestic settings
 #
+
+cli -s .isp.blkCnt 5
+cli -s .image.mirror true
+cli -s .image.flip true
 cli -s .video0.codec h264
 cli -s .audio.enabled true
 cli -s .audio.volume 50
