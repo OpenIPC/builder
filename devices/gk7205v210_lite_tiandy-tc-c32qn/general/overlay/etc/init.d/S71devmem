@@ -1,0 +1,27 @@
+#!/bin/sh
+
+case "$1" in
+        start)
+                devmem 0x112c0028 32 0x0
+                devmem 0x112c002c 32 0x0
+                devmem 0x112c0030 32 0x0
+                devmem 0x112c0034 32 0x0
+                devmem 0x112c0048 32 0x2
+                devmem 0x112c0054 32 0x2
+                devmem 0x112c0060 32 0x2
+                devmem 0x112c0064 32 0x2
+                devmem 0x120c0000 32 0x1
+                ;;
+
+        stop)
+                ;;
+
+        *)
+                echo "Usage: $0 {start}"
+                exit 1
+                ;;
+esac
+
+
+
+
