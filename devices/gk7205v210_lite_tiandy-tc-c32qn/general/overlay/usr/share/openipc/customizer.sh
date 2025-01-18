@@ -19,6 +19,7 @@ cli -s .osd.enabled true
 cli -s .osd.template "OpenIPC | %F %T %Z"
 cli -s .audio.enabled true
 cli -s .audio.volume 50
+cli -s .nightMode.lightMonitor true
 cli -s .nightMode.irCutPin1 52
 cli -s .nightMode.irCutPin2 53
 cli -s .nightMode.backlightPin 4
