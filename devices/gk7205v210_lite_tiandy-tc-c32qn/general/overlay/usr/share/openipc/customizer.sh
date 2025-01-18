@@ -23,8 +23,8 @@ cli -s .nightMode.irCutPin1 52
 cli -s .nightMode.irCutPin2 53
 cli -s .nightMode.backlightPin 4
 cli -s .nightMode.lightMonitor false
-cli -s .nightMode.monitorDelay 3
-cli -s .nightMode.minThreshold 2000
+cli -s .nightMode.monitorDelay 5
+cli -s .nightMode.minThreshold 1300
 cli -s .nightMode.maxThreshold 14000
 #
 #
