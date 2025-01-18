@@ -22,9 +22,10 @@ jobs:
         platform:
           - gk7202v300_lite_cootli_camv0103
           - gk7202v300_lite_xg521
-          - gk7205v210_lite_tiandy-tc-c32qn
+          - gk7205v200_lite_tiandy-tc-c321n
           - gk7205v200_lite_vixand-ipc-1
           - gk7205v200_lite_vixand-iph-5-4g
+          - gk7205v210_lite_tiandy-tc-c32qn
           - gk7205v210_lite_vixand-ivg-g3s
           - gk7205v210_lite_vixand-ivg-g4f-a
           - gk7205v210_lite_vixand-ivg-g4f-a-w
