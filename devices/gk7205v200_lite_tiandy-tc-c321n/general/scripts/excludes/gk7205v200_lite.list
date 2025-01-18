@@ -8,6 +8,7 @@
 /etc/sensors/gc2053_i2c_1080p.ini
 /etc/sensors/gc4023_i2c_4M.ini
 /etc/sensors/gc4653_i2c_4M.ini
+/etc/sensors/gc5603_i2c_5M.ini
 /etc/sensors/imx307_i2c_2l_1080p.ini
 /etc/sensors/imx335_i2c_4M.ini
 /etc/sensors/jxf23_i2c_1080p.ini
