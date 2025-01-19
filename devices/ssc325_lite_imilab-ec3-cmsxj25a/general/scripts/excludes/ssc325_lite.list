@@ -2,11 +2,11 @@
 /etc/sensors/sc2239.bin
 /etc/sensors/sc2335.bin
 #
-/lib/modules/4.9.84/sigmastar/sensor/sensor_imx307_mipi.ko
-/lib/modules/4.9.84/sigmastar/sensor/sensor_sc2239_mipi.ko
-/lib/modules/4.9.84/sigmastar/sensor/sensor_sc2239_parl.ko
-/lib/modules/4.9.84/sigmastar/sensor/sensor_sc2335_mipi.ko
-/lib/modules/4.9.84/sigmastar/sensor/sensor_sc2335_parl.ko
+/lib/modules/4.9.84/sigmastar/sensor_imx307_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor_sc2239_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor_sc2239_parl.ko
+/lib/modules/4.9.84/sigmastar/sensor_sc2335_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor_sc2335_parl.ko
 #
 /lib/modules/4.9.84/kernel/fs/lockd/*.ko
 /lib/modules/4.9.84/kernel/fs/nfs/*.ko
