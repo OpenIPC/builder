@@ -2,11 +2,11 @@
 /etc/sensors/imx335.bin
 /etc/sensors/imx415.bin
 #
-/lib/modules/4.9.84/sigmastar/sensor/sensor_gc4653_mipi.ko
-/lib/modules/4.9.84/sigmastar/sensor/sensor_imx335_mipi.ko
-/lib/modules/4.9.84/sigmastar/sensor/sensor_imx347_mipi.ko
-/lib/modules/4.9.84/sigmastar/sensor/sensor_imx415_mipi.ko
-/lib/modules/4.9.84/sigmastar/sensor/sensor_sc8235_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor_gc4653_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor_imx335_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor_imx347_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor_imx415_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor_sc8235_mipi.ko
 #
 /lib/modules/4.9.84/kernel/fs/lockd/*.ko
 /lib/modules/4.9.84/kernel/fs/nfs/*.ko
