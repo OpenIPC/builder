@@ -11,8 +11,6 @@ fw_setenv wlandev rtl8188fu-generic
 #
 # Set custom majestic settings
 #
-#cli -s .system.webAdmin disabled
-#cli -s .system.staticDir /var/www/majestic
 #cli -s .isp.sensorConfig /etc/sensors/bt656_ahd_1920x1080_25fps.ini
 #cli -s .nightMode.lightMonitor true
 #cli -s .nightMode.minThreshold 2000

@@ -10,8 +10,6 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/h
 #
 # Set custom majestic settings
 #
-cli -s .system.webAdmin disabled
-cli -s .system.staticDir /var/www/majestic
 cli -s .isp.iqProfile /etc/sensors/iq/f23.ini
 cli -s .nightMode.irCutPin1 70
 cli -s .nightMode.irCutPin2 68

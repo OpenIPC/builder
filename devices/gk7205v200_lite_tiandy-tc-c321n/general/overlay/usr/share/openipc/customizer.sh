@@ -3,6 +3,10 @@
 # Perform basic settings on a known IP camera
 #
 #
+# Set sensor
+#
+fw_setenv sensor os02g10
+#
 # Set custom upgrade url
 #
 fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/gk7205v200_lite_tiandy-tc-c321n-nor.tgz'

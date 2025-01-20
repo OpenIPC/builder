@@ -10,8 +10,6 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t
 #
 # Set custom majestic settings
 #
-cli -s .system.webAdmin disabled
-cli -s .system.staticDir /var/www/majestic
 cli -s .isp.blkCnt 1
 cli -s .audio.speakerPin 7
 cli -s .nightMode.irCutPin1 58

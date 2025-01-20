@@ -11,7 +11,6 @@ fw_setenv wlandev 'rtl8188eus-hi3518ev200-lenovo'
 #
 # Set custom majestic settings
 #
-cli -s .system.staticDir /var/www/majestic
 cli -s .nightMode.irCutPin1 33
 cli -s .nightMode.irCutSingleInvert true
 cli -s .nightMode.backlightPin 50

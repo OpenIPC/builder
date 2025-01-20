@@ -2,6 +2,9 @@
 #
 # Perform basic settings on a known IP camera
 #
+# Set sensor
+#
+fw_setenv sensor os02g10
 #
 # Set custom upgrade url
 #
