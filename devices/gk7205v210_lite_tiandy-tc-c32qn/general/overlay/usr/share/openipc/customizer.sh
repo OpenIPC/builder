@@ -2,9 +2,10 @@
 #
 # Perform basic settings on a known IP camera
 #
-# Set sensor
+# Set sensor and processor
 #
 fw_setenv sensor os02g10
+fw_setenv soc $(ipcinfo -c)
 #
 # Set custom upgrade url
 #
