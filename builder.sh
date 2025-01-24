@@ -83,9 +83,9 @@ copy_to_tftp() {
 }
 
 select_device() {
-    AVAILABLE_DEVICES=$(ls -1 ${BUILDER_DIR}/devices | grep '_')
+    AVAILABLE_DEVICES=$(find common devices -name *_defconfig | sort | cut -d/ -f5)
     cmd="whiptail --title \"Available devices\" --menu \"Please select a device from the list below:\" 20 70 12"
-    for p in $AVAILABLE_DEVICES; do cmd="${cmd} \"$p\" \"\""; done
+    for p in ${AVAILABLE_DEVICES//_defconfig}; do cmd="${cmd} \"$p\" \"\""; done
     DEVICE=$(eval "${cmd} 3>&1 1>&2 2>&3")
     if [ $? != 0 ]; then
         echo_c 31 "Cancelled."
@@ -100,7 +100,8 @@ echo_c 30 "Version: ${VERSION}"
 while [ -z "${DEVICE}" ]; do select_device; done
 
 echo_c 31 "\nStarting a device for ${DEVICE}"
-tree -C ${BUILDER_DIR}/devices/${DEVICE}
+ITEM=$(find common devices -name ${DEVICE}_defconfig | cut -d/ -f1,2)
+tree -C "${ITEM}"
 
 sleep 3
 
@@ -120,7 +121,7 @@ else
 fi
 
 echo_c 33 "\nCopying device files"
-cp -afv ${BUILDER_DIR}/devices/${DEVICE}/*  ${FIRMWARE_DIR}
+cp -afv ${BUILDER_DIR}/${ITEM}/* ${FIRMWARE_DIR}
 
 echo_c 33 "\nBuilding the device"
 make BOARD=${DEVICE}

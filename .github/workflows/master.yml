@@ -83,6 +83,33 @@ jobs:
           - t31_ultimate_gcraftsman-gca50
           - t31_lite_zte-k540
 
+          # Generic FPV
+          - hi3516ev200_fpv
+          - hi3516ev300_fpv
+          - hi3536dv100_fpv
+          - gk7205v200_fpv
+          - gk7205v210_fpv
+          - gk7205v300_fpv
+          - ssc30kq_fpv
+          - ssc338q_fpv
+          - ssc378qe_fpv
+
+          # Ruby FPV
+          - gk7205v200_rubyfpv
+          - gk7205v210_rubyfpv
+          - gk7205v300_rubyfpv
+          - ssc30kq_rubyfpv
+          - ssc338q_rubyfpv
+
+          # LTE/Venc
+          - hi3516ev200_lte
+          - hi3516ev300_lte
+          - gk7205v200_lte
+          - gk7205v300_lte
+          - gk7205v200_venc
+          - gk7205v210_venc
+          - gk7205v300_venc
+
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
