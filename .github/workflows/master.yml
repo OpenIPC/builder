@@ -84,7 +84,7 @@ jobs:
           - t31_ultimate_gcraftsman-gca50
           - t31_lite_zte-k540
 
-          # Generic FPV
+          # FPV
           - hi3516ev200_fpv
           - hi3516ev300_fpv
           - hi3536dv100_fpv
@@ -95,21 +95,27 @@ jobs:
           - ssc338q_fpv
           - ssc378qe_fpv
 
-          # Ruby FPV
+          # Ruby
           - gk7205v200_rubyfpv
           - gk7205v210_rubyfpv
           - gk7205v300_rubyfpv
           - ssc30kq_rubyfpv
           - ssc338q_rubyfpv
 
-          # LTE/Venc
+          # LTE
           - hi3516ev200_lte
           - hi3516ev300_lte
           - gk7205v200_lte
           - gk7205v300_lte
+
+          # Venc
           - gk7205v200_venc
           - gk7205v210_venc
           - gk7205v300_venc
+
+          # Mini
+          - hi3516cv300_mini
+          - hi3518ev200_mini
 
     steps:
       - name: Checkout source
