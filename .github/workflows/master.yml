@@ -158,14 +158,22 @@ jobs:
 
           NORFW=$(find output/images -name openipc*nor*)
           if [ ! -z ${NORFW} ]; then
-            mv ${NORFW} ../${NAME}-nor.tgz
-            echo NORFW=${GITHUB_WORKSPACE}/${NAME}-nor.tgz >> ${GITHUB_ENV}
+            if echo ${NAME} | grep -q -; then
+              mv ${NORFW} ../${NAME}-nor.tgz
+              echo NORFW=${GITHUB_WORKSPACE}/${NAME}-nor.tgz >> ${GITHUB_ENV}
+            else
+              echo NORFW=openipc/${NORFW} >> ${GITHUB_ENV}
+            fi
           fi
 
           NANDFW=$(find output/images -name openipc*nand*)
           if [ ! -z ${NANDFW} ]; then
-            mv ${NANDFW} ../${NAME}-nand.tgz
-            echo NANDFW=${GITHUB_WORKSPACE}/${NAME}-nand.tgz >> ${GITHUB_ENV}
+            if echo ${NAME} | grep -q -; then
+              mv ${NANDFW} ../${NAME}-nand.tgz
+              echo NANDFW=${GITHUB_WORKSPACE}/${NAME}-nand.tgz >> ${GITHUB_ENV}
+            else
+              echo NANDFW=openipc/${NANDFW} >> ${GITHUB_ENV}
+            fi
           fi
 
           if [ -z ${NORFW} ] && [ -z ${NANDFW} ]; then
