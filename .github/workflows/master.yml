@@ -155,24 +155,25 @@ jobs:
 
           TIME=$(date -d @${SECONDS} +%M:%S)
           echo TIME=${TIME} >> ${GITHUB_ENV}
+          COMMON=$(echo ${NAME} | awk -F_ '{print NF-1}')
 
           NORFW=$(find output/images -name openipc*nor*)
           if [ ! -z ${NORFW} ]; then
-            if echo ${NAME} | grep -q -; then
-              mv ${NORFW} ../${NAME}-nor.tgz
-              echo NORFW=${GITHUB_WORKSPACE}/${NAME}-nor.tgz >> ${GITHUB_ENV}
-            else
+            if [ ${COMMON} -eq 1 ]; then
               echo NORFW=openipc/${NORFW} >> ${GITHUB_ENV}
+            else
+              mv ${NORFW} ../${NAME}-nor.tgz
+              echo NORFW=${NAME}-nor.tgz >> ${GITHUB_ENV}
             fi
           fi
 
           NANDFW=$(find output/images -name openipc*nand*)
           if [ ! -z ${NANDFW} ]; then
-            if echo ${NAME} | grep -q -; then
-              mv ${NANDFW} ../${NAME}-nand.tgz
-              echo NANDFW=${GITHUB_WORKSPACE}/${NAME}-nand.tgz >> ${GITHUB_ENV}
-            else
+            if [ ${COMMON} -eq 1 ]; then
               echo NANDFW=openipc/${NANDFW} >> ${GITHUB_ENV}
+            else
+              mv ${NANDFW} ../${NAME}-nand.tgz
+              echo NANDFW=${NAME}-nand.tgz >> ${GITHUB_ENV}
             fi
           fi
 
