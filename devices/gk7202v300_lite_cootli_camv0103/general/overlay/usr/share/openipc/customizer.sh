@@ -21,7 +21,7 @@ fw_setenv wlandev ssv6x5x-generic
 cli -s .nightMode.irCutPin1 56
 cli -s .nightMode.irCutPin2 58
 cli -s .nightMode.backlightPin 16
-cli -s .nightMode.lightMonitor true
+#cli -s .nightMode.lightMonitor true
 cli -s .nightMode.minThreshold 2000
 cli -s .nightMode.maxThreshold 17000
 cli -s .audio.enabled true

@@ -13,7 +13,7 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/h
 cli -s .isp.blkCnt 5
 cli -s .nightMode.irCutPin1 64
 cli -s .nightMode.backlightPin 65
-cli -s .nightMode.lightMonitor true
+#cli -s .nightMode.lightMonitor true
 cli -s .nightMode.lightSensorPin 62
 cli -s .nightMode.lightSensorInvert false
 cli -s .video0.codec h264
