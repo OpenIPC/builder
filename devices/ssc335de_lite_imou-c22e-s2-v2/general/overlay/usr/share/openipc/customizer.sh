@@ -19,7 +19,8 @@ cli -s .nightMode.backlightPin 52
 cli -s .nightMode.colorToGray true
 cli -s .audio.outputEnabled true
 cli -s .audio.outputVolume 80
-cli -s .audio.speakerPin 38
+cli -s .audio.speakerPin 15
+cli -s .audio.speakerPinInvert true
 cli -s .audio.srate 48000
 #
 #
