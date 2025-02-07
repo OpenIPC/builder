@@ -75,6 +75,7 @@ jobs:
           - t31_lite_wansview-q5-2k
           - t31_lite_aoni-ep01j05
           - t31_lite_chinamobile-hdc-51-a6-v11
+          - t31_lite_cmcc-hdc-51-a6-v10
           - t31_lite_chinatelecom-y4h-50
           - t31_lite_wyze-v3b
           - t31_lite_xiaomi-mjsxj03hl

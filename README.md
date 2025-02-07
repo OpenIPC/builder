@@ -22,7 +22,8 @@ Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
 Bathhouse                HI3518EV300  ?         RTL8188FU_USB    NOR_8M    research
 ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no
 ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
-CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   in progress
+CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   done
+CMCC HDC-51 A6-V11       T31L         JXF37     RTL8188FU_USB    NOR_16M   in progress
 CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in progress
 Emax Wyvern Link         SSC338Q      IMX415                     NOR_16M   done
