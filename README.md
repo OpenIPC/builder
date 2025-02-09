@@ -46,6 +46,7 @@ OpenIPC AIO Thinker      SSC338Q      IMX335                     NOR_16M   in pr
 OpenIPC AIO UltraSight   SSC338Q      IMX415    RTL8812AU_USB    NOR_16M   done
 OpenIPC URLLC            SSC338Q                                 NOR_16M   done
 Qtech QVC-IPC-136W       HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
+Rostelecom IPC8232SWC-WE HI3516EV300  SP2305    RTL8188FU_USB    NAND      testing
 RunCam WiFiLink          SSC338Q      IMX415                     NOR_16M   done
 Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   in progress
 Smartwares CIP-37210AT   T21N         JXF37     RTL8188FU_USB    NOR_16M   done
