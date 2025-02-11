@@ -99,10 +99,9 @@ jobs:
 
           # Ruby
           - gk7205v200_rubyfpv
-          - gk7205v210_rubyfpv
-          - gk7205v300_rubyfpv
           - ssc30kq_rubyfpv
           - ssc338q_rubyfpv
+          - ssc338q_rubyfpv_thinker_internal_wifi
 
           # LTE
           - hi3516ev200_lte
