@@ -15,6 +15,10 @@
 /etc/sensors/sc223a_i2c_1080p.ini
 /etc/sensors/4l_sc223a_i2c_1080p.ini
 /etc/sensors/sc2335_i2c_1080p.ini
+/etc/sensors/gc4023_i2c_4M.ini
+/etc/sensors/gc5603_i2c_5M.ini
+/etc/sensors/mis2008_i2c_1080p.ini
+/etc/sensors/os02g10_i2c_1080p.ini
 /etc/sensors/iq/f23.ini
 /etc/sensors/iq/gc2053.ini
 /etc/sensors/iq/imx335.ini
@@ -55,3 +59,5 @@
 /usr/lib/sensors/libsns_sc500ai.so
 /usr/lib/sensors/libsns_sc223a.so
 /usr/lib/sensors/libsns_sc223a_4l.so
+/usr/lib/sensors/libsns_gc5603.so
+/usr/lib/sensors/libsns_mis2008.so
