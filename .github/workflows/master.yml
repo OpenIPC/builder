@@ -98,10 +98,10 @@ jobs:
           - ssc378qe_fpv
 
           # Ruby
-          - gk7205v200_rubyfpv
-          - ssc30kq_rubyfpv
-          - ssc338q_rubyfpv
-          - ssc338q_rubyfpv_thinker_internal_wifi
+          - rubyfpv_generic_soc_gk7205v200
+          - rubyfpv_generic_soc_ssc30kq
+          - rubyfpv_generic_soc_ssc338q
+          - rubyfpv_thinker_internal_wifi
 
           # LTE
           - hi3516ev200_lte
