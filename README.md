@@ -48,9 +48,10 @@ OpenIPC URLLC            SSC338Q                                 NOR_16M   done
 Qtech QVC-IPC-136W       HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
 Rostelecom IPC8232SWC-WE HI3516EV300  SP2305    RTL8188FU_USB    NAND      testing
 RunCam WiFiLink          SSC338Q      IMX415                     NOR_16M   done
+RVi-1NCMW2028 (2.8)      HI3516EV300  SC2330    RTL8188FU_USB    NAND      testing
 Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   in progress
 Smartwares CIP-37210AT   T21N         JXF37     RTL8188FU_USB    NOR_16M   done
-Switcam HS303 (v1)       HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   testing now
+Switcam HS303 v1         HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   testing now
 Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
 Tiandy TC-C321N          GK7205V200   OS02G10   -                NOR_8M    done
 Tiandy TC-C32QN          GK7205V210   OS02G10   -                NOR_8M    done

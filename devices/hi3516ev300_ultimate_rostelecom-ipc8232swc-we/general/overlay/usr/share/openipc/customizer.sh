@@ -10,7 +10,7 @@ fw_setenv sensor sp2305
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3516ev300_ultimate_rostelekom_ipc8232swc-we-nor.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3516ev300_ultimate_rostelecom-ipc8232swc-we-nor.tgz'
 #
 #
 # Set custom majestic settings
