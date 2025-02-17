@@ -12,7 +12,6 @@ fw_setenv sensor sp2305
 #
 fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3516ev300_ultimate_rostelecom-ipc8232swc-we-nor.tgz'
 #
-#
 # Set custom majestic settings
 #
 cli -s .video0.codec h264
@@ -38,3 +37,7 @@ fw_setenv wlandev rtl8188fu-generic
 #fw_setenv wlanpass 12345678
 
 exit 0
+
+### enable SD card
+# devmem 0x100c0058 32 0
+# gpio set 38
