@@ -31,11 +31,5 @@ fw_setenv wlandev rtl8188fu-ssc335de-uniview-c1l-2wn-g
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 #
-#
-# Other info for some custom settings
-#
-# gpio64 - red led
-# gpio65 - blue led
-#
 
 exit 0

@@ -37,7 +37,3 @@ fw_setenv wlandev rtl8188fu-generic
 #fw_setenv wlanpass 12345678
 
 exit 0
-
-### enable SD card
-# devmem 0x100c0058 32 0
-# gpio set 38
