@@ -15,7 +15,6 @@ cli -s .nightMode.lightSensorInvert true
 cli -s .nightMode.irCutPin1 50
 cli -s .nightMode.irCutSingleInvert true
 cli -s .nightMode.adcReadout true
-#cli -s .nightMode.lightMonitor true
 cli -s .nightMode.minThreshold 100
 cli -s .nightMode.maxThreshold 500
 cli -s .video0.codec h264
@@ -37,4 +36,5 @@ fw_setenv extras nogmac
 fw_setenv osmem 39M
 fw_setenv rmem 25M@0x2700000
 #
+
 exit 0

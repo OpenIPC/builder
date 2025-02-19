@@ -10,7 +10,6 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t
 #
 # Set custom majestic settings
 #
-cli -s .nightMode.lightMonitor true
 cli -s .nightMode.lightSensorPin 7
 cli -s .nightMode.irCutPin1 49
 cli -s .video0.codec h264
@@ -35,4 +34,5 @@ fw_setenv wlandev rtl8188fu-generic
 fw_setenv osmem 39M
 fw_setenv rmem 25M@0x2700000
 #
+
 exit 0

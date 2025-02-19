@@ -13,7 +13,6 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/h
 cli -s .nightMode.irCutPin1 48
 cli -s .nightMode.irCutPin2 47
 cli -s .nightMode.backlightPin 59
-cli -s .nightMode.lightMonitor false    # can set true
 cli -s .nightMode.minThreshold 2000
 cli -s .nightMode.maxThreshold 10000
 cli -s .video0.codec h264
@@ -35,4 +34,5 @@ fw_setenv extras initcall_blacklist=hisi_femac_driver_init
 fw_setenv board hs303-v3
 #fw_setenv osmem 45M
 #
+
 exit 0
