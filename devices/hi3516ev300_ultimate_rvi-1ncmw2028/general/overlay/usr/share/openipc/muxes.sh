@@ -2,6 +2,7 @@
 
 ### set off white led ###
 gpio clear 72
+gpio clear 24
 
 # pwm light control
 #devmem 0x100c009c 32 0x1 # pwm 2
@@ -14,5 +15,5 @@ gpio clear 72
 #devmem 0x112c0094 32 0x1000 # gpio 8-3
 #devmem 0x112c0040 32 0x100  # gpio 5-0 green led (flash with use wifi connection and not flash for wired)
 
-# after sensor init
+# after sensor init # (??)
 #devmem 0x120100f0 32 0x19
