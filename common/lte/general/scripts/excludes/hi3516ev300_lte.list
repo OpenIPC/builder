@@ -9,6 +9,10 @@
 /etc/sensors/sc3235_i2c_3M.ini
 /etc/sensors/sc4236_i2c_3M.ini
 /etc/sensors/sp2305_i2c_1080p.ini
+/etc/sensors/gc4023_i2c_4M.ini
+/etc/sensors/gc5603_i2c_5M.ini
+/etc/sensors/mis2008_i2c_1080p.ini
+/etc/sensors/os02g10_i2c_1080p.ini
 /etc/sensors/iq/f23.ini
 /etc/sensors/iq/gc2053.ini
 /etc/sensors/iq/sc2232.ini
