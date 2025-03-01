@@ -1,9 +1,9 @@
 ![OpenIPC logo][logo]
 
 ## OpenIPC Builder
-**_Experimental system for building OpenIPC firmware for known devices_**
-- **_[Current release of firmware builds](https://github.com/OpenIPC/builder/releases/tag/latest)_**
+_(based on Buildroot)_
 
+[![Telegram](https://openipc.org/images/telegram_button.svg)][telegram]
 
 ### Specialized features
 
@@ -165,4 +165,16 @@ sh repack.sh ssc337de ssc337de_ultimate_foscam-x5-nor router password
 
 Please **_[support our project](https://openipc.org/support-open-source)_** with donations or orders for development or maintenance. Thank you!
 
+<p align="center">
+<a href="https://opencollective.com/openipc/contribute/backer-14335/checkout" target="_blank"><img src="https://opencollective.com/webpack/donate/button@2x.png?color=blue" width="250" alt="Open Collective donate button"></a>
+</p>
+
+[firmware]: https://github.com/openipc/firmware
 [logo]: https://openipc.org/assets/openipc-logo-black.svg
+[mit]: https://opensource.org/license/mit
+[opencollective]: https://opencollective.com/openipc
+[paypal]: https://www.paypal.com/donate/?hosted_button_id=C6F7UJLA58MBS
+[project]: https://github.com/openipc
+[telegram]: https://openipc.org/our-channels
+[website]: https://openipc.org
+[wiki]: https://github.com/openipc/wiki
