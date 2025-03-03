@@ -57,6 +57,7 @@ jobs:
           - ssc335de_lite_imou-c22e-s2-v2
           - ssc335de_lite_uniview-c1l-2wn-g
           - ssc337_lite_h3c-tc2101
+          - ssc337_lite_tiandy-tc-c321n-v2
           - ssc337_lite_tp-link-tapo-c110-v1
           - ssc337de_ultimate_foscam-x5
           - ssc338q_fpv_caddx-fly

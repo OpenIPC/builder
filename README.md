@@ -51,9 +51,10 @@ RunCam WiFiLink          SSC338Q      IMX415                     NOR_16M   done
 RVi-1NCMW2028 (2.8)      HI3516EV300  SC2330    RTL8188FU_USB    NAND      testing
 Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   in progress
 Smartwares CIP-37210AT   T21N         JXF37     RTL8188FU_USB    NOR_16M   done
-Switcam HS303 v1         HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   testing now
+Switcam HS303 v1         HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   done
 Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
 Tiandy TC-C321N          GK7205V200   OS02G10   -                NOR_8M    done
+Tiandy TC-C321N v2       SSC337       SC2336P   -                NOR_8M    testing now
 Tiandy TC-C32QN          GK7205V210   OS02G10   -                NOR_8M    done
 TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    done
 TP-Link Tapo C110 v1     SSC337       SC3335    SSW101B_USB      NOR_8M    done
@@ -98,6 +99,8 @@ Many devices sold in online stores are clones of original devices or, more often
 Model names                            Our firmware
 
 Switcam HS303 v3                =>     Qtech QVC-IPC-136W
+Tiandy TC-C320N                 =>     Tiandy TC-C321N
+Tiandy TC-C320N v2              =>     Tiandy TC-C321N v2
 Rostelecom IPC8232SWC-WE-B      =>     Uniview C1L-2WN-G
 Rostelecom IPC C22E-S2 v2       =>     Imou IPC-C22E-S2-v2
 Uniview C1L-2WN-G-RU            =>     Uniview C1L-2WN-G
