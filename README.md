@@ -27,6 +27,8 @@ CMCC HDC-51 A6-V11       T31L         JXF37     RTL8188FU_USB    NOR_16M   in pr
 CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in progress
 Emax Wyvern Link         SSC338Q      IMX415                     NOR_16M   done
+Faleemi FCS880           GM8136       PS5230    MT7601U_USB      NOR_16M   wifi-no, audio-no
+FDT FD8901               HI3516CV200  SC2135    RTL8188FU_USB    NOR_16M   wifi-no
 Foscam X5                SSC337DE     GC4653    RTL8188FU_USB    NOR_16M   done
 G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
 EC37-T11                 T20L         SC2232    RTL8188FU_USB    MOR_16M   in progress
