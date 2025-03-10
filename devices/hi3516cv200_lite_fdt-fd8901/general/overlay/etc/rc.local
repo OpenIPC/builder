@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+fw_version="OpenIPC $(grep "OPENIPC_VERSION" /etc/os-release | cut -d= -f2 | tr -d '"')"
+network_interface=$(ip route | awk '/default/ {print $5}' | head -n1)
+network_macaddr=$(cat /sys/class/net/${network_interface:-eth0}/address | sed 's/://g')
+soc=$(ipcinfo --chip-name)
+
+config="/etc/onvif.conf"
+
+sed -i "s/^firmware_ver=.*/firmware_ver=$fw_version/" $config
+sed -i "s/^hardware_id=.*/hardware_id=$soc/" $config
+sed -i "s/^serial_num=.*/serial_num=$network_macaddr/" $config
+
+httpd -p 8080 -h /var/www -c /etc/httpd_onvif.conf
+if [ $? -ne 0 ]; then                            
+  echo "Starting ONVIF httpd failed"             
+  exit 1             
+fi                   
+        
+export REQUEST_METHOD=POST
+                          
+onvif_simple_server &
+if [ $? -ne 0 ]; then                
+  echo "onvif_simple_server failed to start"
+  exit 1                             
+fi                                 
+                                   
+exit 0   
