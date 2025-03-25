@@ -1,0 +1,33 @@
+commit 605091daab478f5b2646f6701f8797374c0bc032
+Author: Naomi Rennie-Waldock <naomi.renniewaldock@gmail.com>
+Date:   Wed Jan 1 16:04:34 2025 +0000
+
+    Add GPIOs for TP-Link Tapo TC70 (V3)
+
+diff --git a/arch/mips/xburst/soc-t31/chip-t31/isvp/Swan/board.h b/arch/mips/xburst/soc-t31/chip-t31/isvp/Swan/board.h
+index d9058e12..45c8bbc2 100644
+--- a/arch/mips/xburst/soc-t31/chip-t31/isvp/Swan/board.h
++++ b/arch/mips/xburst/soc-t31/chip-t31/isvp/Swan/board.h
+@@ -29,13 +29,20 @@
+ #endif
+ /* ****************************GPIO SPI END********************************** */
+
++/* ****************************GPIO KEY START******************************** */
++#define GPIO_HOME				GPIO_PC(0)
++#define ACTIVE_LOW_HOME		1
++#define WAKEUP_HOME			1
++#define CAN_DISABLE_MENU		1
++/* ****************************GPIO KEY END********************************** */
++
+ /* ****************************GPIO MMC START******************************** */
+ #define GPIO_MMC_RST_N			-1
+ #define GPIO_MMC_RST_N_LEVEL	LOW_ENABLE
+ #define GPIO_MMC_CD_N			GPIO_PB(27)
+ #define GPIO_MMC_CD_N_LEVEL		LOW_ENABLE
+-#define GPIO_MMC_PWR			-1
+-#define GPIO_MMC_PWR_LEVEL		HIGH_ENABLE
++#define GPIO_MMC_PWR			GPIO_PB(28)
++#define GPIO_MMC_PWR_LEVEL		LOW_ENABLE
+ #define GPIO_MMC_WP_N			-1
+ #define GPIO_MMC_WP_N_LEVEL		LOW_ENABLE
+ /* ****************************GPIO MMC END******************************** */
