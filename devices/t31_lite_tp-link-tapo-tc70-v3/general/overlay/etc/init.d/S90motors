@@ -1,0 +1,13 @@
+#!/bin/sh
+
+case "$1" in
+	start)
+		modprobe -s motor hmaxstep=4000 vmaxstep=790 hst1=39 hst2=45 hst3=46 hst4=40 vst1=41 vst2=47 vst3=48 vst4=38
+	;;
+	stop)
+	;;
+	*)
+	echo "Usage: $0 {start|stop}" >&2
+	exit 1
+	;;
+esac
