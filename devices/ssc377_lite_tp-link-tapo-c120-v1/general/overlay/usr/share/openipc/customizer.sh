@@ -27,7 +27,7 @@ cli -s .audio.outputVolume 60
 #
 # Set wlan device and credentials if need
 #
-fw_setenv wlandev rtl8188fu-ssc377
+fw_setenv wlandev  rtl8188fu-ssc377-tapo-c120
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 

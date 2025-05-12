@@ -5,7 +5,8 @@ set_gpio() {
 	sleep 1
 }
 
-if [ "$1" = "rtl8188fu-ssc377" ]; then
+# SSC377 Tapo C120 v1
+if [ "$1" = " rtl8188fu-ssc377-tapo-c120" ]; then
 	set_gpio 42 1
 	modprobe 8188fu
 	exit 0
