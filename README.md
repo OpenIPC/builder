@@ -32,7 +32,7 @@ G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
 EC37-T11                 T20L         SC2232    RTL8188FU_USB    MOR_16M   in progress
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
 HB-WIFI-Z6 v1.2          T10          JXH62     RTL8188EU_USB    NOR_8M    in progress
-iFlytek XFP301-M         T31ZX        JXQ03     RTL8188FU_USB    NOR_?     research
+iFlytek XFP301-M         T31ZX        JXQ03     RTL8188FU_USB    NOR_16    research
 Imilab EC3 CMSXJ25A      SSC325       GC2053    MT7603UN_?       NOR_16M   in progress
 Imou IPC-C22E-S2-v2      SSC335DE     GC2053    RTL8188FU_USB    NOR_16M   done
 Imou IPC-C22EP-S2        SSC325DE     SC2239    RTL8188FU_USB    NAND      testing stage 1
