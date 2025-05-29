@@ -88,6 +88,9 @@ jobs:
           - t31_ultimate_gcraftsman-gca50
           - t31_lite_zte-k540
 
+          # APFPV
+          - ssc338q_apfpv
+
           # FPV
           - hi3516ev200_fpv
           - hi3516ev300_fpv
@@ -100,7 +103,6 @@ jobs:
           - ssc378qe_fpv
 
           # Ruby
-          # - gk7205v200_rubyfpv_generic
           - ssc30kq_rubyfpv_generic
           - ssc338q_rubyfpv_generic
           - ssc338q_rubyfpv_thinker_internal_wifi
