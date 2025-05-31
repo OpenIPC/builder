@@ -1,5 +1,16 @@
 #!/bin/sh
 
+set_config() {
+cat << EOF > /tmp/wpa_supplicant.conf
+network={
+	mode=2
+	frequency=$(fw_printenv -n wlanfreq || echo 2412)
+	ssid="$(fw_printenv -n wlanssid || echo OpenIPC)"
+	psk="$(fw_printenv -n wlanpass || echo 12345678)"
+}
+EOF
+}
+
 case "$1" in
 	setup)
 		for card in $(lsusb | awk '{print $6}' | uniq); do
@@ -24,28 +35,12 @@ case "$1" in
 		fi
 
 		echo "Detected driver: $driver"
-		[ -e /sys/class/net/wlan0 ] && return
-
-		if [ "$driver" != "88XXau" ]; then
-			opt1="rtw_tx_pwr_by_rate=0"
-			opt2="rtw_tx_pwr_lmt_enable=0"
-		fi
-
-		modprobe "$driver" "$opt1" "$opt2"
-		sleep 3
-
-		if ! ifconfig wlan0 up; then
-			echo "Wireless driver not found!"
-			exit 1
-		fi
+		modprobe "$driver" rtw_tx_pwr_by_rate=0 rtw_tx_pwr_lmt_enable=0
 		;;
 
 	start)
-		ssid=$(fw_printenv -n wlanssid || echo OpenIPC)
-		pass=$(fw_printenv -n wlanpass || echo 12345678)
-		wpa_passphrase "$ssid" "$pass" > /tmp/wpa_supplicant.conf
-		sed -i '2i \\tmode=2' /tmp/wpa_supplicant.conf
-		#sed -i '3i \\tfrequency=5180' /tmp/wpa_supplicant.conf
+		iw wlan0 set txpower fixed $(fw_printenv -n wlanpwr || echo 1500)
+		set_config
 		wpa_supplicant -B -i wlan0 -D nl80211 -c /tmp/wpa_supplicant.conf
 		udhcpd -S
 		;;
