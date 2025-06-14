@@ -38,6 +38,7 @@ Imou IPC-C22E-S2-v2      SSC335DE     GC2053    RTL8188FU_USB    NOR_16M   done
 Imou IPC-C22EP-S2        SSC325DE     SC2239    RTL8188FU_USB    NAND      testing stage 1
 Imou IPC-C22EP-S2 ?      SSC325DE     SC2335    RTL8188FU_USB    NAND      wait driver
 Imou IPC-F22AP           SSC325       SC2239    -                NOR_?     preparation
+Jienuo JN-107AR-E-WIFI   T31X         SC5235    RTL8733BU_USB    NOR_16M   done
 JVS INGT10 GQS60EP       T10A         OV9750    -                NOR_8M    done
 Lenovo Snowman 1080P     HI3518EV200  SC2035    RTL8188EUS_USB   NOR_16M   in progress, LightSensor-no
 Meari Speed 6S           SSC333       JXF37     RTL8188FU_USB    NOR_16M   video-yes, wifi-yes, motors-no
