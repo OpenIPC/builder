@@ -41,7 +41,7 @@ case "$1" in
 	start)
 		iw wlan0 set txpower fixed $(fw_printenv -n wlanpwr || echo 1500)
 		set_config
-		wpa_supplicant -B -i wlan0 -D nl80211 -c /tmp/wpa_supplicant.conf
+		wpa_supplicant -B -i wlan0 -c /tmp/wpa_supplicant.conf
 		udhcpd -S
 		;;
 
