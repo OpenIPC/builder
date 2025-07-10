@@ -102,6 +102,7 @@ Model names                            Our firmware
 Switcam HS303 v3                =>     Qtech QVC-IPC-136W
 Tiandy TC-C320N                 =>     Tiandy TC-C321N
 Tiandy TC-C320N v2              =>     Tiandy TC-C321N v2
+TP-Link Tapo C110 v2.20         =>     TP-Link Tapo C110 v2
 Rostelecom IPC8232SWC-WE-B      =>     Uniview C1L-2WN-G
 Rostelecom IPC C22E-S2 v2       =>     Imou IPC-C22E-S2-v2
 Uniview C1L-2WN-G-RU            =>     Uniview C1L-2WN-G
