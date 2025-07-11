@@ -1,13 +1,18 @@
 #!/bin/sh
 
 set_config() {
-cat << EOF > /tmp/wpa_supplicant.conf
-network={
-	mode=2
-	frequency=$(fw_printenv -n wlanfreq || echo 2412)
-	ssid="$(fw_printenv -n wlanssid || echo OpenIPC)"
-	psk="$(fw_printenv -n wlanpass || echo 12345678)"
-}
+cat << EOF > /tmp/hostapd.conf
+ctrl_interface=/var/run/hostapd
+interface=wlan0
+hw_mode=g
+channel=1
+ieee80211n=1
+ieee80211ac=1
+wmm_enabled=1
+rsn_pairwise=CCMP
+wpa=2
+ssid=$(fw_printenv -n wlanssid || echo OpenIPC)
+wpa_passphrase=$(fw_printenv -n wlanpass || echo 12345678)
 EOF
 }
 
@@ -41,7 +46,7 @@ case "$1" in
 	start)
 		iw wlan0 set txpower fixed $(fw_printenv -n wlanpwr || echo 1500)
 		set_config
-		wpa_supplicant -B -i wlan0 -c /tmp/wpa_supplicant.conf
+		hostapd /tmp/hostapd.conf -B
 		udhcpd -S
 		;;
 
