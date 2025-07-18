@@ -5,6 +5,7 @@
 #
 # Set osmem & sensor
 #
+fw_setenv totalmem 128M
 fw_setenv osmem 64M
 fw_setenv sensor sp2305
 #
