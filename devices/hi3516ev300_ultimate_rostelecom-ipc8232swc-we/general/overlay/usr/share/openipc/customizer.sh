@@ -14,6 +14,7 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/h
 #
 # Set custom majestic settings
 #
+cli -s .isp.blkCnt 6
 cli -s .video0.codec h264
 cli -s .nightMode.irCutPin1 63
 cli -s .nightMode.irCutPin2 67
