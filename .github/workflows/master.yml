@@ -44,6 +44,7 @@ jobs:
           - hi3518ev200_ultimate_lenovo-snowman-1080p
           - ssc30kd_lite_chinatelecom-ds-ytj5301
           - ssc325_lite_imilab-ec3-cmsxj25a
+          - ssc325_lite_imou-c22cp
           - ssc325_lite_tp-link-tapo-c310-v1
           - ssc325_lite_trassir-tr-w2c1-v1
           - ssc325de_lite_imou-c22ep-s2
