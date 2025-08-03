@@ -1,0 +1,7 @@
+iface wlan0 inet static
+	address 192.168.0.1
+	gateway 192.168.0.1
+	netmask 255.255.255.0
+	pre-up adapter setup
+	post-up adapter start
+	post-down adapter stop
