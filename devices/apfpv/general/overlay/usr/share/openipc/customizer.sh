@@ -1,15 +1,4 @@
 #!/bin/sh
-#
-# Perform basic settings on a known IP camera
-#
-#
-# Set custom upgrade url
-#
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/openipc.ssc378qe-nor-apfpv.tgz'
-#
-#
-# Set custom majestic settings
-#
 cli -s .isp.exposure 15
 cli -s .video0.fps 60
 cli -s .video0.bitrate 12000

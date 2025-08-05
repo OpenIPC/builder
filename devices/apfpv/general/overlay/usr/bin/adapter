@@ -4,7 +4,7 @@ set_config() {
 cat << EOF > /tmp/wpa_supplicant.conf
 network={
 	mode=2
-	frequency=$(fw_printenv -n wlanfreq || echo 2412)
+	frequency=$(fw_printenv -n wlanfreq || echo 5200)
 	ssid="$(fw_printenv -n wlanssid || echo OpenIPC)"
 	psk="$(fw_printenv -n wlanpass || echo 12345678)"
 }
