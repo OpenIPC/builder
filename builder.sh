@@ -100,7 +100,7 @@ echo_c 30 "Version: ${VERSION}"
 while [ -z "${DEVICE}" ]; do select_device; done
 
 echo_c 31 "\nStarting a device for ${DEVICE}"
-ITEM=$(find common devices -name ${DEVICE}_defconfig | cut -d/ -f1,2)
+ITEM=$(find devices -name ${DEVICE}_defconfig | cut -d/ -f1,2)
 tree -C "${ITEM}"
 
 sleep 3
