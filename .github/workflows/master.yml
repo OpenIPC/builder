@@ -76,6 +76,7 @@ jobs:
           - t21_lite_smartwares-cip-37210at
           - t21_lite_xyx-06s
           - t21_lite_wansview-q5-1080p
+          - t31_lite_aceline-aip-o4
           - t31_lite_wansview-q5-2k
           - t31_lite_aoni-ep01j05
           - t31_lite_chinamobile-hdc-51-a6-v11
