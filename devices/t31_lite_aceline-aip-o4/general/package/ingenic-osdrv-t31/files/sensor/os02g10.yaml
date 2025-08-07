@@ -1,5 +1,5 @@
 sensor:
-  name: os02b10
+  name: os02g10
   address: 0x3c
   width: 1920
   height: 1080
