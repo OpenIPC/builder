@@ -83,7 +83,7 @@ copy_to_tftp() {
 }
 
 select_device() {
-    AVAILABLE_DEVICES=$(find common devices -name *_defconfig | sort | cut -d/ -f5)
+    AVAILABLE_DEVICES=$(find devices -name *_defconfig | sort | cut -d/ -f5)
     cmd="whiptail --title \"Available devices\" --menu \"Please select a device from the list below:\" 20 70 12"
     for p in ${AVAILABLE_DEVICES//_defconfig}; do cmd="${cmd} \"$p\" \"\""; done
     DEVICE=$(eval "${cmd} 3>&1 1>&2 2>&3")
@@ -100,7 +100,7 @@ echo_c 30 "Version: ${VERSION}"
 while [ -z "${DEVICE}" ]; do select_device; done
 
 echo_c 31 "\nStarting a device for ${DEVICE}"
-ITEM=$(find common devices -name ${DEVICE}_defconfig | cut -d/ -f1,2)
+ITEM=$(find devices -name ${DEVICE}_defconfig | cut -d/ -f1,2)
 tree -C "${ITEM}"
 
 sleep 3
