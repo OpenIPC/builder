@@ -12,9 +12,9 @@
 # By default this script does nothing.
 
 
-#(resetd.sh >/dev/null 2>&1) &
+(resetd.sh >/dev/null 2>&1) &
 #
-#(while true; do sleep 30; checker=$(pidof majestic); if [[ -z $checker ]]; then /etc/init.d/S95majestic start; fi; done) &
+(while true; do sleep 30; checker=$(pidof majestic); if [[ -z $checker ]]; then /etc/init.d/S95majestic start; fi; done) &
 
 
 exit 0
