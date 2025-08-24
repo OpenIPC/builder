@@ -20,10 +20,11 @@ Azarton C1               T20X         JXF23     RTL8189FS_SDIO   NOR_16M   done
 Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
 Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
 Bathhouse                HI3518EV300  ?         RTL8188FU_USB    NOR_8M    research
+Botslab C213             T23N         SC3332    ATBM6012B_USB    NOR_8M    **INIT** - frozen
 ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no
 ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
 CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   done
-CMCC HDC-51 A6-V11       T31L         JXF37     RTL8188FU_USB    NOR_16M   in progress
+CMCC HDC-51 A6-V10       T31L         JXF37     RTL8188FU_USB    NOR_16M   done
 CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in progress
 Emax Wyvern Link         SSC338Q      IMX415                     NOR_16M   done
@@ -36,31 +37,36 @@ iFlytek XFP301-M         T31ZX        JXQ03     RTL8188FU_USB    NOR_16    resea
 Imilab EC3 CMSXJ25A      SSC325       GC2053    MT7603UN_?       NOR_16M   in progress
 Imou IPC-C22E-S2-v2      SSC335DE     GC2053    RTL8188FU_USB    NOR_16M   done
 Imou IPC-C22EP-S2        SSC325DE     SC2239    RTL8188FU_USB    NAND      testing stage 1
-Imou IPC-C22EP-S2 ?      SSC325DE     SC2335    RTL8188FU_USB    NAND      wait driver
+Imou IPC-C22EP-S2 ?      SSC325DE     SC2335    RTL8188FU_USB    NAND      wait sensor driver
 Imou IPC-С22СP           SSC325       SC2239    RTL8188FU_USB    NOR_8M    in progress
+Jooan A6M-U              T23N         SC1346    ATBM6012B_USB    NOR_8M    **INIT** - in progress
+Jooan A6M-U vB           T23N         SC1A4T    ATBM6012B_USB    NOR_8M    **INIT** - in progress
+Jooan Q3R-U              T23N         SC1346    ATBM6012B_USB    NOR_8M    **INIT** - in progress
 JVS INGT10 GQS60EP       T10A         OV9750    -                NOR_8M    done
 Lenovo Snowman 1080P     HI3518EV200  SC2035    RTL8188EUS_USB   NOR_16M   in progress, LightSensor-no
+LSC 3215672              T23N         SC2331    ATBM6012B_USB    NOR_8M    **INIT** - progress
 Meari Speed 6S           SSC333       JXF37     RTL8188FU_USB    NOR_16M   video-yes, wifi-yes, motors-no
 OpenIPC AIO Mario        SSC338Q      IMX335    RTL8812AU_USB    NOR_16M   done
-OpenIPC AIO Thinker      SSC338Q      IMX335                     NOR_16M   in progress
+OpenIPC AIO Thinker      SSC338Q      IMX335                     NOR_16M   done
 OpenIPC AIO UltraSight   SSC338Q      IMX415    RTL8812AU_USB    NOR_16M   done
 OpenIPC URLLC            SSC338Q                                 NOR_16M   done
 Qtech QVC-IPC-136W       HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
-Rostelecom IPC8232SWC-WE HI3516EV300  SP2305    RTL8188FU_USB    NAND      testing
+Rostelecom IPC8232SWC-WE HI3516EV300  SP2305    RTL8188FU_USB    NAND      done
 RunCam WiFiLink          SSC338Q      IMX415                     NOR_16M   done
 RVi-1NCMW2028 (2.8)      HI3516EV300  SC2330    RTL8188FU_USB    NAND      testing
-Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   in progress
+Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   done
 Smartwares CIP-37210AT   T21N         JXF37     RTL8188FU_USB    NOR_16M   done
 Switcam HS303 v1         HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   done
 Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
 Tiandy TC-C321N          GK7205V200   OS02G10   -                NOR_8M    done
-Tiandy TC-C321N v2       SSC337       SC2336P   -                NOR_8M    testing now
+Tiandy TC-C321N v2       SSC337       SC2336P   -                NOR_8M    done
 Tiandy TC-C32QN          GK7205V210   OS02G10   -                NOR_8M    done
 TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    done
 TP-Link Tapo C110 v1     SSC337       SC3335    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v26    SSC333       ?         ?                NOR_?     done
 TP-Link Tapo C310 v1     SSC325       SC3335    RTL8192EU_USB    NOR_8M    in progress
+TP-Link Tapo TC60 V5     T23N                   WQ9001_?         NOR_8M    **INIT** - frozen
 TP-Link Tapo TC70 V3     T31L         SC2336    RTL8188FU_USB    NOR_8M    done
 Trassir TR-D4121IR1 v2   HI3516CV200  AR0237    -                NOR_16M   done
 Trassir TR-W2C1 v1       SSC325       GC2053    MT7601U_USB      NOR_16M   done
@@ -68,17 +74,18 @@ Trassir TR-W2C1 v2       SSC335       GC2053    MT7601U_USB      NOR_16M   done
 Tuya GV7630-T31-PTZ      T31L         SC2336    ATBM6012B_USB    NOR_8M    in progress
 Umea QC012               GK7102C_A    MIS2003   RDA5995_USB      MOR_8M    wip
 Uniview C1L-2WN-G        SSC335DE     OS02G10   RTL8188FU_USB    NOR_16M   done
-Vixand IPC-1             GK7205V200   none      EC200N_USB       NOR_8M    insert
-Vixand IPH-5-4G          GK7205V200   SC2239    EC200N_USB       NOR_8M    insert
-Vixand IVG-G3S           GK7205V210   IMX307    -                NOR_16M   !
-Vixand IVG-G4F-A         GK7205V210   SC223A    -                NOR_16M   !
+Vixand IPC-1             GK7205V200   none      EC200N_USB       NOR_8M    frozen
+Vixand IPH-5-4G          GK7205V200   SC2239    EC200N_USB       NOR_8M    frozen
+Vixand IVG-G3S           GK7205V210   IMX307    -                NOR_16M   in progress
+Vixand IVG-G4F-A         GK7205V210   SC223A    -                NOR_16M   in progress
 Vixand IVG-G4F-A-W       GK7205V210   SC223A    ATBM6032i_USB    NOR_16M   w/ext wifi board
 Vixand IVG-G4H           GK7205V210   MIS2008   -                NOR_16M   done
 Vixand IVG-G6S-W         GK7205V300   IMX335    ATBM6032i_USB    NOR_16M   w/ext wifi board
-VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
-VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip
 VStarcam C43S(B)         SSC333       JXF37     MT7601U_USB      NOR_16M   in progress
 VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in progress
+VStarcam C8622           T23N         SC2336P   AIC8800DL_?      NOR_8M    **INIT** - in progress
+VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
+VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip
 Wansview Q5 1080p        T21Z         OV2735B   RTL8188FU_USB    NOR_16M   in progress
 Wansview Q5 2K           T31L         SC2336    ATBM6031_SDIO    NOR_8M    done
 Wyze V3 (WYZEC3B)        T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
