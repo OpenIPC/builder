@@ -37,7 +37,7 @@ cli -s .audio.outputVolume 80
 # Set motor and mmc
 #
 #fw_setenv gpio_mmc XX
-fw_setenv gpio_motors 59 60 8 9 111 112 113 114
+fw_setenv gpio_motors 111 112 113 114 59 60 8 9
 #
 #
 #adduser viewer -s /bin/false -D -H ; echo viewer:123456 | chpasswd
