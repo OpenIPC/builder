@@ -1,10 +1,6 @@
-/etc/sensors/gc2023.bin
-#
-/lib/modules/4.9.84/sigmastar/sensor_gc2053_mipi.ko
-#
+
 /lib/modules/4.9.84/kernel/fs/lockd/lockd.ko
 /lib/modules/4.9.84/kernel/fs/nfs/nfs.ko
 /lib/modules/4.9.84/kernel/fs/nfs/nfsv3.ko
 /lib/modules/4.9.84/kernel/fs/nfs_common/grace.ko
 /lib/modules/4.9.84/kernel/net/sunrpc/sunrpc.ko
-/lib/modules/4.9.84/sigmastar/sensor_gc5053_mipi.ko
