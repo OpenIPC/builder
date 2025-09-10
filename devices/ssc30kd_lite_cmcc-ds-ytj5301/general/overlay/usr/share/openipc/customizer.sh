@@ -23,7 +23,7 @@ cli -s .audio.srate 48000
 cli -s .audio.volume 80
 cli -s .audio.outputEnabled true
 cli -s .audio.outputVolume 80
-#cli -s .audio.speakerPin XX
+cli -s .audio.speakerPin 11
 #cli -s .audio.speakerPinInvert true
 #
 #
