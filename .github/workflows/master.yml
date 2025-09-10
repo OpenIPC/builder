@@ -93,6 +93,7 @@ jobs:
           - t31_ultimate_azarton-c1-t31x
           - t31_ultimate_gcraftsman-gca50
           - t31_lite_zte-k540
+          - t40_lite_movols-mo-805p
 
           # APFPV
           - ssc338q_apfpv
