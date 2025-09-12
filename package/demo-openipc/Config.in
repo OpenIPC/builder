@@ -1,0 +1,7 @@
+config BR2_PACKAGE_DEMO_OPENIPC
+	bool "demo-openipc"
+	default n
+	help
+	  Demo package
+
+	  https://openipc.org
