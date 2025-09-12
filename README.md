@@ -107,6 +107,7 @@ Many devices sold in online stores are clones of original devices or, more often
 ```
 Model names                            Our firmware
 
+Dahua IPC-HFW1230SP-V3          =>     Dahua IPC-HFW1230SP-V2
 Dahua IPC-C22C-LC               =>     Imou IPC-С22CP
 Imou IPC-С22EP-A                =>     Imou IPC-С22CP
 Imou IPC-F22AP                  =>     Imou IPC-С22CP
