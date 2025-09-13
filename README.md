@@ -131,7 +131,16 @@ fw_setenv wlanssid 'OpenIPC'
 fw_setenv wlanpass 'mypassword'
 reboot
 ```
-
+#### Audio Settings for Dahua-IPC-HFW1230SP-V3 and Dahua-IPC-HFW1230SP-V2 (if a microphone is installed)
+Run these commands and enjoy:
+```
+cli -s .audio.enabled: true
+cli -s .audio.volume: 85
+cli -s .audio.srate: 48000
+cli -s .audio.codec: pcm
+cli -s .audio.inputChannel 1
+reboot
+```
 
 ### Requirements for registration of new devices
 
