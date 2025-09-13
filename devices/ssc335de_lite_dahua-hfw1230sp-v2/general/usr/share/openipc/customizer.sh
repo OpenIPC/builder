@@ -17,6 +17,9 @@ cli -s .nightMode.irCutPin1 79
 cli -s .nightMode.irCutPin2 78
 cli -s .nightMode.backlightPin 52
 cli -s .nightMode.colorToGray true
+cli -s .audio.enabled true
+cli -s .audio.codec aac
+cli -s .audio.srate 48000
 cli -s .audio.inputChannel 1
 #
 
