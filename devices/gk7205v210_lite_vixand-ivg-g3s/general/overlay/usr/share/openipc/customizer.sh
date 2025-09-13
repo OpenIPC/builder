@@ -5,6 +5,7 @@
 #
 # Set custom upgrade url
 #
+fw_setenv soc gk7205v210
 fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/gk7205v210_lite_vixand-ivg-g3s-nor.tgz'
 #
 #
@@ -12,7 +13,7 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/g
 #
 cli -s .nightMode.irCutPin1 8
 cli -s .nightMode.irCutPin2 9
-cli -s .nightMode.backlightPin 14
+cli -s .nightMode.backlightPin 16
 #cli -s .nightMode.lightMonitor true
 cli -s .nightMode.minThreshold 2000
 cli -s .nightMode.maxThreshold 14000
