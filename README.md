@@ -81,6 +81,7 @@ Vixand IVG-G3S           GK7205V210   IMX307    -                NOR_16M   in pr
 Vixand IVG-G4F-A         GK7205V210   SC223A    -                NOR_16M   in progress
 Vixand IVG-G4F-A-W       GK7205V210   SC223A    ATBM6032i_USB    NOR_16M   w/ext wifi board
 Vixand IVG-G4H           GK7205V210   MIS2008   -                NOR_16M   done
+Vixand IVG-G6S           GK7205V300   IMX335    -                NOR_16M   done
 Vixand IVG-G6S-W         GK7205V300   IMX335    ATBM6032i_USB    NOR_16M   w/ext wifi board
 VStarcam C43S(B)         SSC333       JXF37     MT7601U_USB      NOR_16M   in progress
 VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in progress
