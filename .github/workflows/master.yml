@@ -21,6 +21,7 @@ jobs:
       matrix:
         platform:
           - gk7202v300_lite_cootli_camv0103
+          - gk7202v300_lite_ipg-g3-wr
           - gk7202v300_lite_xg521
           - gk7205v200_lite_tiandy-tc-c321n
           - gk7205v200_lite_vixand-ipc-1

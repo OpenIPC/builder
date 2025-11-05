@@ -23,6 +23,7 @@
 /etc/sensors/sc4236_i2c_3M.ini
 /etc/sensors/sp2305_i2c_1080p.ini
 /etc/sensors/smtsec_imx307_i2c_4l_1080p.ini
+/etc/sensors/jxh63_i2c_720p.ini
 #
 /etc/sensors/60fps/720p_imx307_i2c_2l.ini
 /etc/sensors/WDR/5M_imx335.ini
@@ -53,6 +54,7 @@
 /usr/lib/sensors/libsns_sc3335.so
 /usr/lib/sensors/libsns_sc4236.so
 /usr/lib/sensors/libsns_sp2305.so
+/usr/lib/sensors/libsns_h63.so
 #
 /lib/modules/4.9.37/kernel/drivers/i2c/busses/i2c-tiny-usb.ko
 /lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek/mt7601u/mt7601u.ko
