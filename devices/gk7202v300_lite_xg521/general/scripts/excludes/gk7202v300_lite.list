@@ -12,6 +12,7 @@
 /usr/lib/sensors/libsns_sc2335.so
 /usr/lib/sensors/libsns_sc3235.so
 /usr/lib/sensors/libsns_sc3335.so
+/usr/lib/sensors/libsns_h63.so
 #
 /etc/sensors/4l_sc223a_i2c_1080p.ini
 /etc/sensors/5M_imx335.ini
@@ -34,3 +35,4 @@
 /etc/sensors/sc223a_i2c_1080p.ini
 /etc/sensors/sc2335_i2c_1080p.ini
 /etc/sensors/smtsec_imx307_i2c_4l_1080p.ini
+/etc/sensors/jxh63_i2c_720p.ini
