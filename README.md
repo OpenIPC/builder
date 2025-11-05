@@ -98,6 +98,7 @@ Xiaomi MJSXJ03HL         T31N         JXQ03P    RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   preparation
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 4G Camera XG521 V1.2     GK7202V300   GC1054    EC800E-CN_USB    NOR_8M    done
+XM IPG-G3-WR             GK7202V300   JXH63     ATBM60321S_USB   NOR_8M    done
 ```
 
 
