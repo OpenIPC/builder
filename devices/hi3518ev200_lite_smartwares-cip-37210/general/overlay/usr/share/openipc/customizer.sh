@@ -14,5 +14,10 @@ cli -s .audio.speakerPinInvert true
 
 # Set wlan settings
 fw_setenv wlandev rtl8188fu-generic
+#
+#
+# Other custom settings
+#
+fw_setenv extras initcall_blacklist=hisi_femac_driver_init
 
 exit 0
