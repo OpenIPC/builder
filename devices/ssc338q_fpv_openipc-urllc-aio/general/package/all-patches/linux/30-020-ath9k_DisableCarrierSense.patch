@@ -1,0 +1,154 @@
+--- a/drivers/net/wireless/ath/ath9k/hw.c	2023-10-29 23:13:23.000000000 +0200
++++ b/drivers/net/wireless/ath/ath9k/hw.c	2023-10-29 23:51:03.576486582 +0200
+@@ -45,6 +45,12 @@
+ u8 ofdm_sifs_man = 16;
+ u8 slottime_man = 9;
+ u8 thresh62_man = 28;
++u8 disable_CS  = 1;
++u8 disable_CS_man = 0;
++u8 CTSTimeOut_man = 0;
++u8 ACKTimeOut_man = 0;
++u8 CTSTimeOut = 0;
++u8 ACKTimeOut = 0;
+ 
+ module_param_named(txpower, tx_power_man, byte, 0444);
+ MODULE_PARM_DESC(txpower, "Manual TX power setting, default 58, max 63");
+@@ -59,7 +65,7 @@
+ MODULE_PARM_DESC(aifs, "AIFS setting, default 2");
+ 
+ module_param_named(cck_sifs, cck_sifs_man, byte, 0444);
+-MODULE_PARM_DESC(cck_sifs, "CCK SIFS setting, default 10");
++MODULE_PARM_DESC(cck_sifs,"AR_USEC_TX_LAT, default 10");
+ 
+ module_param_named(ofdm_sifs, ofdm_sifs_man, byte, 0444);
+ MODULE_PARM_DESC(ofdm_sifs, "OFDM SIFS setting, default 16");
+@@ -70,6 +76,16 @@
+ module_param_named(thresh62, thresh62_man, byte, 0444);
+ MODULE_PARM_DESC(thresh62, "CCA THRESH62 setting, default 28");
+ 
++module_param_named(disable_CS,disable_CS_man,byte,0444);
++MODULE_PARM_DESC(disable_CS,"Disable Carrier Sense  default 0");
++
++module_param_named(CTSTimeOut,CTSTimeOut_man,byte,0444);
++MODULE_PARM_DESC(CTSTimeOut,"CTSTimeOut  default 0");
++ 
++module_param_named(ACKTimeOut,ACKTimeOut_man,byte,0444);
++MODULE_PARM_DESC(ACKTimeOut,"ACKTimeOut  default 0");
++
++
+ static void ath9k_hw_set_clockrate(struct ath_hw *ah)
+ {
+ 	struct ath_common *common = ath9k_hw_common(ah);
+@@ -1052,6 +1068,7 @@
+ 	int sifstime;
+ 	int rx_lat = 0, tx_lat = 0, eifs = 0;
+ 	u32 reg;
++	int qnum=0;
+ 
+ 	ath_dbg(ath9k_hw_common(ah), RESET, "ah->misc_mode 0x%x\n",
+ 		ah->misc_mode);
+@@ -1134,6 +1151,26 @@
+ 		ah->dynack.ackto = acktimeout;
+ 	}
+ 
++	bool register_override=false;	
++	if (ofdm_sifs_man!=16) {
++			sifstime=ofdm_sifs_man;
++			eifs=ofdm_sifs_man;	
++			register_override=true;	
++	}
++	if (ACKTimeOut_man!=0){
++			acktimeout=	ACKTimeOut_man;
++			register_override=true;
++	}
++	if (CTSTimeOut_man!=0){
++			ctstimeout=CTSTimeOut_man;
++			register_override=true;
++	}
++	
++	if (cck_sifs_man!=10){
++		tx_lat=cck_sifs_man*10;
++		register_override=true;
++	}
++
+ 	ath9k_hw_set_sifs_time(ah, sifstime);
+ 	ath9k_hw_setslottime(ah, slottime);
+ 	ath9k_hw_set_ack_timeout(ah, acktimeout);
+@@ -1148,6 +1185,19 @@
+ 		SM(tx_lat, AR_USEC_TX_LAT),
+ 		AR_USEC_TX_LAT | AR_USEC_RX_LAT | AR_USEC_USEC);
+ 
++	ath_err(common,"SET rx_lat:%d, tx_lat:%d, sifstime:%d, eifs:%d, slottime:%d, acktimeout:%d, ctstimeout:%d",rx_lat, tx_lat, sifstime, eifs, slottime, acktimeout, ctstimeout);
++
++	if(disable_CS_man==1){
++ 		ath_err(ath9k_hw_common(ah),  "Disabled Carrier Sense! %d !\n",disable_CS, disable_CS_man);
++ 		REG_SET_BIT(ah, AR_DIAG_SW, AR_DIAG_FORCE_RX_CLEAR);
++    	REG_SET_BIT(ah, AR_DIAG_SW, AR_DIAG_IGNORE_VIRT_CS);
++ 		REG_SET_BIT(ah, AR_DIAG_SW, AR_DIAG_FORCE_CH_IDLE_HIGH);
++	}
++
++	if (register_override || disable_CS_man==1){	
++		for (qnum=0;qnum<7;qnum++)
++			REG_WRITE(ah, AR_DLCL_IFS(qnum), 0);
++	}
+ }
+ EXPORT_SYMBOL(ath9k_hw_init_global_settings);
+ 
+--- a/drivers/net/wireless/ath/ath9k/mac.c	2023-10-29 23:13:23.000000000 +0200
++++ b/drivers/net/wireless/ath/ath9k/mac.c	2023-10-29 23:56:49.383741779 +0200
+@@ -18,6 +18,12 @@
+ #include "hw-ops.h"
+ #include <linux/export.h>
+ 
++extern u8 cwmin_man;
++extern u8 cwmax_man;
++extern u8 aifs_man;
++extern u8 cck_sifs;
++extern u8 ofdm_sifs;
++
+ static void ath9k_hw_set_txq_interrupts(struct ath_hw *ah,
+ 					struct ath9k_tx_queue_info *qi)
+ {
+@@ -217,6 +217,7 @@
+ 		qi->tqi_aifs = min(qinfo->tqi_aifs, 255U);
+ 	else
+ 		qi->tqi_aifs = aifs_man;
++		
+ 	if (qinfo->tqi_cwmin != ATH9K_TXQ_USEDEFAULT) {
+ 		cw = min(qinfo->tqi_cwmin, 1024U);
+ 		qi->tqi_cwmin = 1;
+@@ -245,6 +246,21 @@
+ 	qi->tqi_burstTime = qinfo->tqi_burstTime;
+ 	qi->tqi_readyTime = qinfo->tqi_readyTime;
+ 
++	bool override=false;
++	if (cwmax_man!=15){
++			qi->tqi_cwmax=cwmax_man;
++			override=true;
++	}
++	if (cwmin_man!=7){
++			qi->tqi_cwmin=cwmin_man;
++			override=true;
++	}
++	if (aifs_man!=2){
++	        qi->tqi_aifs = aifs_man;
++			override=true;
++	}
++
++
+ 	switch (qinfo->tqi_subtype) {
+ 	case ATH9K_WME_UPSD:
+ 		if (qi->tqi_type == ATH9K_TX_QUEUE_DATA)
+@@ -254,6 +270,11 @@
+ 		break;
+ 	}
+ 
++	if (override){
++		REG_WRITE(ah, AR_DLCL_IFS(q), 0);
++		ath_err(common, "SET cwmax:%d, cwmin:%d, aifs:%d  for queu:%d", qi->tqi_cwmax, qi->tqi_cwmin, qi->tqi_aifs,q);
++	}
++
+ 	return true;
+ }
+ EXPORT_SYMBOL(ath9k_hw_set_txq_props);
+
