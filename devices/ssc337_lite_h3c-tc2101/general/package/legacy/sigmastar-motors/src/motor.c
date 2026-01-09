@@ -101,8 +101,8 @@ int limit_value(int x) {
 }
 
 int main(int argc, char **argv) {
-	if (argc < 2 || argc > 3) {
-		printf("Usage: %s [x_step] [y_step]\n", argv[0]);
+	if (argc < 2 || argc > 4) {
+		printf("Usage: %s [x_step] [y_step] [delay (ms. unused)]\n", argv[0]);
 		return -1;
 	}
 
