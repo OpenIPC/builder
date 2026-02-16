@@ -56,6 +56,7 @@ jobs:
           - ssc333_lite_babysense-see-hd-ip206
           - ssc333_lite_vstarcam-c43s_b
           - ssc335_lite_tp-link-tapo-c110-v1
+          - ssc335_lite_tp-link-tapo-c310-v220
           - ssc335_lite_trassir-tr-w2c1-v2
           - ssc335de_lite_dahua-hfw1230sp-v2
           - ssc335de_lite_imou-c22e-s2-v2

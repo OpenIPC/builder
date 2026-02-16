@@ -67,6 +67,7 @@ TP-Link Tapo C110 v1     SSC337       SC3335    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v26    SSC333       ?         ?                NOR_?     done
 TP-Link Tapo C310 v1     SSC325       SC3335    RTL8192EU_USB    NOR_8M    in progress
+TP-Link Tapo C310 v2.20  SSC335       SC3338    RTL8192EU_USB    NOR_8M    testing
 TP-Link Tapo TC60 V5     T23N                   WQ9001_?         NOR_8M    **INIT** - frozen
 TP-Link Tapo TC70 V3     T31L         SC2336    RTL8188FU_USB    NOR_8M    done
 Trassir TR-D4121IR1 v2   HI3516CV200  AR0237    -                NOR_16M   done
