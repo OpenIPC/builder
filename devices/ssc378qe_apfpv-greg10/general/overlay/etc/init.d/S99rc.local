@@ -1,0 +1,41 @@
+#!/bin/sh
+
+MAJESTIC_API="http://localhost/api/v1/config.json"
+
+wait_for_majestic_ready() {
+    timeout="${1:-30}"
+    i=0
+    while [ "$i" -lt "$timeout" ]; do
+        curl -sf --connect-timeout 1 --max-time 2 "$MAJESTIC_API" >/dev/null 2>&1 && return 0
+        sleep 1
+        i=$((i + 1))
+    done
+    return 1
+}
+
+start() {
+    echo "S99rc.local: waiting for majestic API..."
+    if ! wait_for_majestic_ready 10; then
+        echo "S99rc.local: majestic API not ready after 10s; continuing with /etc/rc.local anyway"
+    else
+        echo "S99rc.local: majestic API ready"
+    fi
+    echo "S99rc.local: running /etc/rc.local"
+    /etc/rc.local
+}
+
+stop() {
+    [ -x /etc/rc.local.stop ] && /etc/rc.local.stop
+}
+
+case "$1" in
+    start|stop)
+        "$1"
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit $?
