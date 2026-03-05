@@ -101,6 +101,10 @@ jobs:
           # APFPV
           - ssc338q_apfpv
           - ssc378qe_apfpv
+          - ssc30kq_apfpv-greg
+          - ssc30kq_apfpv-greg_bu
+          - ssc338q_apfpv-greg
+          - ssc338q_apfpv-greg_bu
 
           # FPV
           - hi3516ev200_fpv
