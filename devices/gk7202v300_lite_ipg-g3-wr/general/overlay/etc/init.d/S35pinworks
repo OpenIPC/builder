@@ -1,0 +1,12 @@
+#!/bin/sh
+
+case "$1" in
+        start)
+
+            # bumping SDHCI driver
+            echo 10010000.sdhci > /sys/bus/platform/drivers/sdhci-goke/unbind
+            echo 10010000.sdhci > /sys/bus/platform/drivers/sdhci-goke/bind
+
+esac
+
+exit 0

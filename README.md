@@ -67,6 +67,7 @@ TP-Link Tapo C110 v1     SSC337       SC3335    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v26    SSC333       ?         ?                NOR_?     done
 TP-Link Tapo C310 v1     SSC325       SC3335    RTL8192EU_USB    NOR_8M    in progress
+TP-Link Tapo C310 v2.20  SSC335       SC3338    RTL8192EU_USB    NOR_8M    testing
 TP-Link Tapo TC60 V5     T23N                   WQ9001_?         NOR_8M    **INIT** - frozen
 TP-Link Tapo TC70 V3     T31L         SC2336    RTL8188FU_USB    NOR_8M    done
 Trassir TR-D4121IR1 v2   HI3516CV200  AR0237    -                NOR_16M   done
@@ -81,6 +82,7 @@ Vixand IVG-G3S           GK7205V210   IMX307    -                NOR_16M   in pr
 Vixand IVG-G4F-A         GK7205V210   SC223A    -                NOR_16M   in progress
 Vixand IVG-G4F-A-W       GK7205V210   SC223A    ATBM6032i_USB    NOR_16M   w/ext wifi board
 Vixand IVG-G4H           GK7205V210   MIS2008   -                NOR_16M   done
+Vixand IVG-G6S           GK7205V300   IMX335    -                NOR_16M   done
 Vixand IVG-G6S-W         GK7205V300   IMX335    ATBM6032i_USB    NOR_16M   w/ext wifi board
 VStarcam C43S(B)         SSC333       JXF37     MT7601U_USB      NOR_16M   in progress
 VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in progress
@@ -97,6 +99,7 @@ Xiaomi MJSXJ03HL         T31N         JXQ03P    RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   preparation
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 4G Camera XG521 V1.2     GK7202V300   GC1054    EC800E-CN_USB    NOR_8M    done
+XM IPG-G3-WR             GK7202V300   JXH63     ATBM60321S_USB   NOR_8M    done
 ```
 
 
@@ -107,6 +110,7 @@ Many devices sold in online stores are clones of original devices or, more often
 ```
 Model names                            Our firmware
 
+Dahua IPC-HFW1230SP-V3          =>     Dahua IPC-HFW1230SP-V2
 Dahua IPC-C22C-LC               =>     Imou IPC-С22CP
 Imou IPC-С22EP-A                =>     Imou IPC-С22CP
 Imou IPC-F22AP                  =>     Imou IPC-С22CP
@@ -114,6 +118,7 @@ Switcam HS303 v3                =>     Qtech QVC-IPC-136W
 Tiandy TC-C320N                 =>     Tiandy TC-C321N
 Tiandy TC-C320N v2              =>     Tiandy TC-C321N v2
 TP-Link Tapo C110 v2.20         =>     TP-Link Tapo C110 v2
+TP-Link Tapo C200 v3.00         =>     TP-Link Tapo TC70 V3
 Rostelecom IPC8232SWC-WE-B      =>     Uniview C1L-2WN-G
 Rostelecom IPC C22E-S2 v2       =>     Imou IPC-C22E-S2-v2
 Uniview C1L-2WN-G-RU            =>     Uniview C1L-2WN-G

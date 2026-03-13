@@ -35,5 +35,10 @@ fw_setenv wlandev rtl8188fu-generic
 fw_setenv osmem 39M
 fw_setenv rmem 25M@0x2700000
 #
+#
+# Led crutch
+#
+sed -i '/exit 1/i\\tsh /usr/share/openipc/muxes.sh' /usr/sbin/qrscan.sh
+#
 
 exit 0

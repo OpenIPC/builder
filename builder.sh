@@ -93,6 +93,21 @@ select_device() {
     fi
 }
 
+copy_extra_packages() {
+    extra_package=${BUILDER_DIR}/package
+    firmware_package=${FIRMWARE_DIR}/general/package
+    cp -afv $extra_package/* $firmware_package
+    package_list_file=$firmware_package/Config.in
+    for f in "$extra_package"/*
+    do
+        package_name=$(basename $f)
+        if ! grep -Fq "$package_name" $package_list_file
+        then
+            printf 'source "$BR2_EXTERNAL_GENERAL_PATH/package/%s/Config.in"\n' $package_name >> $package_list_file
+        fi
+    done
+}
+
 echo_c 37 "Experimental system for building OpenIPC firmware for known devices"
 echo_c 30 "https://openipc.org/"
 echo_c 30 "Version: ${VERSION}"
@@ -119,6 +134,9 @@ else
     # git reset HEAD --hard
     # git pull --rebase
 fi
+
+echo_c 33 "\nCopying extra packages"
+copy_extra_packages
 
 echo_c 33 "\nCopying device files"
 cp -afv ${BUILDER_DIR}/${ITEM}/* ${FIRMWARE_DIR}

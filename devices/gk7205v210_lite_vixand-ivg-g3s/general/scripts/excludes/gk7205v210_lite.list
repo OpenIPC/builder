@@ -14,6 +14,7 @@
 /etc/sensors/sc223a_i2c_1080p.ini
 /etc/sensors/sc2335_i2c_1080p.ini
 /etc/sensors/smtsec_imx307_i2c_4l_1080p.ini
+/etc/sensors/jxh63_i2c_720p.ini
 #
 /etc/sensors/iq/imx335.ini
 /etc/sensors/iq/sc2232.ini
@@ -33,6 +34,7 @@
 /usr/lib/sensors/libsns_sc2232h.so
 /usr/lib/sensors/libsns_sc3235.so
 /usr/lib/sensors/libsns_sc3335.so
+/usr/lib/sensors/libsns_h63.so
 #
 /lib/modules/4.9.37/kernel/drivers/i2c/busses/i2c-tiny-usb.ko
 /lib/modules/4.9.37/kernel/drivers/scsi/scsi_mod.ko

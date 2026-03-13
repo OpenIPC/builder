@@ -1,0 +1,38 @@
+#!/bin/sh
+
+case "$1" in
+        start)
+
+            # Unmuxing GPIO12, GPIO13, GPIO14, GPIO15 (motor H connector)
+            devmem 0x120c0010 32 0x2
+            devmem 0x120c0014 32 0x2
+            devmem 0x120c0018 32 0x2
+            devmem 0x120c001c 32 0x2
+
+            # irled gpio
+            devmem 0x120c0020 32 0x2
+
+
+            # I2C0 mux
+            devmem 0x112c0060 32 0x2
+            devmem 0x112c0064 32 0x2
+
+            # other like a stock
+            devmem 0x112c0044 32 0x1
+            devmem 0x112c0048 32 0x2
+            devmem 0x112c0054 32 0x2
+            devmem 0x120f0020 32 0x0
+
+            # fix after load
+            devmem 0x112c0028 32 0x0
+            devmem 0x112c002c 32 0x0
+            devmem 0x112c0030 32 0x0
+            devmem 0x112c0034 32 0x0
+            # Unpower motors winding (GPIO13 is HI after kernel modules load)
+            #
+            gpio clear 13
+            gpio unexport 13
+
+esac
+
+exit 0

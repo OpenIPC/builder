@@ -21,6 +21,7 @@ jobs:
       matrix:
         platform:
           - gk7202v300_lite_cootli_camv0103
+          - gk7202v300_lite_ipg-g3-wr
           - gk7202v300_lite_xg521
           - gk7205v200_lite_tiandy-tc-c321n
           - gk7205v200_lite_vixand-ipc-1
@@ -30,6 +31,7 @@ jobs:
           - gk7205v210_lite_vixand-ivg-g4f-a
           - gk7205v210_lite_vixand-ivg-g4f-a-w
           - gk7205v210_lite_vixand-ivg-g4h
+          - gk7205v300_lite_vixand-ivg-g6s
           - gk7205v300_lite_vixand-ivg-g6s-w
           - hi3516cv200_lite_trassir-tr-d4121ir1-v2
           - hi3516ev300_ultimate_rostelecom-ipc8232swc-we
@@ -54,6 +56,7 @@ jobs:
           - ssc333_lite_babysense-see-hd-ip206
           - ssc333_lite_vstarcam-c43s_b
           - ssc335_lite_tp-link-tapo-c110-v1
+          - ssc335_lite_tp-link-tapo-c310-v220
           - ssc335_lite_trassir-tr-w2c1-v2
           - ssc335de_lite_dahua-hfw1230sp-v2
           - ssc335de_lite_imou-c22e-s2-v2
@@ -93,6 +96,7 @@ jobs:
           - t31_ultimate_azarton-c1-t31x
           - t31_ultimate_gcraftsman-gca50
           - t31_lite_zte-k540
+          - t40_lite_movols-mo-805p
 
           # APFPV
           - ssc338q_apfpv

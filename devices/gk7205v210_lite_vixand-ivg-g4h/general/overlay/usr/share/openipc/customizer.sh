@@ -18,13 +18,13 @@ cli -s .osd.enabled true
 cli -s .osd.template "OpenIPC | %F %T %Z"
 cli -s .audio.enabled true
 cli -s .audio.volume 50
-cli -s .nightMode.irCutPin1 8              # or vice versa
-cli -s .nightMode.irCutPin2 9
-cli -s .nightMode.backlightPin 14          # or 16
+#cli -s .audio.speakerPin 55
+cli -s .nightMode.irCutPin1 9              # or vice versa
+cli -s .nightMode.irCutPin2 8
+cli -s .nightMode.backlightPin 16          # or 14
 #cli -s .nightMode.lightMonitor true
 cli -s .nightMode.minThreshold 2000
 cli -s .nightMode.maxThreshold 14000
-#cli -s .audio.speakerPin 55
 #
 #
 # Set wlan device and credentials if need
