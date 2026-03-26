@@ -5,7 +5,7 @@
 #
 # Set custom upgrade url
 #
-# fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t31_lite_tuya_moes_wcm-p52-nor.tgz'
+# fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t31_lite_tuya-moes-wcm-p52-nor.tgz'
 #
 #
 # Set custom majestic settings
