@@ -71,6 +71,7 @@ jobs:
           - ssc338q_fpv_openipc-thinker-aio
           - ssc338q_fpv_openipc-urllc-aio
           - ssc338q_fpv_runcam-wifilink
+          - ssc377qe_fpv_generic
           - t10_lite_hb-wifi-z6
           - t10_lite_jvs-ingt10-gqs60ep
           - t20_ultimate_azarton-c1
