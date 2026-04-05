@@ -100,7 +100,11 @@ jobs:
           - t40_lite_movols-mo-805p
 
           # APFPV
+          - ssc30kq_apfpv_greg-generic-bu-eu
+          - ssc30kq_apfpv_greg-generic-cu-eu
           - ssc338q_apfpv
+          - ssc338q_apfpv_greg-generic-bu-eu
+          - ssc338q_apfpv_greg-generic-cu-eu
           - ssc378qe_apfpv
 
           # FPV
