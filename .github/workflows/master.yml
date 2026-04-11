@@ -116,6 +116,7 @@ jobs:
           - gk7205v300_fpv
           - ssc30kq_fpv
           - ssc338q_fpv
+          - ssc377qe_fpv_ccdcam-im50q01-tipoman
           - ssc378qe_fpv
 
           # Ruby
