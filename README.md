@@ -57,6 +57,7 @@ RunCam WiFiLink          SSC338Q      IMX415                     NOR_16M   done
 RVi-1NCMW2028 (2.8)      HI3516EV300  SC2330    RTL8188FU_USB    NAND      testing
 Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   done
 Smartwares CIP-37210AT   T21N         JXF37     RTL8188FU_USB    NOR_16M   done
+Smitch 360 PTZ           HI3518EV300  JXF23     RTL8188FU_USB    NOR_16M   video-yes, wifi-yes, motors-no
 Switcam HS303 v1         HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   done
 Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
 Tiandy TC-C321N          GK7205V200   OS02G10   -                NOR_8M    done
@@ -168,7 +169,7 @@ cd builder
 ./builder.sh
 ```
 
-### Create firmware with built-in credentials
+### Recreate firmware with built-in router credentials
 - Usage: `repack.sh [uboot] [firmware] [ssid] [pass]`
 ```
 sh repack.sh ssc337de ssc337de_ultimate_foscam-x5-nor router password
