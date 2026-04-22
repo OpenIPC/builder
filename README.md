@@ -21,7 +21,7 @@ Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
 Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
 Bathhouse                HI3518EV300  ?         RTL8188FU_USB    NOR_8M    research
 Botslab C213             T23N         SC3332    ATBM6012B_USB    NOR_8M    **INIT** - frozen
-CCDCAM IM50Q01           SSC377Q      IMX335    -                NOR_16M   done
+CCDCAM IM50Q01           SSC377QE     IMX335    -                NOR_16M   done
 ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no
 ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
 CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   done
