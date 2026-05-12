@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set_gpio() {
+	[ "$2" -eq 1 ] && gpio set $1 || gpio clear $1
+	sleep 1
+}
+
+# Detect USB WiFi adapters and load appropriate driver
+if [ "$1" = "rtl8812au-generic" ] || [ "$1" = "rtl8812eu-generic" ]; then
+	# Detect which adapter is connected
+	for card in $(lsusb | awk '{print $6}' | uniq); do
+		case "$card" in
+			"0bda:8812" | "0bda:881a" | "0b05:17d2" | "2357:0101" | "2604:0012")
+				modprobe 8812au
+				exit 0
+				;;
+			"0bda:a81a")
+				modprobe 8812eu
+				exit 0
+				;;
+		esac
+	done
+fi
+
+exit 1
