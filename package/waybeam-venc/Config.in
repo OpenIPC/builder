@@ -1,0 +1,9 @@
+config BR2_PACKAGE_WAYBEAM_VENC
+	bool "waybeam-venc"
+	default n
+	help
+	  Standalone H.265/H.264 encoder and RTP streamer for
+	  Sigmastar Star6E (Infinity6E) and Maruko (Infinity6C).
+	  Replaces Majestic on supported devices.
+
+	  https://github.com/snokvist/waybeam_venc
