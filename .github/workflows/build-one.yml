@@ -58,6 +58,15 @@ jobs:
           path: /tmp/ccache
           key: ${{inputs.platform}}-${{env.CACHE_DATE}}
 
+      # See master.yml for the rationale — builder.sh rm -rf's openipc/
+      # every run, so dl/ has to live outside via BR2_DL_DIR.
+      - name: Setup dl cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/builder-dl
+          key: builder-dl-${{env.CACHE_DATE}}
+          restore-keys: builder-dl-
+
       - name: Build firmware
         env:
           BUILD_ID:       ${{ needs.resolve.outputs.tag_name }}
@@ -72,6 +81,9 @@ jobs:
 
           mkdir -p /tmp/ccache
           ln -s /tmp/ccache ${HOME}/.ccache
+
+          mkdir -p /tmp/builder-dl
+          export BR2_DL_DIR=/tmp/builder-dl
 
           NAME=${{inputs.platform}}
           # Retry budget for transient upstream toolchain/CDN flakes
