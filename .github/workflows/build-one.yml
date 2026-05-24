@@ -6,7 +6,10 @@ on:
         description: 'Platform to build (e.g. hi3518ev200_lite_switcam-hs303-v2)'
         required: true
       commit:
-        description: 'Commit SHA to build (optional; defaults to current branch HEAD). Use this from `git bisect run` or for one-off historic rebuilds.'
+        description: 'Builder commit SHA to build (optional; defaults to current branch HEAD). Use this from `git bisect run` or for one-off historic rebuilds.'
+        required: false
+      firmware_ref:
+        description: 'OpenIPC/firmware ref (SHA/tag/branch) to clone — for cross-repo bisect of size/regression issues. Defaults to firmware HEAD.'
         required: false
 
 jobs:
@@ -60,6 +63,7 @@ jobs:
           BUILD_ID:       ${{ needs.resolve.outputs.tag_name }}
           BUILD_SHA:      ${{ needs.resolve.outputs.ref }}
           BUILD_PLATFORM: ${{ inputs.platform }}
+          OPENIPC_FW_REV: ${{ inputs.firmware_ref }}
         run: |
           export GIT_HASH=$(git rev-parse --short ${GITHUB_SHA})
           export GIT_BRANCH=${GITHUB_REF_NAME}

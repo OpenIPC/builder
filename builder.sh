@@ -124,9 +124,18 @@ echo_c 33 "\nUpdating Builder"
 git pull
 
 rm -rf openipc
+# OPENIPC_FW_REV pins firmware to a specific ref (branch, tag, or SHA) for
+# cross-repo bisect of size/regression issues — set by build-one.yml's
+# firmware_ref input. When unset, clones HEAD of master as before.
 if [ ! -d "$FIRMWARE_DIR" ]; then
-    echo_c 33 "\nDownloading Firmware"
-    git clone --depth=1 https://github.com/OpenIPC/firmware.git "$FIRMWARE_DIR"
+    if [ -n "$OPENIPC_FW_REV" ]; then
+        echo_c 33 "\nDownloading Firmware @ ${OPENIPC_FW_REV}"
+        git clone https://github.com/OpenIPC/firmware.git "$FIRMWARE_DIR"
+        git -C "$FIRMWARE_DIR" checkout "$OPENIPC_FW_REV"
+    else
+        echo_c 33 "\nDownloading Firmware"
+        git clone --depth=1 https://github.com/OpenIPC/firmware.git "$FIRMWARE_DIR"
+    fi
     cd "$FIRMWARE_DIR"
 else
     echo_c 33 "\nUpdating Firmware"
