@@ -195,6 +195,30 @@ jobs:
           path: /tmp/ccache
           key: ${{matrix.platform}}-${{env.CACHE_DATE}}
 
+      # builder.sh does `rm -rf openipc` at the top of every run to force a
+      # clean re-clone of OpenIPC/firmware, which also nukes the default
+      # `openipc/output/dl/` directory Buildroot uses for downloaded source
+      # tarballs. Without a cache, every cron run re-downloads ~1-3 GB of
+      # tarballs from upstream mirrors — and any one of them randomly
+      # failing (e.g. cgit `snapshot/` URLs that regenerate tarballs per
+      # request with shifting sha256, like wireguard-tools on
+      # git.zx2c4.com) takes down the matrix entry for that board. See
+      # kaeru wireguard-zx2c4-tarball-regeneration-hash-drift for the
+      # specific incident this caching addresses.
+      #
+      # Cache to /tmp/builder-dl (outside the openipc/ tree so builder.sh's
+      # rm -rf doesn't touch it) and point Buildroot at it via BR2_DL_DIR
+      # env var (honored per Buildroot manual section "Location of source
+      # tarballs"). Mirrors OpenIPC/firmware/.github/workflows/build.yml's
+      # output/dl cache, adapted for builder's clean-clone behavior.
+      - name: Setup dl cache
+        if: env.RUN
+        uses: actions/cache@v4
+        with:
+          path: /tmp/builder-dl
+          key: builder-dl-${{env.CACHE_DATE}}
+          restore-keys: builder-dl-
+
       - name: Build firmware
         if: env.RUN
         run: |
@@ -205,6 +229,9 @@ jobs:
 
           mkdir -p /tmp/ccache
           ln -s /tmp/ccache ${HOME}/.ccache
+
+          mkdir -p /tmp/builder-dl
+          export BR2_DL_DIR=/tmp/builder-dl
 
           NAME=${{matrix.platform}}
           # Retry budget for transient upstream toolchain/CDN flakes
