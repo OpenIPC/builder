@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-05-24T05:27:08Z",
+  "generated_at": "2026-05-24T05:39:45Z",
   "channels": {
     "nightly": "nightly-20260524-c427c73",
     "latest": "nightly-20260524-c427c73"
@@ -293,6 +293,16 @@
             "size": 10043626
           }
         },
+        "ssc325de_lite_imou-c22ep-s2": {
+          "nand": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260524-c427c73/ssc325de_lite_imou-c22ep-s2-nand.tgz",
+            "size": 6711692
+          },
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260524-c427c73/ssc325de_lite_imou-c22ep-s2-nor.tgz",
+            "size": 6703453
+          }
+        },
         "ssc325_lite_imilab-ec3-cmsxj25a": {
           "nor": {
             "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260524-c427c73/ssc325_lite_imilab-ec3-cmsxj25a-nor.tgz",
@@ -399,6 +409,12 @@
           "nor": {
             "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260524-c427c73/ssc337_lite_tiandy-tc-c321n-v2-nor.tgz",
             "size": 6332661
+          }
+        },
+        "ssc337_lite_tp-link-tapo-c110-v1": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260524-c427c73/ssc337_lite_tp-link-tapo-c110-v1-nor.tgz",
+            "size": 7142778
           }
         },
         "ssc338q_apfpv_greg-generic-bu-eu": {
@@ -513,6 +529,12 @@
           "nor": {
             "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260524-c427c73/t21_lite_xyx-06s-nor.tgz",
             "size": 6313954
+          }
+        },
+        "t23_lite_jooan-a6m-u": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260524-c427c73/t23_lite_jooan-a6m-u-nor.tgz",
+            "size": 6408630
           }
         },
         "t23_lite_jooan-q3r-u": {
