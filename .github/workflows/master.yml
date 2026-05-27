@@ -28,15 +28,16 @@ jobs:
           SHORT=$(git rev-parse --short HEAD)
           BUILD_ID="nightly-$(date -u +%Y%m%d)-${SHORT}"
           BUILT_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          PREV=$(gh release view nightly --json body -q .body 2>/dev/null \
-                  | sed -n 's/^sha=//p' | head -1 || true)
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$PREV" = "$HEAD" ]; then
-            echo "Skip: HEAD ($HEAD) already published as the latest nightly."
-            echo "should_build=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "Build: $BUILD_ID (event=${{ github.event_name }}, prev=$PREV)"
-            echo "should_build=true"  >> "$GITHUB_OUTPUT"
-          fi
+          # Nightly rebuilds unconditionally on schedule. builder.sh re-clones
+          # OpenIPC/firmware at HEAD on every run, so the relevant inputs are
+          # mostly outside this repo (firmware HEAD, toolchain release, kernel
+          # tarball, vendor osdrv, individual package upstreams). The previous
+          # gate skipped when only this repo's HEAD matched the last published
+          # nightly, which made upstream fixes (e.g. an openhisilicon mipi_rx
+          # regression fix that lands in firmware) invisible to users until
+          # something here happened to change. Always build on schedule.
+          echo "Build: $BUILD_ID (event=${{ github.event_name }})"
+          echo "should_build=true"  >> "$GITHUB_OUTPUT"
           echo "head_sha=$HEAD"      >> "$GITHUB_OUTPUT"
           echo "short_sha=$SHORT"    >> "$GITHUB_OUTPUT"
           echo "build_id=$BUILD_ID"  >> "$GITHUB_OUTPUT"
