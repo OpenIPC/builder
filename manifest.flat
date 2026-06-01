@@ -1,6 +1,91 @@
 # OpenIPC builder build index
-# generated_at=2026-05-31T07:52:28Z
+# generated_at=2026-06-01T09:31:18Z
 # columns: build_id platform flash size url
+nightly-20260601-9d8d5a3 hi3516cv200_lite_trassir-tr-d4121ir1-v2 nor 6333422 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3516cv200_lite_trassir-tr-d4121ir1-v2-nor.tgz
+nightly-20260601-9d8d5a3 hi3516cv300_mini nor 5771929 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.hi3516cv300-nor-mini.tgz
+nightly-20260601-9d8d5a3 hi3516ev200_fpv nor 7131253 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.hi3516ev200-nor-fpv.tgz
+nightly-20260601-9d8d5a3 hi3516ev200_lte nor 6903661 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.hi3516ev200-nor-lte.tgz
+nightly-20260601-9d8d5a3 hi3516ev300_fpv nor 7131351 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.hi3516ev300-nor-fpv.tgz
+nightly-20260601-9d8d5a3 hi3516ev300_lte nor 6903513 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.hi3516ev300-nor-lte.tgz
+nightly-20260601-9d8d5a3 hi3516ev300_ultimate_rostelecom-ipc8232swc-we nand 11360969 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3516ev300_ultimate_rostelecom-ipc8232swc-we-nand.tgz
+nightly-20260601-9d8d5a3 hi3516ev300_ultimate_rostelecom-ipc8232swc-we nor 9271581 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3516ev300_ultimate_rostelecom-ipc8232swc-we-nor.tgz
+nightly-20260601-9d8d5a3 hi3516ev300_ultimate_rvi-1ncmw2028 nand 11386665 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3516ev300_ultimate_rvi-1ncmw2028-nand.tgz
+nightly-20260601-9d8d5a3 hi3516ev300_ultimate_rvi-1ncmw2028 nor 9297398 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3516ev300_ultimate_rvi-1ncmw2028-nor.tgz
+nightly-20260601-9d8d5a3 hi3518ev200_lite_qtech-qvc-ipc-136w nor 6961186 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3518ev200_lite_qtech-qvc-ipc-136w-nor.tgz
+nightly-20260601-9d8d5a3 hi3518ev200_lite_smartwares-cip-37210 nor 6958882 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3518ev200_lite_smartwares-cip-37210-nor.tgz
+nightly-20260601-9d8d5a3 hi3518ev200_lite_switcam-hs303 nor 7020024 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3518ev200_lite_switcam-hs303-nor.tgz
+nightly-20260601-9d8d5a3 hi3518ev200_lite_switcam-hs303-v2 nor 6896224 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3518ev200_lite_switcam-hs303-v2-nor.tgz
+nightly-20260601-9d8d5a3 hi3518ev200_lite_vstarcam-c8892wip nor 6471158 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3518ev200_lite_vstarcam-c8892wip-nor.tgz
+nightly-20260601-9d8d5a3 hi3518ev200_mini nor 7052018 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.hi3518ev200-nor-mini.tgz
+nightly-20260601-9d8d5a3 hi3518ev200_ultimate_lenovo-snowman-1080p nand 10437680 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3518ev200_ultimate_lenovo-snowman-1080p-nand.tgz
+nightly-20260601-9d8d5a3 hi3518ev200_ultimate_lenovo-snowman-1080p nor 7865908 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3518ev200_ultimate_lenovo-snowman-1080p-nor.tgz
+nightly-20260601-9d8d5a3 hi3518ev300_lite_bathhouse nor 6920190 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3518ev300_lite_bathhouse-nor.tgz
+nightly-20260601-9d8d5a3 hi3518ev300_lite_xiaomi-mjsxj02hl nor 7009113 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/hi3518ev300_lite_xiaomi-mjsxj02hl-nor.tgz
+nightly-20260601-9d8d5a3 hi3536dv100_fpv nor 9384147 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.hi3536dv100-nor-fpv.tgz
+nightly-20260601-9d8d5a3 ssc30kd_lite_cmcc-ds-ytj5301 nor 8672270 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc30kd_lite_cmcc-ds-ytj5301-nor.tgz
+nightly-20260601-9d8d5a3 ssc30kq_apfpv_greg-generic-bu-eu nor 9331400 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc30kq_apfpv_greg-generic-bu-eu-nor.tgz
+nightly-20260601-9d8d5a3 ssc30kq_apfpv_greg-generic-cu-eu nor 9425421 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc30kq_apfpv_greg-generic-cu-eu-nor.tgz
+nightly-20260601-9d8d5a3 ssc30kq_fpv nor 10070687 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.ssc30kq-nor-fpv.tgz
+nightly-20260601-9d8d5a3 ssc30kq_rubyfpv_generic nor 10089156 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc30kq_rubyfpv_generic-nor.tgz
+nightly-20260601-9d8d5a3 ssc325_lite_imilab-ec3-cmsxj25a nor 6174702 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc325_lite_imilab-ec3-cmsxj25a-nor.tgz
+nightly-20260601-9d8d5a3 ssc325_lite_imou-c22cp nor 6753502 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc325_lite_imou-c22cp-nor.tgz
+nightly-20260601-9d8d5a3 ssc325_lite_tp-link-tapo-c310-v1 nor 6661724 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc325_lite_tp-link-tapo-c310-v1-nor.tgz
+nightly-20260601-9d8d5a3 ssc325_lite_trassir-tr-w2c1-v1 nor 6636983 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc325_lite_trassir-tr-w2c1-v1-nor.tgz
+nightly-20260601-9d8d5a3 ssc325de_lite_imou-c22ep-s2 nand 6832447 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc325de_lite_imou-c22ep-s2-nand.tgz
+nightly-20260601-9d8d5a3 ssc325de_lite_imou-c22ep-s2 nor 6824046 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc325de_lite_imou-c22ep-s2-nor.tgz
+nightly-20260601-9d8d5a3 ssc333_lite_babysense-see-hd-ip206 nor 7271626 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc333_lite_babysense-see-hd-ip206-nor.tgz
+nightly-20260601-9d8d5a3 ssc333_lite_meari-speed-6s nor 7273514 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc333_lite_meari-speed-6s-nor.tgz
+nightly-20260601-9d8d5a3 ssc333_lite_tp-link-tapo-c110-v2 nor 7193349 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc333_lite_tp-link-tapo-c110-v2-nor.tgz
+nightly-20260601-9d8d5a3 ssc333_lite_tp-link-tapo-c110-v26 nor 7228420 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc333_lite_tp-link-tapo-c110-v26-nor.tgz
+nightly-20260601-9d8d5a3 ssc335_lite_tp-link-tapo-c110-v1 nor 7176192 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc335_lite_tp-link-tapo-c110-v1-nor.tgz
+nightly-20260601-9d8d5a3 ssc335_lite_tp-link-tapo-c310-v220 nor 7196226 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc335_lite_tp-link-tapo-c310-v220-nor.tgz
+nightly-20260601-9d8d5a3 ssc335de_lite_dahua-hfw1230sp-v2 nor 6341352 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc335de_lite_dahua-hfw1230sp-v2-nor.tgz
+nightly-20260601-9d8d5a3 ssc337_lite_h3c-tc2101 nor 7258845 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc337_lite_h3c-tc2101-nor.tgz
+nightly-20260601-9d8d5a3 ssc337_lite_tiandy-tc-c321n-v2 nor 6376782 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc337_lite_tiandy-tc-c321n-v2-nor.tgz
+nightly-20260601-9d8d5a3 ssc337_lite_tp-link-tapo-c110-v1 nor 7187517 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc337_lite_tp-link-tapo-c110-v1-nor.tgz
+nightly-20260601-9d8d5a3 ssc337de_ultimate_foscam-x5 nor 8064714 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc337de_ultimate_foscam-x5-nor.tgz
+nightly-20260601-9d8d5a3 ssc338q_apfpv nor 10232583 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.ssc338q-nor-apfpv.tgz
+nightly-20260601-9d8d5a3 ssc338q_apfpv_greg-generic-bu-eu nor 9331465 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc338q_apfpv_greg-generic-bu-eu-nor.tgz
+nightly-20260601-9d8d5a3 ssc338q_apfpv_greg-generic-cu-eu nor 9425444 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc338q_apfpv_greg-generic-cu-eu-nor.tgz
+nightly-20260601-9d8d5a3 ssc338q_fpv nand 10082319 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.ssc338q-nand-fpv.tgz
+nightly-20260601-9d8d5a3 ssc338q_fpv nor 10070671 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.ssc338q-nor-fpv.tgz
+nightly-20260601-9d8d5a3 ssc338q_fpv_caddx-fly nor 10275185 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc338q_fpv_caddx-fly-nor.tgz
+nightly-20260601-9d8d5a3 ssc338q_fpv_emax-wyvern-link nor 10275177 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc338q_fpv_emax-wyvern-link-nor.tgz
+nightly-20260601-9d8d5a3 ssc338q_fpv_openipc-mario-aio nor 10293630 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc338q_fpv_openipc-mario-aio-nor.tgz
+nightly-20260601-9d8d5a3 ssc338q_fpv_openipc-thinker-aio nor 10259096 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc338q_fpv_openipc-thinker-aio-nor.tgz
+nightly-20260601-9d8d5a3 ssc338q_fpv_openipc-urllc-aio nor 10282044 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc338q_fpv_openipc-urllc-aio-nor.tgz
+nightly-20260601-9d8d5a3 ssc338q_fpv_runcam-wifilink nor 10275241 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc338q_fpv_runcam-wifilink-nor.tgz
+nightly-20260601-9d8d5a3 ssc338q_rubyfpv_generic nor 10089175 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc338q_rubyfpv_generic-nor.tgz
+nightly-20260601-9d8d5a3 ssc338q_rubyfpv_thinker_internal_wifi nor 10054327 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc338q_rubyfpv_thinker_internal_wifi-nor.tgz
+nightly-20260601-9d8d5a3 ssc377qe_fpv_ccdcam-im50q01-tipoman nor 9833651 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/ssc377qe_fpv_ccdcam-im50q01-tipoman-nor.tgz
+nightly-20260601-9d8d5a3 ssc378qe_apfpv nor 8773547 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.ssc378qe-nor-apfpv.tgz
+nightly-20260601-9d8d5a3 ssc378qe_fpv nor 8151464 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/openipc.ssc378qe-nor-fpv.tgz
+nightly-20260601-9d8d5a3 t10_lite_hb-wifi-z6 nor 6679389 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t10_lite_hb-wifi-z6-nor.tgz
+nightly-20260601-9d8d5a3 t10_lite_jvs-ingt10-gqs60ep nor 6271244 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t10_lite_jvs-ingt10-gqs60ep-nor.tgz
+nightly-20260601-9d8d5a3 t20_lite_ec37-t11 nor 6567844 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t20_lite_ec37-t11-nor.tgz
+nightly-20260601-9d8d5a3 t20_ultimate_azarton-c1 nor 7375765 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t20_ultimate_azarton-c1-nor.tgz
+nightly-20260601-9d8d5a3 t21_lite_chinamobile-hdc-51-a5-v12 nor 6273630 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t21_lite_chinamobile-hdc-51-a5-v12-nor.tgz
+nightly-20260601-9d8d5a3 t21_lite_smartwares-cip-37210at nor 6376913 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t21_lite_smartwares-cip-37210at-nor.tgz
+nightly-20260601-9d8d5a3 t21_lite_wansview-q5-1080p nor 6362488 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t21_lite_wansview-q5-1080p-nor.tgz
+nightly-20260601-9d8d5a3 t21_lite_xyx-06s nor 6366838 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t21_lite_xyx-06s-nor.tgz
+nightly-20260601-9d8d5a3 t23_lite_jooan-a6m-u nor 6461833 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t23_lite_jooan-a6m-u-nor.tgz
+nightly-20260601-9d8d5a3 t23_lite_jooan-q3r-u nor 6465330 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t23_lite_jooan-q3r-u-nor.tgz
+nightly-20260601-9d8d5a3 t23_lite_lsc-3215672 nor 6341160 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t23_lite_lsc-3215672-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_aceline-aip-o4 nor 6759405 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_aceline-aip-o4-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_aoni-ep01j05 nor 6948021 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_aoni-ep01j05-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_chinamobile-hdc-51-a6-v11 nor 6813677 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_chinamobile-hdc-51-a6-v11-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_chinatelecom-y4h-50 nor 6859836 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_chinatelecom-y4h-50-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_cmcc-hdc-51-a6-v10 nor 6808771 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_cmcc-hdc-51-a6-v10-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_tuya-gv7630-t31-ptz nor 6756608 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_tuya-gv7630-t31-ptz-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_vstarcam-cs55 nor 6817552 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_vstarcam-cs55-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_wansview-q5-2k nor 6759365 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_wansview-q5-2k-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_wyze-v3b nor 7748234 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_wyze-v3b-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_xiaomi-mjsxj03hl nor 6790849 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_xiaomi-mjsxj03hl-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_xiaomi-mjsxj03hl-jxq03 nor 6783056 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_xiaomi-mjsxj03hl-jxq03-nor.tgz
+nightly-20260601-9d8d5a3 t31_lite_zte-k540 nor 6710167 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_lite_zte-k540-nor.tgz
+nightly-20260601-9d8d5a3 t31_ultimate_azarton-c1-t31x nor 7846388 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_ultimate_azarton-c1-t31x-nor.tgz
+nightly-20260601-9d8d5a3 t31_ultimate_gcraftsman-gca50 nor 7122719 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t31_ultimate_gcraftsman-gca50-nor.tgz
+nightly-20260601-9d8d5a3 t40_lite_movols-mo-805p nor 5156518 https://github.com/OpenIPC/builder/releases/download/nightly-20260601-9d8d5a3/t40_lite_movols-mo-805p-nor.tgz
 nightly-20260531-9d8d5a3 hi3516cv200_lite_trassir-tr-d4121ir1-v2 nor 6332222 https://github.com/OpenIPC/builder/releases/download/nightly-20260531-9d8d5a3/hi3516cv200_lite_trassir-tr-d4121ir1-v2-nor.tgz
 nightly-20260531-9d8d5a3 hi3516cv300_mini nor 5772105 https://github.com/OpenIPC/builder/releases/download/nightly-20260531-9d8d5a3/openipc.hi3516cv300-nor-mini.tgz
 nightly-20260531-9d8d5a3 hi3516ev200_fpv nor 7130715 https://github.com/OpenIPC/builder/releases/download/nightly-20260531-9d8d5a3/openipc.hi3516ev200-nor-fpv.tgz
@@ -825,5 +910,5 @@ nightly-20260524-c427c73 t31_ultimate_azarton-c1-t31x nor 7818530 https://github
 nightly-20260524-c427c73 t31_ultimate_gcraftsman-gca50 nor 7094914 https://github.com/OpenIPC/builder/releases/download/nightly-20260524-c427c73/t31_ultimate_gcraftsman-gca50-nor.tgz
 nightly-20260524-c427c73 t40_lite_movols-mo-805p nor 5103498 https://github.com/OpenIPC/builder/releases/download/nightly-20260524-c427c73/t40_lite_movols-mo-805p-nor.tgz
 # channels
-@channel nightly nightly-20260531-9d8d5a3
-@channel latest nightly-20260531-9d8d5a3
+@channel nightly nightly-20260601-9d8d5a3
+@channel latest nightly-20260601-9d8d5a3
