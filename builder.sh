@@ -57,6 +57,9 @@ copy_to_archive() {
         ${FIRMWARE_DIR}/output/images/openipc.*.tgz \
         ${BUILDER_DIR}/archive/${DEVICE}/${TIMESTAMP}
 
+    cp -a ${FIRMWARE_DIR}/output/images/sizes.*.json \
+        ${BUILDER_DIR}/archive/${DEVICE}/${TIMESTAMP} 2>/dev/null || true
+
     if [ -f "${FIRMWARE_DIR}/output/images/autoupdate-kernel.img" ]; then
         cp -a ${FIRMWARE_DIR}/output/images/autoupdate* ${BUILDER_DIR}/archive/${DEVICE}/${TIMESTAMP}
     fi
@@ -152,6 +155,11 @@ cp -afv ${BUILDER_DIR}/${ITEM}/* ${FIRMWARE_DIR}
 
 echo_c 33 "\nBuilding the device"
 make BOARD=${DEVICE}
+
+# Best-effort: emit per-package/per-kernel-module size JSON next to the .tgz.
+# Target lives in firmware's Makefile (PR #2166); ignore failure so legacy
+# pinned firmware refs without the target don't sink the build.
+make BOARD=${DEVICE} size-report || true
 
 copy_to_archive
 echo_c 35 "\nDone"

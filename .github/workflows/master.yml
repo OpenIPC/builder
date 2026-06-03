@@ -279,6 +279,30 @@ jobs:
             exit 1
           fi
 
+      - name: Build size report
+        if: env.NORFW || env.NANDFW
+        run: |
+          cd openipc
+          NAME=${{matrix.platform}}
+          make BOARD=${NAME} size-report || \
+            { echo "::warning::size-report failed for ${NAME}"; exit 0; }
+          SIZES=$(find output/images -name 'sizes.*.json' | head -1)
+          if [ -z "${SIZES}" ]; then
+            exit 0
+          fi
+          # Mirror the .tgz rename trick: compound matrix entries
+          # (`<soc>_<variant>_<vendor>-<model>`) share `<soc>_<variant>` and
+          # would collide on the firmware-side `sizes.<soc>-<variant>.json`
+          # filename when uploaded to the same release tag. Rename to
+          # `sizes.<NAME>.json` so every compound device gets its own asset.
+          COMMON=$(echo ${NAME} | awk -F_ '{print NF-1}')
+          if [ ${COMMON} -eq 1 ]; then
+            echo "SIZES=openipc/${SIZES}" >> ${GITHUB_ENV}
+          else
+            mv ${SIZES} ../sizes.${NAME}.json
+            echo "SIZES=sizes.${NAME}.json" >> ${GITHUB_ENV}
+          fi
+
       - name: Upload firmware (dated)
         if: env.NORFW || env.NANDFW
         uses: softprops/action-gh-release@v2
@@ -292,6 +316,7 @@ jobs:
           files: |
             ${{env.NORFW}}
             ${{env.NANDFW}}
+            ${{env.SIZES}}
 
       - name: Upload firmware (rolling nightly)
         if: env.NORFW || env.NANDFW
@@ -305,6 +330,7 @@ jobs:
           files: |
             ${{env.NORFW}}
             ${{env.NANDFW}}
+            ${{env.SIZES}}
 
       - name: Upload firmware (latest — legacy alias)
         if: env.NORFW || env.NANDFW
@@ -314,6 +340,7 @@ jobs:
           files: |
             ${{env.NORFW}}
             ${{env.NANDFW}}
+            ${{env.SIZES}}
 
       - name: Send binary
         if: env.NORFW
