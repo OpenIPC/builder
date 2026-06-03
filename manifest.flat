@@ -1,8 +1,10 @@
 # OpenIPC builder build index
-# generated_at=2026-06-03T09:42:04Z
+# generated_at=2026-06-03T20:09:58Z
 # columns: build_id platform flash size url
+# also: @sizes <build_id> <platform> <size> <url>  (per-platform size report sidecar)
 nightly-20260603-83faaad gk7202v300_lite_cootli_camv0103 nor 7061944 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7202v300_lite_cootli_camv0103-nor.tgz
 nightly-20260603-83faaad gk7202v300_lite_ipg-g3-wr nor 7121733 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7202v300_lite_ipg-g3-wr-nor.tgz
+nightly-20260603-83faaad gk7202v300_lite_xg521 nor 6628078 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7202v300_lite_xg521-nor.tgz
 nightly-20260603-83faaad gk7205v200_fpv nor 7146791 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/openipc.gk7205v200-nor-fpv.tgz
 nightly-20260603-83faaad gk7205v200_lite_tiandy-tc-c321n nor 6171035 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7205v200_lite_tiandy-tc-c321n-nor.tgz
 nightly-20260603-83faaad gk7205v200_lite_vixand-ipc-1 nor 5569677 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7205v200_lite_vixand-ipc-1-nor.tgz
@@ -13,6 +15,7 @@ nightly-20260603-83faaad gk7205v210_fpv nor 7146832 https://github.com/OpenIPC/b
 nightly-20260603-83faaad gk7205v210_lite_tiandy-tc-c32qn nor 6170249 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7205v210_lite_tiandy-tc-c32qn-nor.tgz
 nightly-20260603-83faaad gk7205v210_lite_vixand-ivg-g3s nor 6125324 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7205v210_lite_vixand-ivg-g3s-nor.tgz
 nightly-20260603-83faaad gk7205v210_lite_vixand-ivg-g4f-a nor 6289407 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7205v210_lite_vixand-ivg-g4f-a-nor.tgz
+nightly-20260603-83faaad gk7205v210_lite_vixand-ivg-g4f-a-w nor 6968564 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7205v210_lite_vixand-ivg-g4f-a-w-nor.tgz
 nightly-20260603-83faaad gk7205v210_lite_vixand-ivg-g4h nor 5931225 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7205v210_lite_vixand-ivg-g4h-nor.tgz
 nightly-20260603-83faaad gk7205v210_venc nor 6779276 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/openipc.gk7205v210-nor-venc.tgz
 nightly-20260603-83faaad gk7205v300_fpv nor 7146901 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/openipc.gk7205v300-nor-fpv.tgz
@@ -56,9 +59,13 @@ nightly-20260603-83faaad ssc333_lite_babysense-see-hd-ip206 nor 7272313 https://
 nightly-20260603-83faaad ssc333_lite_meari-speed-6s nor 7274579 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc333_lite_meari-speed-6s-nor.tgz
 nightly-20260603-83faaad ssc333_lite_tp-link-tapo-c110-v2 nor 7194033 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc333_lite_tp-link-tapo-c110-v2-nor.tgz
 nightly-20260603-83faaad ssc333_lite_tp-link-tapo-c110-v26 nor 7230249 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc333_lite_tp-link-tapo-c110-v26-nor.tgz
+nightly-20260603-83faaad ssc333_lite_vstarcam-c43s_b nor 7213763 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc333_lite_vstarcam-c43s_b-nor.tgz
 nightly-20260603-83faaad ssc335_lite_tp-link-tapo-c110-v1 nor 7176520 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc335_lite_tp-link-tapo-c110-v1-nor.tgz
 nightly-20260603-83faaad ssc335_lite_tp-link-tapo-c310-v220 nor 7197477 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc335_lite_tp-link-tapo-c310-v220-nor.tgz
+nightly-20260603-83faaad ssc335_lite_trassir-tr-w2c1-v2 nor 7212091 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc335_lite_trassir-tr-w2c1-v2-nor.tgz
 nightly-20260603-83faaad ssc335de_lite_dahua-hfw1230sp-v2 nor 6342052 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc335de_lite_dahua-hfw1230sp-v2-nor.tgz
+nightly-20260603-83faaad ssc335de_lite_imou-c22e-s2-v2 nor 7245620 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc335de_lite_imou-c22e-s2-v2-nor.tgz
+nightly-20260603-83faaad ssc335de_lite_uniview-c1l-2wn-g nor 7247230 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc335de_lite_uniview-c1l-2wn-g-nor.tgz
 nightly-20260603-83faaad ssc337_lite_h3c-tc2101 nor 7259346 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc337_lite_h3c-tc2101-nor.tgz
 nightly-20260603-83faaad ssc337_lite_tiandy-tc-c321n-v2 nor 6377902 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc337_lite_tiandy-tc-c321n-v2-nor.tgz
 nightly-20260603-83faaad ssc337_lite_tp-link-tapo-c110-v1 nor 7188184 https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc337_lite_tp-link-tapo-c110-v1-nor.tgz

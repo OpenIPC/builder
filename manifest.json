@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-06-03T09:42:04Z",
+  "generated_at": "2026-06-03T20:09:58Z",
   "channels": {
     "nightly": "nightly-20260603-83faaad",
     "latest": "nightly-20260603-83faaad"
@@ -23,6 +23,12 @@
           "nor": {
             "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7202v300_lite_ipg-g3-wr-nor.tgz",
             "size": 7121733
+          }
+        },
+        "gk7202v300_lite_xg521": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7202v300_lite_xg521-nor.tgz",
+            "size": 6628078
           }
         },
         "gk7205v200_lite_tiandy-tc-c321n": {
@@ -59,6 +65,12 @@
           "nor": {
             "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7205v210_lite_vixand-ivg-g4f-a-nor.tgz",
             "size": 6289407
+          }
+        },
+        "gk7205v210_lite_vixand-ivg-g4f-a-w": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/gk7205v210_lite_vixand-ivg-g4f-a-w-nor.tgz",
+            "size": 6968564
           }
         },
         "gk7205v210_lite_vixand-ivg-g4h": {
@@ -363,10 +375,28 @@
             "size": 7230249
           }
         },
+        "ssc333_lite_vstarcam-c43s_b": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc333_lite_vstarcam-c43s_b-nor.tgz",
+            "size": 7213763
+          }
+        },
         "ssc335de_lite_dahua-hfw1230sp-v2": {
           "nor": {
             "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc335de_lite_dahua-hfw1230sp-v2-nor.tgz",
             "size": 6342052
+          }
+        },
+        "ssc335de_lite_imou-c22e-s2-v2": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc335de_lite_imou-c22e-s2-v2-nor.tgz",
+            "size": 7245620
+          }
+        },
+        "ssc335de_lite_uniview-c1l-2wn-g": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc335de_lite_uniview-c1l-2wn-g-nor.tgz",
+            "size": 7247230
           }
         },
         "ssc335_lite_tp-link-tapo-c110-v1": {
@@ -379,6 +409,12 @@
           "nor": {
             "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc335_lite_tp-link-tapo-c310-v220-nor.tgz",
             "size": 7197477
+          }
+        },
+        "ssc335_lite_trassir-tr-w2c1-v2": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260603-83faaad/ssc335_lite_trassir-tr-w2c1-v2-nor.tgz",
+            "size": 7212091
           }
         },
         "ssc337de_ultimate_foscam-x5": {
