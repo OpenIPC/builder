@@ -41,15 +41,6 @@ TAG_RE = re.compile(r"^nightly-(\d{8})-([0-9a-f]{7})$")
 COMPOUND_RE = re.compile(r"^(?P<platform>[a-z0-9]+_[a-z0-9]+_[a-z0-9_.-]+)-(?P<flash>nor|nand)\.tgz$")
 SIMPLE_RE   = re.compile(r"^openipc\.(?P<soc>[^.]+)-(?P<flash>nor|nand)-(?P<variant>\w+)\.tgz$")
 
-# Per-platform size report sidecar (PR #97, mirrors firmware PR #2166).
-# Compound form is renamed in master.yml to `sizes.<NAME>.json` so two
-# compound devices sharing `<soc>_<variant>` don't collide on upload;
-# simple form keeps firmware's `sizes.<soc>-<variant>.json` shape.
-# Compound is tried first because `[^._-]+` in simple would otherwise
-# accept the underscore-laden compound form too.
-SIZES_COMPOUND_RE = re.compile(r"^sizes\.(?P<platform>[a-z0-9]+_[a-z0-9]+_[a-z0-9_.-]+)\.json$")
-SIZES_SIMPLE_RE   = re.compile(r"^sizes\.(?P<soc>[^._-]+)-(?P<variant>\w+)\.json$")
-
 # Retry budget for transient GitHub API failures (mirrors firmware/#2129).
 GH_RETRY_DELAYS = (0, 5, 15, 40)
 
@@ -116,17 +107,6 @@ def parse_asset(name: str) -> tuple[str, str] | None:
     return None
 
 
-def parse_sizes(name: str) -> str | None:
-    """Returns the platform_key for a sizes.*.json sidecar, or None."""
-    m = SIZES_COMPOUND_RE.match(name)
-    if m:
-        return m.group("platform")
-    m = SIZES_SIMPLE_RE.match(name)
-    if m:
-        return f"{m.group('soc')}_{m.group('variant')}"
-    return None
-
-
 def main() -> None:
     out_dir = Path(sys.argv[1] if len(sys.argv) > 1 else ".")
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -153,19 +133,13 @@ def main() -> None:
         platforms: dict[str, dict[str, dict]] = {}
         for a in info.get("assets") or []:
             parsed = parse_asset(a["name"])
-            if parsed:
-                platform, flash = parsed
-                platforms.setdefault(platform, {})[flash] = {
-                    "url": a["url"],
-                    "size": a["size"],
-                }
+            if not parsed:
                 continue
-            platform = parse_sizes(a["name"])
-            if platform:
-                platforms.setdefault(platform, {})["sizes"] = {
-                    "url": a["url"],
-                    "size": a["size"],
-                }
+            platform, flash = parsed
+            platforms.setdefault(platform, {})[flash] = {
+                "url": a["url"],
+                "size": a["size"],
+            }
         builds.append({
             "id": info["tagName"],
             "sha": sha,
@@ -188,19 +162,11 @@ def main() -> None:
         "# OpenIPC builder build index",
         f"# generated_at={now}",
         "# columns: build_id platform flash size url",
-        "# also: @sizes <build_id> <platform> <size> <url>  (per-platform size report sidecar)",
     ]
     for b in builds:
         for platform, flashes in sorted(b["platforms"].items()):
             for flash, info in sorted(flashes.items()):
-                if flash == "sizes":
-                    continue
                 lines.append(f"{b['id']} {platform} {flash} {info['size']} {info['url']}")
-            sizes = flashes.get("sizes")
-            if sizes:
-                lines.append(
-                    f"@sizes {b['id']} {platform} {sizes['size']} {sizes['url']}"
-                )
     lines.append("# channels")
     for ch, target in manifest["channels"].items():
         lines.append(f"@channel {ch} {target}")
