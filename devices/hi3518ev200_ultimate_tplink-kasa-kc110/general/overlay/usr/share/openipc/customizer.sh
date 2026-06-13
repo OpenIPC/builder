@@ -12,7 +12,7 @@ fw_setenv wlandev 'rtl8188fu-generic'
 #
 # Set custom majestic settings
 #
-cli -s .isp.sensorConfig /etc/sensors/ov2735_i2c_1080p.ini
+cli -s .isp.sensorConfig /etc/sensors/ov2735_mipi_1080p.ini
 cli -s .nightMode.irCutPin1 64
 cli -s .nightMode.irCutSingleInvert false
 cli -s .nightMode.backlightPin 63

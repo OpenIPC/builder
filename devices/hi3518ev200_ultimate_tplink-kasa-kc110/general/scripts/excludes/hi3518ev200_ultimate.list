@@ -18,6 +18,7 @@
 /etc/sensors/sc2135_i2c_1080p.ini
 /etc/sensors/sc2235_i2c_dc_1080p.ini
 /etc/sensors/ar0237_i2c_dc_1080p.ini
+/etc/sensors/ov2735_i2c_1080p.ini
 #
 /etc/sensors/iq/ar0230.ini
 /etc/sensors/iq/imx222.ini
