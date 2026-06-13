@@ -63,6 +63,7 @@ Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
 Tiandy TC-C321N          GK7205V200   OS02G10   -                NOR_8M    done
 Tiandy TC-C321N v2       SSC337       SC2336P   -                NOR_8M    done
 Tiandy TC-C32QN          GK7205V210   OS02G10   -                NOR_8M    done
+TP-Link Kasa KC110       HI3518EV200  OV2735    RTL8188FU_USB    NOR_16M   ptz-yes, video-WIP (pending majestic MIPI fix)
 TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    done
 TP-Link Tapo C110 v1     SSC337       SC3335    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    done
