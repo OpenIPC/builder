@@ -1,11 +1,670 @@
 {
   "schema": 1,
-  "generated_at": "2026-06-13T07:31:36Z",
+  "generated_at": "2026-06-14T07:55:13Z",
   "channels": {
-    "nightly": "nightly-20260613-21de4f7",
-    "latest": "nightly-20260613-21de4f7"
+    "nightly": "nightly-20260614-e6d8822",
+    "latest": "nightly-20260614-e6d8822"
   },
   "builds": [
+    {
+      "id": "nightly-20260614-e6d8822",
+      "sha": "e6d882251711ed5ddde4701b7783c4eed54de6e7",
+      "short": "e6d8822",
+      "built_at": "2026-06-14T07:19:23Z",
+      "release_url": "https://github.com/OpenIPC/builder/releases/tag/nightly-20260614-e6d8822",
+      "platforms": {
+        "gk7202v300_lite_cootli_camv0103": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7202v300_lite_cootli_camv0103-nor.tgz",
+            "size": 7002973
+          }
+        },
+        "gk7202v300_lite_ipg-g3-wr": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7202v300_lite_ipg-g3-wr-nor.tgz",
+            "size": 7057902
+          }
+        },
+        "gk7202v300_lite_xg521": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7202v300_lite_xg521-nor.tgz",
+            "size": 6647044
+          }
+        },
+        "gk7205v200_lite_tiandy-tc-c321n": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7205v200_lite_tiandy-tc-c321n-nor.tgz",
+            "size": 6190507
+          }
+        },
+        "gk7205v200_lite_vixand-ipc-1": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7205v200_lite_vixand-ipc-1-nor.tgz",
+            "size": 5493154
+          }
+        },
+        "gk7205v200_lite_vixand-iph-5-4g": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7205v200_lite_vixand-iph-5-4g-nor.tgz",
+            "size": 6204671
+          }
+        },
+        "gk7205v210_lite_tiandy-tc-c32qn": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7205v210_lite_tiandy-tc-c32qn-nor.tgz",
+            "size": 6190513
+          }
+        },
+        "gk7205v210_lite_vixand-ivg-g3s": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7205v210_lite_vixand-ivg-g3s-nor.tgz",
+            "size": 6145093
+          }
+        },
+        "gk7205v210_lite_vixand-ivg-g4f-a": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7205v210_lite_vixand-ivg-g4f-a-nor.tgz",
+            "size": 6230096
+          }
+        },
+        "gk7205v210_lite_vixand-ivg-g4f-a-w": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7205v210_lite_vixand-ivg-g4f-a-w-nor.tgz",
+            "size": 6908175
+          }
+        },
+        "gk7205v210_lite_vixand-ivg-g4h": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7205v210_lite_vixand-ivg-g4h-nor.tgz",
+            "size": 5951634
+          }
+        },
+        "gk7205v300_lite_vixand-ivg-g6s": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7205v300_lite_vixand-ivg-g6s-nor.tgz",
+            "size": 6769405
+          }
+        },
+        "gk7205v300_lite_vixand-ivg-g6s-w": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/gk7205v300_lite_vixand-ivg-g6s-w-nor.tgz",
+            "size": 6905090
+          }
+        },
+        "hi3516cv200_lite_trassir-tr-d4121ir1-v2": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3516cv200_lite_trassir-tr-d4121ir1-v2-nor.tgz",
+            "size": 6354507
+          }
+        },
+        "hi3516ev300_ultimate_rostelecom-ipc8232swc-we": {
+          "nand": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3516ev300_ultimate_rostelecom-ipc8232swc-we-nand.tgz",
+            "size": 11281665
+          },
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3516ev300_ultimate_rostelecom-ipc8232swc-we-nor.tgz",
+            "size": 9192074
+          }
+        },
+        "hi3516ev300_ultimate_rvi-1ncmw2028": {
+          "nand": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3516ev300_ultimate_rvi-1ncmw2028-nand.tgz",
+            "size": 11307365
+          },
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3516ev300_ultimate_rvi-1ncmw2028-nor.tgz",
+            "size": 9217823
+          }
+        },
+        "hi3518ev200_lite_qtech-qvc-ipc-136w": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3518ev200_lite_qtech-qvc-ipc-136w-nor.tgz",
+            "size": 6981715
+          }
+        },
+        "hi3518ev200_lite_smartwares-cip-37210": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3518ev200_lite_smartwares-cip-37210-nor.tgz",
+            "size": 6980538
+          }
+        },
+        "hi3518ev200_lite_switcam-hs303": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3518ev200_lite_switcam-hs303-nor.tgz",
+            "size": 7040696
+          }
+        },
+        "hi3518ev200_lite_switcam-hs303-v2": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3518ev200_lite_switcam-hs303-v2-nor.tgz",
+            "size": 6916448
+          }
+        },
+        "hi3518ev200_lite_vstarcam-c8892wip": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3518ev200_lite_vstarcam-c8892wip-nor.tgz",
+            "size": 6492125
+          }
+        },
+        "hi3518ev200_ultimate_lenovo-snowman-1080p": {
+          "nand": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3518ev200_ultimate_lenovo-snowman-1080p-nand.tgz",
+            "size": 10468057
+          },
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3518ev200_ultimate_lenovo-snowman-1080p-nor.tgz",
+            "size": 7886566
+          }
+        },
+        "hi3518ev300_lite_bathhouse": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3518ev300_lite_bathhouse-nor.tgz",
+            "size": 6941589
+          }
+        },
+        "hi3518ev300_lite_xiaomi-mjsxj02hl": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/hi3518ev300_lite_xiaomi-mjsxj02hl-nor.tgz",
+            "size": 7029893
+          }
+        },
+        "gk7205v200_fpv": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.gk7205v200-nor-fpv.tgz",
+            "size": 7166218
+          }
+        },
+        "gk7205v200_lte": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.gk7205v200-nor-lte.tgz",
+            "size": 6679616
+          }
+        },
+        "gk7205v200_venc": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.gk7205v200-nor-venc.tgz",
+            "size": 6781873
+          }
+        },
+        "gk7205v210_fpv": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.gk7205v210-nor-fpv.tgz",
+            "size": 7166275
+          }
+        },
+        "gk7205v210_venc": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.gk7205v210-nor-venc.tgz",
+            "size": 6781902
+          }
+        },
+        "gk7205v300_fpv": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.gk7205v300-nor-fpv.tgz",
+            "size": 7166275
+          }
+        },
+        "gk7205v300_lte": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.gk7205v300-nor-lte.tgz",
+            "size": 6679754
+          }
+        },
+        "gk7205v300_venc": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.gk7205v300-nor-venc.tgz",
+            "size": 6781986
+          }
+        },
+        "hi3516cv300_mini": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.hi3516cv300-nor-mini.tgz",
+            "size": 5716192
+          }
+        },
+        "hi3516ev200_fpv": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.hi3516ev200-nor-fpv.tgz",
+            "size": 7152512
+          }
+        },
+        "hi3516ev200_lte": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.hi3516ev200-nor-lte.tgz",
+            "size": 6924948
+          }
+        },
+        "hi3516ev300_fpv": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.hi3516ev300-nor-fpv.tgz",
+            "size": 7152598
+          }
+        },
+        "hi3516ev300_lte": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.hi3516ev300-nor-lte.tgz",
+            "size": 6924943
+          }
+        },
+        "hi3518ev200_mini": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.hi3518ev200-nor-mini.tgz",
+            "size": 6970504
+          }
+        },
+        "hi3536dv100_fpv": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.hi3536dv100-nor-fpv.tgz",
+            "size": 9302766
+          }
+        },
+        "ssc30kq_fpv": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.ssc30kq-nor-fpv.tgz",
+            "size": 10095488
+          }
+        },
+        "ssc338q_fpv": {
+          "nand": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.ssc338q-nand-fpv.tgz",
+            "size": 10106533
+          },
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.ssc338q-nor-fpv.tgz",
+            "size": 10095041
+          }
+        },
+        "ssc338q_apfpv": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.ssc338q-nor-apfpv.tgz",
+            "size": 10257500
+          }
+        },
+        "ssc378qe_apfpv": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.ssc378qe-nor-apfpv.tgz",
+            "size": 8789620
+          }
+        },
+        "ssc378qe_fpv": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/openipc.ssc378qe-nor-fpv.tgz",
+            "size": 8168377
+          }
+        },
+        "ssc30kd_lite_cmcc-ds-ytj5301": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc30kd_lite_cmcc-ds-ytj5301-nor.tgz",
+            "size": 8698113
+          }
+        },
+        "ssc30kq_apfpv_greg-generic-bu-eu": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc30kq_apfpv_greg-generic-bu-eu-nor.tgz",
+            "size": 9355932
+          }
+        },
+        "ssc30kq_apfpv_greg-generic-cu-eu": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc30kq_apfpv_greg-generic-cu-eu-nor.tgz",
+            "size": 9449921
+          }
+        },
+        "ssc30kq_rubyfpv_generic": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc30kq_rubyfpv_generic-nor.tgz",
+            "size": 10119313
+          }
+        },
+        "ssc325de_lite_imou-c22ep-s2": {
+          "nand": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc325de_lite_imou-c22ep-s2-nand.tgz",
+            "size": 6835464
+          },
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc325de_lite_imou-c22ep-s2-nor.tgz",
+            "size": 6827131
+          }
+        },
+        "ssc325_lite_imilab-ec3-cmsxj25a": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc325_lite_imilab-ec3-cmsxj25a-nor.tgz",
+            "size": 6177655
+          }
+        },
+        "ssc325_lite_imou-c22cp": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc325_lite_imou-c22cp-nor.tgz",
+            "size": 6756911
+          }
+        },
+        "ssc325_lite_tp-link-tapo-c310-v1": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc325_lite_tp-link-tapo-c310-v1-nor.tgz",
+            "size": 6664389
+          }
+        },
+        "ssc325_lite_trassir-tr-w2c1-v1": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc325_lite_trassir-tr-w2c1-v1-nor.tgz",
+            "size": 6639860
+          }
+        },
+        "ssc333_lite_babysense-see-hd-ip206": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc333_lite_babysense-see-hd-ip206-nor.tgz",
+            "size": 7283746
+          }
+        },
+        "ssc333_lite_meari-speed-6s": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc333_lite_meari-speed-6s-nor.tgz",
+            "size": 7286067
+          }
+        },
+        "ssc333_lite_tp-link-tapo-c110-v2": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc333_lite_tp-link-tapo-c110-v2-nor.tgz",
+            "size": 7205287
+          }
+        },
+        "ssc333_lite_tp-link-tapo-c110-v26": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc333_lite_tp-link-tapo-c110-v26-nor.tgz",
+            "size": 7240846
+          }
+        },
+        "ssc333_lite_vstarcam-c43s_b": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc333_lite_vstarcam-c43s_b-nor.tgz",
+            "size": 7224746
+          }
+        },
+        "ssc335de_lite_dahua-hfw1230sp-v2": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc335de_lite_dahua-hfw1230sp-v2-nor.tgz",
+            "size": 6353703
+          }
+        },
+        "ssc335de_lite_imou-c22e-s2-v2": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc335de_lite_imou-c22e-s2-v2-nor.tgz",
+            "size": 7256495
+          }
+        },
+        "ssc335de_lite_uniview-c1l-2wn-g": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc335de_lite_uniview-c1l-2wn-g-nor.tgz",
+            "size": 7258008
+          }
+        },
+        "ssc335_lite_tp-link-tapo-c110-v1": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc335_lite_tp-link-tapo-c110-v1-nor.tgz",
+            "size": 7187825
+          }
+        },
+        "ssc335_lite_tp-link-tapo-c310-v220": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc335_lite_tp-link-tapo-c310-v220-nor.tgz",
+            "size": 7208242
+          }
+        },
+        "ssc335_lite_trassir-tr-w2c1-v2": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc335_lite_trassir-tr-w2c1-v2-nor.tgz",
+            "size": 7222244
+          }
+        },
+        "ssc337de_ultimate_foscam-x5": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc337de_ultimate_foscam-x5-nor.tgz",
+            "size": 8076705
+          }
+        },
+        "ssc337_lite_h3c-tc2101": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc337_lite_h3c-tc2101-nor.tgz",
+            "size": 7270812
+          }
+        },
+        "ssc337_lite_tiandy-tc-c321n-v2": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc337_lite_tiandy-tc-c321n-v2-nor.tgz",
+            "size": 6389251
+          }
+        },
+        "ssc337_lite_tp-link-tapo-c110-v1": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc337_lite_tp-link-tapo-c110-v1-nor.tgz",
+            "size": 7199464
+          }
+        },
+        "ssc338q_apfpv_greg-generic-bu-eu": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc338q_apfpv_greg-generic-bu-eu-nor.tgz",
+            "size": 9356306
+          }
+        },
+        "ssc338q_apfpv_greg-generic-cu-eu": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc338q_apfpv_greg-generic-cu-eu-nor.tgz",
+            "size": 9450517
+          }
+        },
+        "ssc338q_fpv_caddx-fly": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc338q_fpv_caddx-fly-nor.tgz",
+            "size": 10300016
+          }
+        },
+        "ssc338q_fpv_emax-wyvern-link": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc338q_fpv_emax-wyvern-link-nor.tgz",
+            "size": 10299663
+          }
+        },
+        "ssc338q_fpv_openipc-mario-aio": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc338q_fpv_openipc-mario-aio-nor.tgz",
+            "size": 10318631
+          }
+        },
+        "ssc338q_fpv_openipc-thinker-aio": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc338q_fpv_openipc-thinker-aio-nor.tgz",
+            "size": 10283192
+          }
+        },
+        "ssc338q_fpv_openipc-urllc-aio": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc338q_fpv_openipc-urllc-aio-nor.tgz",
+            "size": 10306616
+          }
+        },
+        "ssc338q_fpv_runcam-wifilink": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc338q_fpv_runcam-wifilink-nor.tgz",
+            "size": 10299701
+          }
+        },
+        "ssc338q_rubyfpv_generic": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc338q_rubyfpv_generic-nor.tgz",
+            "size": 10119164
+          }
+        },
+        "ssc338q_rubyfpv_thinker_internal_wifi": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc338q_rubyfpv_thinker_internal_wifi-nor.tgz",
+            "size": 10084233
+          }
+        },
+        "ssc377qe_fpv_ccdcam-im50q01-tipoman": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/ssc377qe_fpv_ccdcam-im50q01-tipoman-nor.tgz",
+            "size": 9850557
+          }
+        },
+        "t10_lite_hb-wifi-z6": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t10_lite_hb-wifi-z6-nor.tgz",
+            "size": 6647097
+          }
+        },
+        "t10_lite_jvs-ingt10-gqs60ep": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t10_lite_jvs-ingt10-gqs60ep-nor.tgz",
+            "size": 6238499
+          }
+        },
+        "t20_lite_ec37-t11": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t20_lite_ec37-t11-nor.tgz",
+            "size": 6534470
+          }
+        },
+        "t20_ultimate_azarton-c1": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t20_ultimate_azarton-c1-nor.tgz",
+            "size": 7343584
+          }
+        },
+        "t21_lite_chinamobile-hdc-51-a5-v12": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t21_lite_chinamobile-hdc-51-a5-v12-nor.tgz",
+            "size": 6241640
+          }
+        },
+        "t21_lite_smartwares-cip-37210at": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t21_lite_smartwares-cip-37210at-nor.tgz",
+            "size": 6344392
+          }
+        },
+        "t21_lite_wansview-q5-1080p": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t21_lite_wansview-q5-1080p-nor.tgz",
+            "size": 6387132
+          }
+        },
+        "t21_lite_xyx-06s": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t21_lite_xyx-06s-nor.tgz",
+            "size": 6391188
+          }
+        },
+        "t23_lite_jooan-a6m-u": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t23_lite_jooan-a6m-u-nor.tgz",
+            "size": 6429654
+          }
+        },
+        "t23_lite_jooan-q3r-u": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t23_lite_jooan-q3r-u-nor.tgz",
+            "size": 6432916
+          }
+        },
+        "t23_lite_lsc-3215672": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t23_lite_lsc-3215672-nor.tgz",
+            "size": 6308456
+          }
+        },
+        "t31_lite_aceline-aip-o4": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_aceline-aip-o4-nor.tgz",
+            "size": 6762154
+          }
+        },
+        "t31_lite_aoni-ep01j05": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_aoni-ep01j05-nor.tgz",
+            "size": 6893977
+          }
+        },
+        "t31_lite_chinamobile-hdc-51-a6-v11": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_chinamobile-hdc-51-a6-v11-nor.tgz",
+            "size": 6760053
+          }
+        },
+        "t31_lite_chinatelecom-y4h-50": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_chinatelecom-y4h-50-nor.tgz",
+            "size": 6805482
+          }
+        },
+        "t31_lite_cmcc-hdc-51-a6-v10": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_cmcc-hdc-51-a6-v10-nor.tgz",
+            "size": 6754779
+          }
+        },
+        "t31_lite_tuya-gv7630-t31-ptz": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_tuya-gv7630-t31-ptz-nor.tgz",
+            "size": 6759010
+          }
+        },
+        "t31_lite_vstarcam-cs55": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_vstarcam-cs55-nor.tgz",
+            "size": 6763702
+          }
+        },
+        "t31_lite_wansview-q5-2k": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_wansview-q5-2k-nor.tgz",
+            "size": 6761910
+          }
+        },
+        "t31_lite_wyze-v3b": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_wyze-v3b-nor.tgz",
+            "size": 7693965
+          }
+        },
+        "t31_lite_xiaomi-mjsxj03hl-jxq03": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_xiaomi-mjsxj03hl-jxq03-nor.tgz",
+            "size": 6728986
+          }
+        },
+        "t31_lite_xiaomi-mjsxj03hl": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_xiaomi-mjsxj03hl-nor.tgz",
+            "size": 6736527
+          }
+        },
+        "t31_lite_zte-k540": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_lite_zte-k540-nor.tgz",
+            "size": 6656048
+          }
+        },
+        "t31_ultimate_azarton-c1-t31x": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_ultimate_azarton-c1-t31x-nor.tgz",
+            "size": 7792023
+          }
+        },
+        "t31_ultimate_gcraftsman-gca50": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t31_ultimate_gcraftsman-gca50-nor.tgz",
+            "size": 7068667
+          }
+        },
+        "t40_lite_movols-mo-805p": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260614-e6d8822/t40_lite_movols-mo-805p-nor.tgz",
+            "size": 5180435
+          }
+        }
+      }
+    },
     {
       "id": "nightly-20260613-21de4f7",
       "sha": "21de4f7b92cc20e3f21d7f85334f51df4886b7ee",
