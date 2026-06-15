@@ -220,6 +220,24 @@ jobs:
           key: builder-dl-${{env.CACHE_DATE}}
           restore-keys: builder-dl-
 
+      - name: Refresh moving-ref package downloads
+        if: env.RUN
+        run: |
+          # builder caches BR2_DL_DIR (/tmp/builder-dl) under a monthly key
+          # (date +%m) and actions/cache only saves on a key miss, so the first build
+          # of the month freezes it for weeks. Packages pinned to a moving ref
+          # (VERSION = HEAD / branch, or the majestic-webui `dist` release asset)
+          # download as a constant <pkg>-<ref>.tar.gz, so buildroot keeps reusing the
+          # stale tarball — even though builder re-clones firmware HEAD each run for
+          # freshness. (Empirically: a 06-14 builder nightly shipped a ~2-week-old
+          # majestic-webui — full bootstrap.min.css, no mj-settings.js — while the
+          # firmware nightly shipped the current UI.) Drop those archives so buildroot
+          # re-fetches the current ref each run. Content-addressed packages
+          # (S3 / semver / SHA pins) keep their cache.
+          find /tmp/builder-dl -type f \
+            \( -name '*-HEAD.tar.gz' -o -name '*-master.tar.gz' -o -name '*-main.tar.gz' -o -name '*-dist.tar.gz' \) \
+            -print -delete 2>/dev/null || true
+
       - name: Build firmware
         if: env.RUN
         run: |

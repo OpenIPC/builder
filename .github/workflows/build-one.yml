@@ -67,6 +67,16 @@ jobs:
           key: builder-dl-${{env.CACHE_DATE}}
           restore-keys: builder-dl-
 
+      - name: Refresh moving-ref package downloads
+        run: |
+          # The monthly builder-dl cache freezes moving-ref downloads (VERSION = HEAD /
+          # branch, or the majestic-webui `dist` release asset) under a constant
+          # <pkg>-<ref>.tar.gz filename, so buildroot keeps reusing a stale tarball.
+          # Drop them so it re-fetches the current ref each run. See master.yml.
+          find /tmp/builder-dl -type f \
+            \( -name '*-HEAD.tar.gz' -o -name '*-master.tar.gz' -o -name '*-main.tar.gz' -o -name '*-dist.tar.gz' \) \
+            -print -delete 2>/dev/null || true
+
       - name: Build firmware
         env:
           BUILD_ID:       ${{ needs.resolve.outputs.tag_name }}
