@@ -28,6 +28,7 @@ CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   done
 CMCC HDC-51 A6-V10       T31L         JXF37     RTL8188FU_USB    NOR_16M   done
 CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in progress
+CP Plus CP-UNC-TA21L2C   GK7205V200   SC223A    -                NOR_16M   video-ok, ir-cut-no, audio-no
 Emax Wyvern Link         SSC338Q      IMX415                     NOR_16M   done
 Foscam X5                SSC337DE     GC4653    RTL8188FU_USB    NOR_16M   done
 G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done

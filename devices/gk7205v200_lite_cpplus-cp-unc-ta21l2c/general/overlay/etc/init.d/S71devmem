@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# CP Plus CP-UNC-TA21L2C (Goke gk7205v200, SmartSens SC223A) board pinmux.
+#
+# Runs after S70vendor (load_goke), overriding the SDK board=demo defaults
+# for this board's actual wiring:
+#  - the SC223A i2c is on hardware I2C0 routed to the VI-RAW pads
+#    (0x60/0x64 func2), not the default mipi-sensor pads (0x30/0x34 func1);
+#  - sensor reset/enable is GPIO8_7 (SENSOR_RSTN, func2);
+#  - the SC223A needs a 27 MHz MCLK (div6 = 0x19); the SDK default 0x11
+#    (div4) is wrong, so the sensor never ACKs without this.
+# (load_goke already muxes SENSOR_CLK 0x112c0028 to func1, so it is left as-is.)
+#
+case "$1" in
+	start)
+		devmem 0x112c0030 32 0x0     # default I2C0 SDA -> GPIO (de-mux)
+		devmem 0x112c0034 32 0x0     # default I2C0 SCL -> GPIO (de-mux)
+		devmem 0x112c0060 32 0x2     # GPIO7_2 -> I2C0_SDA (func2, VI-RAW)
+		devmem 0x112c0064 32 0x2     # GPIO7_3 -> I2C0_SCL (func2, VI-RAW)
+		devmem 0x112c0048 32 0x2     # GPIO8_7 -> SENSOR_RSTN (func2)
+		devmem 0x120100f0 32 0x19    # sensor MCLK = 27 MHz (div6)
+		;;
+
+	stop)
+		;;
+
+	*)
+		echo "Usage: $0 {start}"
+		exit 1
+		;;
+esac
