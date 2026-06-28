@@ -69,12 +69,14 @@ jobs:
 
       - name: Refresh moving-ref package downloads
         run: |
-          # The monthly builder-dl cache freezes moving-ref downloads (VERSION = HEAD /
-          # branch, or the majestic-webui `dist` release asset) under a constant
-          # <pkg>-<ref>.tar.gz filename, so buildroot keeps reusing a stale tarball.
-          # Drop them so it re-fetches the current ref each run. See master.yml.
-          find /tmp/builder-dl -type f \
-            \( -name '*-HEAD.tar.gz' -o -name '*-master.tar.gz' -o -name '*-main.tar.gz' -o -name '*-dist.tar.gz' \) \
+          # The monthly builder-dl cache freezes moving-ref downloads under a constant
+          # filename, so buildroot keeps reusing a stale tarball. Drop them so it
+          # re-fetches the current ref each run. See master.yml for the rationale.
+          # Covers both the dash form (<pkg>-<ref>.tar.gz, e.g. majestic-webui-dist) and
+          # the dot form (<pkg>.<ref>.tar.bz2, e.g. majestic.t31.lite.master from S3 —
+          # a moving build with no .hash, NOT a content-addressed pin).
+          find /tmp/builder-dl -type f -regextype posix-extended \
+            -regex '.*[-.](HEAD|master|main|dist)\.tar\.(gz|bz2|xz)' \
             -print -delete 2>/dev/null || true
 
       - name: Build firmware
