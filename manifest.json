@@ -1,11 +1,104 @@
 {
   "schema": 1,
-  "generated_at": "2026-06-28T07:34:49Z",
+  "generated_at": "2026-06-28T11:09:05Z",
   "channels": {
-    "nightly": "nightly-20260628-edb7251",
-    "latest": "nightly-20260628-edb7251"
+    "nightly": "nightly-20260628-9d85e99",
+    "latest": "nightly-20260628-9d85e99"
   },
   "builds": [
+    {
+      "id": "nightly-20260628-9d85e99",
+      "sha": "9d85e993fb989998799d1bde11bea01ca6aba4cb",
+      "short": "9d85e99",
+      "built_at": "2026-06-28T11:00:49Z",
+      "release_url": "https://github.com/OpenIPC/builder/releases/tag/nightly-20260628-9d85e99",
+      "platforms": {
+        "t31_lite_aceline-aip-o4": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_aceline-aip-o4-nor.tgz",
+            "size": 6825705
+          }
+        },
+        "t31_lite_aoni-ep01j05": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_aoni-ep01j05-nor.tgz",
+            "size": 6957342
+          }
+        },
+        "t31_lite_chinamobile-hdc-51-a6-v11": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_chinamobile-hdc-51-a6-v11-nor.tgz",
+            "size": 6822927
+          }
+        },
+        "t31_lite_chinatelecom-y4h-50": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_chinatelecom-y4h-50-nor.tgz",
+            "size": 6868651
+          }
+        },
+        "t31_lite_cmcc-hdc-51-a6-v10": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_cmcc-hdc-51-a6-v10-nor.tgz",
+            "size": 6818060
+          }
+        },
+        "t31_lite_tuya-gv7630-t31-ptz": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_tuya-gv7630-t31-ptz-nor.tgz",
+            "size": 6822554
+          }
+        },
+        "t31_lite_vstarcam-cs55": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_vstarcam-cs55-nor.tgz",
+            "size": 6826893
+          }
+        },
+        "t31_lite_wansview-q5-2k": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_wansview-q5-2k-nor.tgz",
+            "size": 6825489
+          }
+        },
+        "t31_lite_wyze-v3b": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_wyze-v3b-nor.tgz",
+            "size": 7757909
+          }
+        },
+        "t31_lite_xiaomi-mjsxj03hl-jxq03": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_xiaomi-mjsxj03hl-jxq03-nor.tgz",
+            "size": 6792390
+          }
+        },
+        "t31_lite_xiaomi-mjsxj03hl": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_xiaomi-mjsxj03hl-nor.tgz",
+            "size": 6800030
+          }
+        },
+        "t31_lite_zte-k540": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_zte-k540-nor.tgz",
+            "size": 6719872
+          }
+        },
+        "t31_ultimate_azarton-c1-t31x": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_ultimate_azarton-c1-t31x-nor.tgz",
+            "size": 7855113
+          }
+        },
+        "t31_ultimate_gcraftsman-gca50": {
+          "nor": {
+            "url": "https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_ultimate_gcraftsman-gca50-nor.tgz",
+            "size": 7132338
+          }
+        }
+      }
+    },
     {
       "id": "nightly-20260628-edb7251",
       "sha": "edb7251bf31c06a9092207a3b96301df750a1e21",
