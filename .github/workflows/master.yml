@@ -176,6 +176,9 @@ jobs:
           - hi3516cv300_mini
           - hi3518ev200_mini
 
+          # OTG (camera presents itself to a PC as a USB webcam)
+          - gk7205v200_otg_generic
+
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
