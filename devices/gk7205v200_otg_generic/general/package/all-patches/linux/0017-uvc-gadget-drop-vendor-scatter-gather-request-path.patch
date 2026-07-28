@@ -1,0 +1,53 @@
+uvc gadget: drop the vendor scatter-gather request path
+
+Goke's f_uvc carries a private UVC_SG_REQ mode that replaces the mainline
+request ring with a *single* in-flight usb_request (UVC_NUM_REQUESTS 1)
+whose scatterlist is sized to hold an entire video frame:
+
+	num_sgs = (video->imagesize / (req_size - 2)) + 1;
+
+uvc_video_encode_isoc() then fills every sg entry of that one request and
+hands the whole chain to the UDC in one go.
+
+dwc3 turns each mapped sg entry into a TRB chained to the next, so the
+chain describes one isochronous service interval. On a full-speed link an
+isoc interval carries exactly one 1023-byte packet, so only the first sg
+entry ever reaches the wire; the rest of the frame is dropped. Because the
+encoder had already consumed the buffer into the sg list, the buffer is
+marked done and the FID toggles, so the host sees a *complete* frame that
+happens to be 1021 bytes long (1023 minus the 2-byte UVC payload header).
+
+The visible symptom is that every frame larger than one packet arrives
+truncated. H.264 decoders report a stream of
+
+	error while decoding MB x y, bytestream -5
+
+and roughly half the frames fail to decode, while frames that happen to
+fit in a single packet come through intact.
+
+Fall back to the mainline path: 32 plain one-packet requests kept in
+flight by uvcg_video_pump(). Measured on gk7205v200 at full speed, this
+takes a 1280x720 H.264 stream from ~50% corrupt frames to 120/120 frames
+delivered with zero decoder errors and no gaps in the buffer sequence.
+
+The SG code is left in place behind the now-undefined macro rather than
+deleted, so it stays available for anyone who wants to revisit it on a
+high-speed link where an interval can hold mult*maxpacket bytes.
+
+diff --git a/drivers/usb/gadget/function/uvc.h b/drivers/usb/gadget/function/uvc.h
+--- a/drivers/usb/gadget/function/uvc.h
++++ b/drivers/usb/gadget/function/uvc.h
+@@ -17,7 +17,12 @@
+ #include <linux/types.h>
+ #include <linux/usb/ch9.h>
+ 
+-#define UVC_SG_REQ
++/* UVC_SG_REQ: the vendor scatter-gather path uses a single in-flight request
++ * carrying a whole frame as a chained TRB list. On this full-speed link the
++ * host only ever receives the first 1023-byte packet of each frame, so every
++ * frame larger than one packet arrives truncated (H.264 "bytestream -5").
++ * Fall back to the mainline path: 32 plain one-packet requests. */
++#undef UVC_SG_REQ
+ #define UVC_EVENT_FIRST			(V4L2_EVENT_PRIVATE_START + 0)
+ #define UVC_EVENT_CONNECT		(V4L2_EVENT_PRIVATE_START + 0)
+ #define UVC_EVENT_DISCONNECT		(V4L2_EVENT_PRIVATE_START + 1)

@@ -1,0 +1,131 @@
+#!/bin/sh
+#
+# Compose the UVC gadget in configfs. Advertises MJPEG and H.264 (frame-based)
+# at 720p and 1080p; the host picks one via UVC PROBE/COMMIT.
+#
+# Run after the gadget modules are loaded and configfs is mounted, and BEFORE
+# anything writes the UDC name. `usb-mode device` does both for you.
+#
+# Notes that cost real debugging time, do not "fix" these:
+#
+#  * The streaming group is "framebased", NOT "frame_based". The latter is the
+#    upstream >=5.15 spelling; this 4.9 vendor tree uses framebased. Using the
+#    wrong one fails silently -- mkdir just creates a junk directory that the
+#    gadget ignores, and the host sees no H.264 format.
+#  * control/class has only fs and ss. streaming/class has fs, hs and ss.
+#    Creating control/class/hs fails.
+#  * Attribute file names are camelCase (wWidth, dwFrameInterval, ...), even
+#    though the kernel's C identifiers are snake_case.
+#  * Do NOT try to set streaming_maxpacket / streaming_interval /
+#    streaming_maxburst. uvc_configfs.c's UVCG_OPTS_ATTR macro takes no `aname`
+#    parameter but still calls UVC_ATTR(..., aname), so all three land in
+#    configfs as files literally named "aname" and are unreachable. This is
+#    harmless: uvc_alloc_inst() already defaults them to 1 / 3072 / 15, and
+#    3072 is the USB 2.0 high-speed maximum (3 transactions x 1024 B per
+#    microframe = ~24.5 MB/s isoc ceiling). There is nothing better to set.
+#  * The framebased format's GUID is hardcoded to H.264 by the kernel, so
+#    there is no guidFormat attribute to write for it.
+
+set -e
+
+G=/sys/kernel/config/usb_gadget/uvc0
+
+# Frame intervals are in 100 ns units: 10000000 / fps.
+FPS30=333333
+
+if [ -d "$G" ]; then
+	echo "uvc-gadget-setup: $G already exists, nothing to do"
+	exit 0
+fi
+
+mkdir -p "$G"
+
+# 0x1d6b/0x0102 is the Linux Foundation vendor ID with the "UVC gadget"
+# product ID used by the in-tree g_webcam example. Fine for a device that is
+# never going to ship a USB-IF certified VID/PID.
+echo 0x1d6b > "$G/idVendor"
+echo 0x0102 > "$G/idProduct"
+
+mkdir -p "$G/strings/0x409"
+echo "OpenIPC"          > "$G/strings/0x409/manufacturer"
+echo "gk7205v200 UVC"   > "$G/strings/0x409/product"
+[ -r /sys/class/net/eth0/address ] &&
+	tr -d ':' < /sys/class/net/eth0/address > "$G/strings/0x409/serialnumber" ||
+	echo "0000" > "$G/strings/0x409/serialnumber"
+
+mkdir -p "$G/configs/c.1/strings/0x409"
+echo "UVC" > "$G/configs/c.1/strings/0x409/configuration"
+# Self-powered: the camera runs off its own PSU, it draws nothing from the host.
+echo 0xc0 > "$G/configs/c.1/bmAttributes"
+echo 0    > "$G/configs/c.1/MaxPower"
+
+mkdir -p "$G/functions/uvc.0"
+F="$G/functions/uvc.0"
+
+# Advertise only rates the camera can actually produce. The sensors on this
+# board top out at 1080p30, and a 60 fps entry is not harmless: hosts pick the
+# fastest interval on offer, so they commit to 60, size their timing from it and
+# then see half the frames they were promised.
+#
+# This MUST reach the kernel as a single write(): configfs invokes the
+# attribute's store() once per write() syscall, and each store() replaces the
+# whole list rather than appending. busybox `printf '%s\n%s\n' a b` emits one
+# write() per directive, so it stores only the last value and then fails with
+# EINVAL on the second write. An `echo` of one string is a single write().
+FRAME_INTERVALS="$FPS30"
+
+# --- a frame directory, shared by both formats -------------------------------
+# $1 format dir, $2 name, $3 width, $4 height, $5 default interval,
+# $6 min bitrate, $7 max bitrate
+add_frame() {
+	_d="$1/$2"
+	mkdir -p "$_d"
+	echo "$3" > "$_d/wWidth"
+	echo "$4" > "$_d/wHeight"
+	echo "$5" > "$_d/dwDefaultFrameInterval"
+	echo "$6" > "$_d/dwMinBitRate"
+	echo "$7" > "$_d/dwMaxBitRate"
+	echo "$FRAME_INTERVALS" > "$_d/dwFrameInterval"
+}
+
+# --- MJPEG -------------------------------------------------------------------
+mkdir -p "$F/streaming/mjpeg/m"
+# dwMaxVideoFrameBufferSize is an upper bound the host uses to size its buffer.
+# w*h*2 is a generous ceiling for JPEG; undersizing it truncates frames.
+add_frame "$F/streaming/mjpeg/m" 720p  1280 720  "$FPS30" 12000000 30000000
+echo $((1280 * 720 * 2))  > "$F/streaming/mjpeg/m/720p/dwMaxVideoFrameBufferSize"
+add_frame "$F/streaming/mjpeg/m" 1080p 1920 1080 "$FPS30" 24000000 60000000
+echo $((1920 * 1080 * 2)) > "$F/streaming/mjpeg/m/1080p/dwMaxVideoFrameBufferSize"
+
+# --- H.264 (frame-based) -----------------------------------------------------
+mkdir -p "$F/streaming/framebased/h"
+add_frame "$F/streaming/framebased/h" 720p  1280 720  "$FPS30" 2000000  8000000
+add_frame "$F/streaming/framebased/h" 1080p 1920 1080 "$FPS30" 4000000 16000000
+# dwBytesPerLine is meaningless for a compressed format; 0 says "variable".
+echo 0 > "$F/streaming/framebased/h/720p/dwBytesPerLine"
+echo 0 > "$F/streaming/framebased/h/1080p/dwBytesPerLine"
+
+# --- headers and class links -------------------------------------------------
+# Formats link INTO the streaming header; the header links INTO each speed
+# class.
+#
+# Targets must be ABSOLUTE. configfs_symlink() resolves the target with
+# kern_path(), which resolves a relative path against the calling process's
+# CWD -- not against the directory the link lives in. The upstream
+# gadget-testing.txt recipe gets away with relative targets only because it
+# cd's into each directory first. Absolute paths do not care where we are.
+mkdir -p "$F/streaming/header/h"
+ln -s "$F/streaming/mjpeg/m"      "$F/streaming/header/h/m"
+ln -s "$F/streaming/framebased/h" "$F/streaming/header/h/h"
+
+ln -s "$F/streaming/header/h" "$F/streaming/class/fs/h"
+ln -s "$F/streaming/header/h" "$F/streaming/class/hs/h"
+ln -s "$F/streaming/header/h" "$F/streaming/class/ss/h"
+
+mkdir -p "$F/control/header/h"
+ln -s "$F/control/header/h" "$F/control/class/fs/h"
+ln -s "$F/control/header/h" "$F/control/class/ss/h"
+
+ln -s "$F" "$G/configs/c.1/uvc.0"
+
+echo "uvc-gadget-setup: composed $G (MJPEG + H.264, 720p/1080p)"

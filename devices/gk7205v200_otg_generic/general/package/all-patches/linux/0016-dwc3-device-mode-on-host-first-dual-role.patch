@@ -1,0 +1,210 @@
+From: OpenIPC
+Subject: [PATCH] usb: dwc3: make device mode work on a host-first dual-role part
+
+On gk7205v200 the DTS boots in host mode and the role is switched at
+runtime, so the gadget always starts from a controller that xHCI has
+already owned and reset. Three things were missing for that to work; all
+three are needed, and all three are things upstream's later
+__dwc3_set_mode() rework does for the DWC3_GCTL_PRTCAP_DEVICE case.
+
+1. The event buffer was never re-armed. xHCI's controller reset clears
+   GEVNTADRLO/HI and nothing programmed them again, so the core DMA'd its
+   event descriptors to physical address 0 -- not RAM on this SoC, DRAM
+   starts at 0x40000000. No event ever reached the driver: the link
+   chirped and counted SOFs in hardware and the host saw a device, but the
+   gadget never observed the USB reset.
+
+2. The device side was never reset before being started, so the USB2 PHY
+   was left in whatever state xHCI put it in. The high-speed chirp then
+   failed, DSTS.CONNECTSPD came back full-speed, CONNECT_DONE was never
+   raised and the host timed out with -71.
+
+3. Re-attach never worked, for two separate reasons -- see the comments in
+   dwc3_gadget_pullup().
+
+With all three, enumeration is reliable across repeated attach/detach
+cycles.
+
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -144,7 +144,7 @@
+  * dwc3_core_soft_reset - Issues core soft reset and PHY reset
+  * @dwc: pointer to our context structure
+  */
+-static int dwc3_core_soft_reset(struct dwc3 *dwc)
++int dwc3_core_soft_reset(struct dwc3 *dwc)
+ {
+ 	u32		reg;
+ 	int		retries = 1000;
+@@ -316,7 +316,7 @@
+  *
+  * Returns 0 on success otherwise negative errno.
+  */
+-static int dwc3_event_buffers_setup(struct dwc3 *dwc)
++int dwc3_event_buffers_setup(struct dwc3 *dwc)
+ {
+ 	struct dwc3_event_buffer	*evt;
+ 
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -1155,6 +1155,8 @@
+ 
+ /* prototypes */
+ void dwc3_set_mode(struct dwc3 *dwc, u32 mode);
++int dwc3_event_buffers_setup(struct dwc3 *dwc);
++int dwc3_core_soft_reset(struct dwc3 *dwc);
+ u32 dwc3_core_fifo_space(struct dwc3_ep *dep, u8 type);
+ 
+ /* check whether we are on the DWC_usb31 core */
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1563,6 +1563,9 @@
+ 	return 0;
+ }
+ 
++static int __dwc3_gadget_start(struct dwc3 *dwc);
++static void __dwc3_gadget_stop(struct dwc3 *dwc);
++
+ static int dwc3_gadget_pullup(struct usb_gadget *g, int is_on)
+ {
+ 	struct dwc3		*dwc = gadget_to_dwc(g);
+@@ -1571,8 +1574,80 @@
+ 
+ 	is_on = !!is_on;
+ 
++	if (!is_on) {
++		spin_lock_irqsave(&dwc->lock, flags);
++		ret = dwc3_gadget_run_stop(dwc, false, false);
++		spin_unlock_irqrestore(&dwc->lock, flags);
++		/*
++		 * Never report a failure on the way down.
++		 *
++		 * dwc3_gadget_run_stop(0) polls DSTS.DEVCTRLHLT and returns
++		 * -ETIMEDOUT if the core does not halt in time, which this one
++		 * regularly does not. That error is not harmless: it propagates
++		 * out through usb_gadget_disconnect() into
++		 * usb_gadget_deactivate(), which then skips "gadget->deactivated
++		 * = true", and into usb_function_deactivate(), which then skips
++		 * "cdev->deactivations++". The refcount is left permanently
++		 * unbalanced, so every later usb_function_activate() trips
++		 * WARN_ON(cdev->deactivations == 0) and never calls
++		 * usb_gadget_connect() -- the gadget can be disconnected once
++		 * and then never comes back.
++		 *
++		 * RUN_STOP has been cleared regardless, so the pullup really is
++		 * down; only the halt handshake was slow. Whatever state that
++		 * leaves the core in does not matter, because the is_on path
++		 * below soft-resets and re-initialises it from scratch.
++		 */
++		if (ret) {
++			dev_dbg(dwc->dev,
++				"pullup(0): run_stop returned %d, ignoring so the deactivation refcount stays balanced\n",
++				ret);
++			ret = 0;
++		}
++		return ret;
++	}
++
++	/*
++	 * Bringing the pullup back up after a disconnect needs a full device-side
++	 * re-init, not just RUN_STOP.
++	 *
++	 * A gadget that has been disconnected once (f_uvc does this every time
++	 * userspace closes /dev/videoN, via usb_function_deactivate()) leaves the
++	 * core half torn down: the USB2 PHY keeps whatever state the disconnect
++	 * left it in and the event buffer registers are stale. Re-asserting
++	 * RUN_STOP on its own gets the host as far as SET_ADDRESS -- the device
++	 * reaches "addressed" -- and then control transfers fail, so enumeration
++	 * never completes. Only the first connect after dwc3_gadget_start() ever
++	 * worked, because that path does the reset for us.
++	 *
++	 * So do here what dwc3_gadget_start() does: quiesce, soft reset (which
++	 * re-runs usb_phy_init()/phy_init()), then start the device side again.
++	 * dwc3_event_buffers_setup() is called from __dwc3_gadget_start().
++	 *
++	 * Callable only from process context: dwc3_core_soft_reset() sleeps, so it
++	 * must run outside dwc->lock. That holds for every caller we have --
++	 * usb_gadget_connect() reaches us from usb_gadget_activate() (userspace
++	 * opening the video node) and from udc_bind_to_driver(). A platform that
++	 * called usb_udc_vbus_handler() from hard IRQ would need reworking here.
++	 */
+ 	spin_lock_irqsave(&dwc->lock, flags);
+-	ret = dwc3_gadget_run_stop(dwc, is_on, false);
++	__dwc3_gadget_stop(dwc);
++	spin_unlock_irqrestore(&dwc->lock, flags);
++
++	ret = dwc3_core_soft_reset(dwc);
++	if (ret) {
++		dev_err(dwc->dev, "pullup: soft reset failed: %d\n", ret);
++		return ret;
++	}
++
++	spin_lock_irqsave(&dwc->lock, flags);
++	ret = __dwc3_gadget_start(dwc);
++	if (ret) {
++		spin_unlock_irqrestore(&dwc->lock, flags);
++		dev_err(dwc->dev, "pullup: gadget start failed: %d\n", ret);
++		return ret;
++	}
++	ret = dwc3_gadget_run_stop(dwc, true, false);
+ 	spin_unlock_irqrestore(&dwc->lock, flags);
+ 
+ 	return ret;
+@@ -1652,6 +1727,27 @@
+ 	int			ret = 0;
+ 	u32			reg;
+ 
++	/*
++	 * Re-program the event buffer address before starting the device side.
++	 *
++	 * dwc3_core_init() sets GEVNTADRLO/HI up once at probe, but on a
++	 * dual-role part the host is brought up straight afterwards and xHCI's
++	 * controller reset clears them again. Nothing else re-arms them, so on
++	 * any host->device transition (and on this SoC, that includes the very
++	 * first one, because the DTS boots in host mode) the core is left with
++	 * an event buffer address of 0. It then DMAs its event descriptors to
++	 * physical address 0 -- which is not RAM here, DRAM starts at
++	 * 0x40000000 -- so no event ever reaches the driver: the link chirps and
++	 * counts SOFs in hardware, the host sees a high-speed device, but the
++	 * gadget never observes the USB reset and enumeration dies with -71.
++	 *
++	 * Upstream fixed this by calling dwc3_event_buffers_setup() from
++	 * __dwc3_set_mode() when switching to DWC3_GCTL_PRTCAP_DEVICE; this
++	 * tree predates that rework, so re-arm here instead. This covers both
++	 * the gadget-bind and the resume path, and is idempotent.
++	 */
++	dwc3_event_buffers_setup(dwc);
++
+ 	reg = dwc3_readl(dwc->regs, DWC3_DCFG);
+ 	reg &= ~(DWC3_DCFG_SPEED_MASK);
+ 
+@@ -1751,6 +1847,29 @@
+ 	int			ret = 0;
+ 	int			irq;
+ 
++	/*
++	 * Re-initialise the controller and its PHYs before handing the port to
++	 * the device side.
++	 *
++	 * On a dual-role part the host is started first, so by the time a gadget
++	 * driver binds, the USB2 PHY is still in the state xHCI left it in and
++	 * the device side has never been reset. Symptom: the link comes up but
++	 * loses the high-speed chirp handshake, so DSTS.CONNECTSPD reads
++	 * full-speed, DWC3_DEVICE_EVENT_CONNECT_DONE is never raised, and the
++	 * host -- which is driving high-speed -- times out with -71.
++	 *
++	 * dwc3_core_soft_reset() re-runs usb_phy_init()/phy_init() and resets
++	 * the device side, which is exactly what upstream's __dwc3_set_mode()
++	 * does for the DWC3_GCTL_PRTCAP_DEVICE case. This tree predates that
++	 * rework. Must be called outside dwc->lock: it sleeps (udelay loops and
++	 * PHY init).
++	 */
++	ret = dwc3_core_soft_reset(dwc);
++	if (ret) {
++		dev_err(dwc->dev, "soft reset before gadget start failed: %d\n", ret);
++		return ret;
++	}
++
+ 	irq = dwc->irq_gadget;
+ 	ret = request_threaded_irq(irq, dwc3_interrupt, dwc3_thread_interrupt,
+ 			IRQF_SHARED, "dwc3", dwc->ev_buf);
