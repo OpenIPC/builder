@@ -73,11 +73,13 @@ teardown_gadget() {
 	F="$GADGET/functions/uvc.0"
 	rm -f "$F/control/class/fs/h" "$F/control/class/ss/h"
 	rm -f "$F/streaming/class/fs/h" "$F/streaming/class/hs/h" "$F/streaming/class/ss/h"
-	rm -f "$F/streaming/header/h/m" "$F/streaming/header/h/h"
+	# uvc-gadget-setup composes whichever single format majestic is set to, so
+	# tear down both possibilities: only one of them exists on any given boot.
+	rm -f "$F/streaming/header/h/f"
 	rmdir "$F/streaming/header/h"      2>/dev/null || true
-	rmdir "$F/streaming/mjpeg/m/720p" "$F/streaming/mjpeg/m/1080p" 2>/dev/null || true
+	rmdir "$F/streaming/mjpeg/m/f"     2>/dev/null || true
 	rmdir "$F/streaming/mjpeg/m"       2>/dev/null || true
-	rmdir "$F/streaming/framebased/h/720p" "$F/streaming/framebased/h/1080p" 2>/dev/null || true
+	rmdir "$F/streaming/framebased/h/f" 2>/dev/null || true
 	rmdir "$F/streaming/framebased/h"  2>/dev/null || true
 	rmdir "$F/control/header/h"        2>/dev/null || true
 
