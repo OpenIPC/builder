@@ -99,6 +99,20 @@ to_device() {
 	need_debugfs
 
 	if X=$(xhci_device) && [ -e "/sys/bus/platform/drivers/xhci-hcd/$X" ]; then
+		# Coming straight from boot the controller is still in its power-on
+		# GCTL.PRTCAPDIR = OTG(3) (see the header note: nothing moves it off
+		# OTG on its own). xhci-hcd binds and registers both buses on top of
+		# that anyway, but it is not actually driving the port -- so unbinding
+		# directly from OTG asks xhci_halt() to halt a host that was never
+		# really running, and it times out:
+		#   xhci-hcd.0.auto: Host not halted after 16000 microseconds.
+		#   xhci-hcd.0.auto: Host controller not halted, aborting reset.
+		# Leaving the controller un-halted is precisely the live-DMA-engine
+		# state this unbind exists to avoid. Flip to host first so the already
+		# bound xHCI is genuinely running, and the unbind then halts cleanly.
+		# A switch from host is already in that state, so only boot pays for it.
+		[ "$(cat "$MODE_FILE")" = host ] || echo host > "$MODE_FILE"
+
 		echo "usb-mode: unbinding host controller $X"
 		echo "$X" > /sys/bus/platform/drivers/xhci-hcd/unbind
 	fi
