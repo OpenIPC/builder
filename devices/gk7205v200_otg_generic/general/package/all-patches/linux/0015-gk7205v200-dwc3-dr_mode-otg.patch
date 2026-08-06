@@ -1,0 +1,40 @@
+From: OpenIPC
+Subject: [PATCH] gk7205v200: run the dwc3 controller in dual-role (otg) mode
+
+The gk7205v200 has a single DWC3 USB controller wired as a host port. This
+image needs it to work both ways: as a host (the usbcam second-camera path,
+consuming a USB webcam) and as a device (the UVC gadget path, presenting the
+camera to a PC as a webcam). They are never active at the same time -- xHCI
+HCSPARAMS1 reports MaxPorts = 1 -- but switching should not require a reboot.
+
+With dr_mode = "host", dwc3_core_init_mode() only calls dwc3_host_init(), so
+no UDC is ever registered and the gadget side is unreachable. With
+dr_mode = "otg" it calls both dwc3_host_init() and dwc3_gadget_init(), so an
+xHCI controller and a UDC coexist and userspace can pick a role at runtime via
+/sys/kernel/debug/<dwc3>/mode.
+
+The controller already carries Goke's peripheral-side endpoint remap in this
+same node (eps_directions, eps_map, snps,eps_new_init), which the vendor would
+only have added if device mode was exercised; and CONFIG_USB_DWC3_DUAL_ROLE is
+already enabled, so dwc3's gadget.o/ep0.o are already linked in.
+
+IMPORTANT: dr_mode = "otg" also makes dwc3_core_init() leave
+GCTL.PRTCAPDIR = OTG(3), and this 4.9 dwc3 has no working OTG role-detection
+block. A concrete role must be forced early in userspace -- see
+/etc/init.d/S72usbmode, which writes "host" at boot. Without it the controller
+sits in a role it cannot drive and USB does not work in either direction.
+
+This patch ships only in the gk7205v200_otg_generic device profile, so other
+gk7205v200 variants keep dr_mode = "host".
+
+--- a/arch/arm/boot/dts/gk7205v200.dtsi
++++ b/arch/arm/boot/dts/gk7205v200.dtsi
+@@ -395,7 +395,7 @@
+ 				phys = <&usb2_phy0>;
+ 				phy-names = "usb2-phy";
+ 				maximum-speed = "high-speed";
+-				dr_mode = "host";
++				dr_mode = "otg";
+ 				eps_directions = <0x6a>;
+ 				snps,eps_new_init;
+ 				eps_map=<0x0 0x1 0x2 0x3 0x4 0x5 0x7>;

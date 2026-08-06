@@ -1,0 +1,22 @@
+#!/bin/sh
+
+case "$1" in
+	start)
+		echo "Starting network..."
+		ifup lo
+		ifup eth0
+		ifup wlan0
+		;;
+
+	stop)
+		echo "Stopping network..."
+		ifdown lo
+		ifdown -f eth0
+		ifdown -f wlan0
+		;;
+
+	*)
+		echo "Usage: $0 {start|stop}"
+		exit 1
+		;;
+esac

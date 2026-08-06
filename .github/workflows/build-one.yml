@@ -1,0 +1,158 @@
+name: build-one
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to build (e.g. hi3518ev200_lite_switcam-hs303-v2)'
+        required: true
+      commit:
+        description: 'Builder commit SHA to build (optional; defaults to current branch HEAD). Use this from `git bisect run` or for one-off historic rebuilds.'
+        required: false
+      firmware_ref:
+        description: 'OpenIPC/firmware ref (SHA/tag/branch) to clone — for cross-repo bisect of size/regression issues. Defaults to firmware HEAD.'
+        required: false
+
+jobs:
+  resolve:
+    name: Resolve commit
+    runs-on: ubuntu-latest
+    outputs:
+      ref:       ${{ steps.r.outputs.ref }}
+      short_sha: ${{ steps.r.outputs.short_sha }}
+      tag_name:  ${{ steps.r.outputs.tag_name }}
+    steps:
+      - id: r
+        run: |
+          REF="${{ inputs.commit }}"
+          [ -z "$REF" ] && REF="${{ github.sha }}"
+          SHORT="$(printf '%s' "$REF" | cut -c1-7)"
+          if [ -n "${{ inputs.commit }}" ]; then
+            TAG="nightly-bisect-${SHORT}"
+          else
+            TAG="nightly-bisect-${SHORT}-$(date -u +%Y%m%d%H%M%S)"
+          fi
+          echo "ref=$REF"               >> "$GITHUB_OUTPUT"
+          echo "short_sha=$SHORT"       >> "$GITHUB_OUTPUT"
+          echo "tag_name=$TAG"          >> "$GITHUB_OUTPUT"
+          echo "Building ${{ inputs.platform }} at $REF -> release tag $TAG"
+
+  buildroot:
+    name: Firmware (${{inputs.platform}})
+    needs: resolve
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve.outputs.ref }}
+
+      - name: Prepare firmware
+        run: |
+          echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+          echo CACHE_DATE=$(date +%m) >> ${GITHUB_ENV}
+
+      - name: Setup ccache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/ccache
+          key: ${{inputs.platform}}-${{env.CACHE_DATE}}
+
+      # See master.yml for the rationale — builder.sh rm -rf's openipc/
+      # every run, so dl/ has to live outside via BR2_DL_DIR.
+      - name: Setup dl cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/builder-dl
+          key: builder-dl-${{env.CACHE_DATE}}
+          restore-keys: builder-dl-
+
+      - name: Refresh moving-ref package downloads
+        run: |
+          # The monthly builder-dl cache freezes moving-ref downloads under a constant
+          # filename, so buildroot keeps reusing a stale tarball. Drop them so it
+          # re-fetches the current ref each run. See master.yml for the rationale.
+          # Covers both the dash form (<pkg>-<ref>.tar.gz, e.g. majestic-webui-dist) and
+          # the dot form (<pkg>.<ref>.tar.bz2, e.g. majestic.t31.lite.master from S3 —
+          # a moving build with no .hash, NOT a content-addressed pin).
+          find /tmp/builder-dl -type f -regextype posix-extended \
+            -regex '.*[-.](HEAD|master|main|dist)\.tar\.(gz|bz2|xz)' \
+            -print -delete 2>/dev/null || true
+
+      - name: Build firmware
+        env:
+          BUILD_ID:       ${{ needs.resolve.outputs.tag_name }}
+          BUILD_SHA:      ${{ needs.resolve.outputs.ref }}
+          BUILD_PLATFORM: ${{ inputs.platform }}
+          OPENIPC_FW_REV: ${{ inputs.firmware_ref }}
+        run: |
+          export GIT_HASH=$(git rev-parse --short ${GITHUB_SHA})
+          export GIT_BRANCH=${GITHUB_REF_NAME}
+          echo GIT_HASH=${GIT_HASH} >> ${GITHUB_ENV}
+          echo GIT_BRANCH=${GIT_BRANCH} >> ${GITHUB_ENV}
+
+          mkdir -p /tmp/ccache
+          ln -s /tmp/ccache ${HOME}/.ccache
+
+          mkdir -p /tmp/builder-dl
+          export BR2_DL_DIR=/tmp/builder-dl
+
+          NAME=${{inputs.platform}}
+          # Retry budget for transient upstream toolchain/CDN flakes
+          # (matches master.yml + OpenIPC/firmware/build-one.yml).
+          backoffs="30 60 120 300 600 1200"
+          attempt=1
+          for sleep_for in $backoffs ""; do
+            bash builder.sh ${NAME} && break
+            if [ -z "$sleep_for" ]; then
+              echo "::error::build failed after ${attempt} attempts"
+              exit 1
+            fi
+            echo "::warning::attempt ${attempt} failed, retrying after ${sleep_for}s"
+            sleep "$sleep_for"
+            attempt=$((attempt + 1))
+          done
+          cd openipc
+
+          TIME=$(date -d @${SECONDS} +%M:%S)
+          echo TIME=${TIME} >> ${GITHUB_ENV}
+          COMMON=$(echo ${NAME} | awk -F_ '{print NF-1}')
+
+          NORFW=$(find output/images -name openipc*nor*)
+          if [ ! -z ${NORFW} ]; then
+            if [ ${COMMON} -eq 1 ]; then
+              echo NORFW=openipc/${NORFW} >> ${GITHUB_ENV}
+            else
+              mv ${NORFW} ../${NAME}-nor.tgz
+              echo NORFW=${NAME}-nor.tgz >> ${GITHUB_ENV}
+            fi
+          fi
+
+          NANDFW=$(find output/images -name openipc*nand*)
+          if [ ! -z ${NANDFW} ]; then
+            if [ ${COMMON} -eq 1 ]; then
+              echo NANDFW=openipc/${NANDFW} >> ${GITHUB_ENV}
+            else
+              mv ${NANDFW} ../${NAME}-nand.tgz
+              echo NANDFW=${NAME}-nand.tgz >> ${GITHUB_ENV}
+            fi
+          fi
+
+          if [ -z ${NORFW} ] && [ -z ${NANDFW} ]; then
+            exit 1
+          fi
+
+      - name: Upload firmware
+        if: env.NORFW || env.NANDFW
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.resolve.outputs.tag_name }}
+          prerelease: true
+          body: |
+            sha=${{ needs.resolve.outputs.ref }}
+            short=${{ needs.resolve.outputs.short_sha }}
+            platform=${{ inputs.platform }}
+            one_off=true
+          files: |
+            ${{env.NORFW}}
+            ${{env.NANDFW}}

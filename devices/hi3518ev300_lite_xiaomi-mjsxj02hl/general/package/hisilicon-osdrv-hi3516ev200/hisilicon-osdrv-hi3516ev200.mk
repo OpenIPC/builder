@@ -24,7 +24,6 @@ define HISILICON_OSDRV_HI3516EV200_INSTALL_TARGET_CMDS
 
 	$(INSTALL) -m 755 -d $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/hisilicon
 	$(INSTALL) -m 644 -t $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/hisilicon $(HISILICON_OSDRV_HI3516EV200_PKGDIR)/files/kmod/camhi-motor.ko
-	$(INSTALL) -m 644 -t $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/hisilicon $(HISILICON_OSDRV_HI3516EV200_PKGDIR)/files/kmod/hi3516ev200_isp.ko
 
 	$(INSTALL) -m 755 -d $(TARGET_DIR)/usr/bin
 	$(INSTALL) -m 755 -t $(TARGET_DIR)/usr/bin $(HISILICON_OSDRV_HI3516EV200_PKGDIR)/files/script/load*

@@ -21,12 +21,14 @@ Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
 Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
 Bathhouse                HI3518EV300  ?         RTL8188FU_USB    NOR_8M    research
 Botslab C213             T23N         SC3332    ATBM6012B_USB    NOR_8M    **INIT** - frozen
+CCDCAM IM50Q01           SSC377QE     IMX335    -                NOR_16M   done
 ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no
 ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
 CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   done
 CMCC HDC-51 A6-V10       T31L         JXF37     RTL8188FU_USB    NOR_16M   done
 CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in progress
+CP Plus CP-UNC-TA21L2C   GK7205V200   SC223A    -                NOR_16M   video-ok, ir-cut-no, audio-no
 Emax Wyvern Link         SSC338Q      IMX415                     NOR_16M   done
 Foscam X5                SSC337DE     GC4653    RTL8188FU_USB    NOR_16M   done
 G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
@@ -63,6 +65,7 @@ Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
 Tiandy TC-C321N          GK7205V200   OS02G10   -                NOR_8M    done
 Tiandy TC-C321N v2       SSC337       SC2336P   -                NOR_8M    done
 Tiandy TC-C32QN          GK7205V210   OS02G10   -                NOR_8M    done
+TP-Link Kasa KC110       HI3518EV200  OV2735    RTL8188FU_USB    NOR_16M   ptz-yes, video-WIP (pending majestic MIPI fix)
 TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    done
 TP-Link Tapo C110 v1     SSC337       SC3335    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    done

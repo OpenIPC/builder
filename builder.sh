@@ -57,6 +57,9 @@ copy_to_archive() {
         ${FIRMWARE_DIR}/output/images/openipc.*.tgz \
         ${BUILDER_DIR}/archive/${DEVICE}/${TIMESTAMP}
 
+    cp -a ${FIRMWARE_DIR}/output/images/sizes.*.json \
+        ${BUILDER_DIR}/archive/${DEVICE}/${TIMESTAMP} 2>/dev/null || true
+
     if [ -f "${FIRMWARE_DIR}/output/images/autoupdate-kernel.img" ]; then
         cp -a ${FIRMWARE_DIR}/output/images/autoupdate* ${BUILDER_DIR}/archive/${DEVICE}/${TIMESTAMP}
     fi
@@ -124,9 +127,18 @@ echo_c 33 "\nUpdating Builder"
 git pull
 
 rm -rf openipc
+# OPENIPC_FW_REV pins firmware to a specific ref (branch, tag, or SHA) for
+# cross-repo bisect of size/regression issues — set by build-one.yml's
+# firmware_ref input. When unset, clones HEAD of master as before.
 if [ ! -d "$FIRMWARE_DIR" ]; then
-    echo_c 33 "\nDownloading Firmware"
-    git clone --depth=1 https://github.com/OpenIPC/firmware.git "$FIRMWARE_DIR"
+    if [ -n "$OPENIPC_FW_REV" ]; then
+        echo_c 33 "\nDownloading Firmware @ ${OPENIPC_FW_REV}"
+        git clone https://github.com/OpenIPC/firmware.git "$FIRMWARE_DIR"
+        git -C "$FIRMWARE_DIR" checkout "$OPENIPC_FW_REV"
+    else
+        echo_c 33 "\nDownloading Firmware"
+        git clone --depth=1 https://github.com/OpenIPC/firmware.git "$FIRMWARE_DIR"
+    fi
     cd "$FIRMWARE_DIR"
 else
     echo_c 33 "\nUpdating Firmware"
@@ -143,6 +155,11 @@ cp -afv ${BUILDER_DIR}/${ITEM}/* ${FIRMWARE_DIR}
 
 echo_c 33 "\nBuilding the device"
 make BOARD=${DEVICE}
+
+# Best-effort: emit per-package/per-kernel-module size JSON next to the .tgz.
+# Target lives in firmware's Makefile (PR #2166); ignore failure so legacy
+# pinned firmware refs without the target don't sink the build.
+make BOARD=${DEVICE} size-report || true
 
 copy_to_archive
 echo_c 35 "\nDone"

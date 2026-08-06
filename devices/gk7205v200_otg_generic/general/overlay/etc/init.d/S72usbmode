@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# Force a concrete USB role at boot.
+#
+# This is NOT optional on this board. The device tree sets dr_mode = "otg" so
+# that dwc3 registers both an xHCI host and a UDC, which is what makes runtime
+# role switching possible. But dwc3_core_init() then leaves
+# GCTL.PRTCAPDIR = OTG(3), and this 4.9 dwc3 has no working OTG role-detection
+# block -- nothing ever moves it off OTG on its own. Left alone the controller
+# sits in a role it cannot drive and USB works in neither direction.
+#
+# Runs after S70vendor so the vendor modules are up first.
+
+case "$1" in
+	start)
+		mode=host
+		[ -r /etc/usbmode ] && read -r mode < /etc/usbmode
+		case "$mode" in
+			host|device) ;;
+			*) mode=host ;;
+		esac
+		echo "Setting USB role to $mode..."
+		/usr/bin/usb-mode "$mode" || echo "usb-mode $mode failed"
+		;;
+
+	stop)
+		;;
+
+	*)
+		echo "Usage: $0 {start|stop}"
+		exit 1
+		;;
+esac

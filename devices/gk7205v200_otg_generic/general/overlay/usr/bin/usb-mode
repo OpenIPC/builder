@@ -1,0 +1,173 @@
+#!/bin/sh
+#
+# Switch the single DWC3 controller between USB host and USB device roles.
+#
+# host   - xHCI drives the port. This is what the usbcam second-camera path
+#          needs (majestic consuming a USB webcam).
+# device - the UVC gadget drives the port, so a PC sees this camera as a
+#          webcam.
+#
+# The two are mutually exclusive: xHCI HCSPARAMS1 reports MaxPorts = 1, so
+# there is one port and one role at a time. Switching does not need a reboot.
+#
+# Why this is more than one echo: dwc3_set_mode() (drivers/usb/dwc3/core.c)
+# only flips GCTL.PRTCAPDIR. It does not stop the host stack or start the
+# gadget stack. Writing the debugfs `mode` file on its own leaves xHCI still
+# bound and its DMA engine still live, pointed at a controller that has been
+# re-aimed underneath it. Unbind first, then flip, then bring the other side
+# up.
+
+set -e
+
+STATE=/etc/usbmode
+GADGET=/sys/kernel/config/usb_gadget/uvc0
+
+die() { echo "usb-mode: $*" >&2; exit 1; }
+
+dwc3_mode_file() {
+	for f in /sys/kernel/debug/*.dwc3/mode; do
+		[ -e "$f" ] && { echo "$f"; return 0; }
+	done
+	return 1
+}
+
+xhci_device() {
+	for d in /sys/bus/platform/drivers/xhci-hcd/*.auto; do
+		[ -e "$d" ] && { basename "$d"; return 0; }
+	done
+	# Not currently bound; fall back to the device that exists on the bus.
+	for d in /sys/bus/platform/devices/xhci-hcd.*.auto; do
+		[ -e "$d" ] && { basename "$d"; return 0; }
+	done
+	return 1
+}
+
+udc_name() {
+	for u in /sys/class/udc/*; do
+		[ -e "$u" ] && { basename "$u"; return 0; }
+	done
+	return 1
+}
+
+need_debugfs() {
+	mountpoint -q /sys/kernel/debug 2>/dev/null ||
+		mount -t debugfs none /sys/kernel/debug
+	MODE_FILE=$(dwc3_mode_file) ||
+		die "no dwc3 mode file; is CONFIG_USB_DWC3_DUAL_ROLE enabled and debugfs mounted?"
+}
+
+teardown_gadget() {
+	[ -d "$GADGET" ] || return 0
+
+	# Unbind from the UDC first: this drops the D+ pullup so the host sees a
+	# disconnect rather than a device that stops answering.
+	if [ -e "$GADGET/UDC" ] && [ -s "$GADGET/UDC" ]; then
+		echo "" > "$GADGET/UDC" 2>/dev/null || true
+	fi
+
+	# configfs rmdir is strict about ordering: links before the things they
+	# point at, leaves before their parents. ENOTEMPTY here means something
+	# below was missed.
+	rm -f "$GADGET/configs/c.1/uvc.0"
+
+	F="$GADGET/functions/uvc.0"
+	rm -f "$F/control/class/fs/h" "$F/control/class/ss/h"
+	rm -f "$F/streaming/class/fs/h" "$F/streaming/class/hs/h" "$F/streaming/class/ss/h"
+	# uvc-gadget-setup composes whichever single format majestic is set to, so
+	# tear down both possibilities: only one of them exists on any given boot.
+	rm -f "$F/streaming/header/h/f"
+	rmdir "$F/streaming/header/h"      2>/dev/null || true
+	rmdir "$F/streaming/mjpeg/m/f"     2>/dev/null || true
+	rmdir "$F/streaming/mjpeg/m"       2>/dev/null || true
+	rmdir "$F/streaming/framebased/h/f" 2>/dev/null || true
+	rmdir "$F/streaming/framebased/h"  2>/dev/null || true
+	rmdir "$F/control/header/h"        2>/dev/null || true
+
+	# EBUSY here means a userspace process still holds the gadget's
+	# /dev/videoN open -- almost always majestic. Stop it first.
+	if ! rmdir "$F" 2>/dev/null; then
+		die "cannot remove uvc.0 (EBUSY?) -- is majestic still holding /dev/video*? stop it first"
+	fi
+
+	rmdir "$GADGET/configs/c.1/strings/0x409" 2>/dev/null || true
+	rmdir "$GADGET/configs/c.1"               2>/dev/null || true
+	rmdir "$GADGET/strings/0x409"             2>/dev/null || true
+	rmdir "$GADGET"                           2>/dev/null || true
+}
+
+to_device() {
+	need_debugfs
+
+	if X=$(xhci_device) && [ -e "/sys/bus/platform/drivers/xhci-hcd/$X" ]; then
+		# Coming straight from boot the controller is still in its power-on
+		# GCTL.PRTCAPDIR = OTG(3) (see the header note: nothing moves it off
+		# OTG on its own). xhci-hcd binds and registers both buses on top of
+		# that anyway, but it is not actually driving the port -- so unbinding
+		# directly from OTG asks xhci_halt() to halt a host that was never
+		# really running, and it times out:
+		#   xhci-hcd.0.auto: Host not halted after 16000 microseconds.
+		#   xhci-hcd.0.auto: Host controller not halted, aborting reset.
+		# Leaving the controller un-halted is precisely the live-DMA-engine
+		# state this unbind exists to avoid. Flip to host first so the already
+		# bound xHCI is genuinely running, and the unbind then halts cleanly.
+		# A switch from host is already in that state, so only boot pays for it.
+		[ "$(cat "$MODE_FILE")" = host ] || echo host > "$MODE_FILE"
+
+		echo "usb-mode: unbinding host controller $X"
+		echo "$X" > /sys/bus/platform/drivers/xhci-hcd/unbind
+	fi
+
+	echo device > "$MODE_FILE"
+
+	modprobe configfs     2>/dev/null || true
+	modprobe libcomposite 2>/dev/null || true
+	modprobe usb_f_uvc    2>/dev/null || true
+
+	mountpoint -q /sys/kernel/config 2>/dev/null ||
+		mount -t configfs none /sys/kernel/config
+
+	/usr/bin/uvc-gadget-setup
+
+	UDC=$(udc_name) ||
+		die "no UDC registered -- is dr_mode=\"otg\" in the device tree?"
+	echo "$UDC" > "$GADGET/UDC"
+
+	echo device > "$STATE"
+	echo "usb-mode: device (UVC gadget bound to $UDC)"
+}
+
+to_host() {
+	need_debugfs
+
+	teardown_gadget
+
+	echo host > "$MODE_FILE"
+
+	if X=$(xhci_device) && [ ! -e "/sys/bus/platform/drivers/xhci-hcd/$X" ]; then
+		echo "usb-mode: rebinding host controller $X"
+		echo "$X" > /sys/bus/platform/drivers/xhci-hcd/bind
+	fi
+
+	echo host > "$STATE"
+	echo "usb-mode: host"
+}
+
+status() {
+	need_debugfs
+	echo "dwc3 role : $(cat "$MODE_FILE")"
+	echo "persisted : $([ -r "$STATE" ] && cat "$STATE" || echo '(unset, defaults to host)')"
+	echo "udc       : $(udc_name || echo '(none)')"
+	echo "xhci bound: $(xhci_device >/dev/null 2>&1 && \
+		([ -e "/sys/bus/platform/drivers/xhci-hcd/$(xhci_device)" ] && echo yes || echo no) || echo '(no device)')"
+	echo "gadget    : $([ -d "$GADGET" ] && echo "composed, UDC='$(cat "$GADGET/UDC" 2>/dev/null)'" || echo 'not composed')"
+}
+
+case "$1" in
+	device) to_device ;;
+	host)   to_host ;;
+	status) status ;;
+	*)
+		echo "Usage: $0 {host|device|status}"
+		exit 1
+		;;
+esac
