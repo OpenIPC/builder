@@ -11,6 +11,22 @@ on:
 jobs:
   preflight:
     name: Preflight
+    # Guard rail for clones of this repo. A clone pushed to a new repository
+    # (a private mirror, an internal re-host) inherits this file along with
+    # its cron, and the full platform matrix then runs on that owner's Actions
+    # bill, nightly and unattended, publishing nightlies nobody reads. Forks
+    # are partially covered (GitHub disables scheduled workflows there), a
+    # fresh repository is not. Mirrors OpenIPC/firmware#2255.
+    #
+    # Unattended runs happen only on the canonical repo. Anywhere else a
+    # workflow runs only if someone explicitly asked for it, or if it is both
+    # free and attended. The pull_request clause is unreachable today -- this
+    # workflow has no pull_request trigger -- and is kept deliberately, so
+    # that adding one later does not silently skip CI on contributor forks.
+    if: >-
+      github.repository == 'OpenIPC/builder' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && !github.event.repository.private)
     runs-on: ubuntu-latest
     outputs:
       should_build: ${{ steps.gate.outputs.should_build }}
