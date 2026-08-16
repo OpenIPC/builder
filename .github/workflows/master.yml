@@ -1,5 +1,15 @@
 name: Build
 on:
+  # There was no pull_request trigger here: a change landed unbuilt and the
+  # nightly found out the next morning, or a user did. Building all 107 devices
+  # per PR is what made that unaffordable, so .github/scripts/ci-matrix.py picks
+  # only the devices a PR can reach. ready_for_review is not in the default set
+  # (opened, synchronize, reopened), and the selector skips drafts, so without it
+  # a PR opened as a draft would never build once marked ready.
+  pull_request:
+    branches:
+      - master
+    types: [opened, synchronize, reopened, ready_for_review]
   schedule:
     - cron: '0 3 * * *'
   workflow_dispatch:
@@ -8,7 +18,42 @@ on:
         description: Platform
         required: false
 
+# Cancel a PR's earlier run when a new commit lands on it. Scheduled and
+# dispatched runs are deliberately left alone: they write releases, and a
+# cancelled publish leaves the nightly half-uploaded.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  # Which devices can this change actually reach? Only ever narrows a
+  # pull_request -- the nightly is decided by firmware HEAD, not by this repo's
+  # diff, so every other event gets the whole matrix.
+  #
+  # The narrowing happens HERE, in a job that always runs, and never in a
+  # `paths:` filter on the trigger: a filtered-out workflow does not run at all,
+  # so a required check would stay pending forever and the PR could never merge.
+  select:
+    name: Select devices
+    # Same guard as preflight below.
+    if: >-
+      github.repository == 'OpenIPC/builder' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && !github.event.repository.private)
+    runs-on: ubuntu-latest
+    outputs:
+      matrix:      ${{ steps.pick.outputs.matrix }}
+      needs-build: ${{ steps.pick.outputs.needs-build }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the selector still describes the tree
+        run: python3 .github/scripts/ci-matrix.py --self-test
+      - id: pick
+        name: Pick the affected devices
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/ci-matrix.py >> ${GITHUB_OUTPUT}
+
   preflight:
     name: Preflight
     # Guard rail for clones of this repo. A clone pushed to a new repository
@@ -20,9 +65,8 @@ jobs:
     #
     # Unattended runs happen only on the canonical repo. Anywhere else a
     # workflow runs only if someone explicitly asked for it, or if it is both
-    # free and attended. The pull_request clause is unreachable today -- this
-    # workflow has no pull_request trigger -- and is kept deliberately, so
-    # that adding one later does not silently skip CI on contributor forks.
+    # free and attended -- which is what the pull_request clause covers, now
+    # that this workflow has such a trigger.
     if: >-
       github.repository == 'OpenIPC/builder' ||
       github.event_name == 'workflow_dispatch' ||
@@ -61,8 +105,10 @@ jobs:
 
   buildroot:
     name: Firmware
-    needs: preflight
-    if: needs.preflight.outputs.should_build == 'true'
+    needs: [preflight, select]
+    if: >-
+      needs.preflight.outputs.should_build == 'true' &&
+      needs.select.outputs.needs-build == 'true'
     runs-on: ubuntu-latest
     env:
       BUILD_ID:       ${{ needs.preflight.outputs.build_id }}
@@ -71,130 +117,9 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        platform:
-          - gk7202v300_lite_cootli_camv0103
-          - gk7202v300_lite_ipg-g3-wr
-          - gk7202v300_lite_xg521
-          - gk7205v200_lite_cpplus-cp-unc-ta21l2c
-          - gk7205v200_lite_tiandy-tc-c321n
-          - gk7205v200_lite_vixand-ipc-1
-          - gk7205v200_lite_vixand-iph-5-4g
-          - gk7205v210_lite_tiandy-tc-c32qn
-          - gk7205v210_lite_vixand-ivg-g3s
-          - gk7205v210_lite_vixand-ivg-g4f-a
-          - gk7205v210_lite_vixand-ivg-g4f-a-w
-          - gk7205v210_lite_vixand-ivg-g4h
-          - gk7205v300_lite_vixand-ivg-g6s
-          - gk7205v300_lite_vixand-ivg-g6s-w
-          - hi3516cv200_lite_trassir-tr-d4121ir1-v2
-          - hi3516ev300_ultimate_rostelecom-ipc8232swc-we
-          - hi3516ev300_ultimate_rvi-1ncmw2028
-          - hi3518ev200_lite_smartwares-cip-37210
-          - hi3518ev200_lite_switcam-hs303
-          - hi3518ev200_lite_switcam-hs303-v2
-          - hi3518ev200_lite_vstarcam-c8892wip
-          - hi3518ev200_lite_qtech-qvc-ipc-136w
-          - hi3518ev300_lite_bathhouse
-          - hi3518ev300_lite_xiaomi-mjsxj02hl
-          - hi3518ev200_ultimate_lenovo-snowman-1080p
-          - ssc30kd_lite_cmcc-ds-ytj5301
-          - ssc325_lite_imilab-ec3-cmsxj25a
-          - ssc325_lite_imou-c22cp
-          - ssc325_lite_tp-link-tapo-c310-v1
-          - ssc325_lite_trassir-tr-w2c1-v1
-          - ssc325de_lite_imou-c22ep-s2
-          - ssc333_lite_meari-speed-6s
-          - ssc333_lite_tp-link-tapo-c110-v2
-          - ssc333_lite_tp-link-tapo-c110-v26
-          - ssc333_lite_babysense-see-hd-ip206
-          - ssc333_lite_vstarcam-c43s_b
-          - ssc335_lite_tp-link-tapo-c110-v1
-          - ssc335_lite_tp-link-tapo-c310-v220
-          - ssc335_lite_trassir-tr-w2c1-v2
-          - ssc335de_lite_dahua-hfw1230sp-v2
-          - ssc335de_lite_imou-c22e-s2-v2
-          - ssc335de_lite_uniview-c1l-2wn-g
-          - ssc337_lite_h3c-tc2101
-          - ssc337_lite_tiandy-tc-c321n-v2
-          - ssc337_lite_tp-link-tapo-c110-v1
-          - ssc337de_ultimate_foscam-x5
-          - ssc338q_fpv_caddx-fly
-          - ssc338q_fpv_emax-wyvern-link
-          - ssc338q_fpv_openipc-mario-aio
-          - ssc338q_fpv_openipc-thinker-aio
-          - ssc338q_fpv_openipc-urllc-aio
-          - ssc338q_fpv_runcam-wifilink
-          - ssc377qe_fpv_ccdcam-im50q01-tipoman
-          - t10_lite_hb-wifi-z6
-          - t10_lite_jvs-ingt10-gqs60ep
-          - t20_ultimate_azarton-c1
-          - t20_lite_ec37-t11
-          - t31_lite_vstarcam-cs55
-          - t21_lite_chinamobile-hdc-51-a5-v12
-          - t21_lite_smartwares-cip-37210at
-          - t21_lite_xyx-06s
-          - t21_lite_wansview-q5-1080p
-          - t23_lite_jooan-a6m-u
-          - t23_lite_jooan-q3r-u
-          - t23_lite_lsc-3215672
-          - t31_lite_aceline-aip-o4
-          - t31_lite_wansview-q5-2k
-          - t31_lite_aoni-ep01j05
-          - t31_lite_chinamobile-hdc-51-a6-v11
-          - t31_lite_cmcc-hdc-51-a6-v10
-          - t31_lite_chinatelecom-y4h-50
-          - t31_lite_wyze-v3b
-          - t31_lite_xiaomi-mjsxj03hl
-          - t31_lite_xiaomi-mjsxj03hl-jxq03
-          - t31_lite_tuya-gv7630-t31-ptz
-          - t31_ultimate_azarton-c1-t31x
-          - t31_ultimate_gcraftsman-gca50
-          - t31_lite_zte-k540
-          - t40_lite_movols-mo-805p
-
-          # APFPV
-          - ssc30kq_apfpv_greg-generic-bu-eu
-          - ssc30kq_apfpv_greg-generic-cu-eu
-          - ssc338q_apfpv
-          - ssc338q_apfpv_greg-generic-bu-eu
-          - ssc338q_apfpv_greg-generic-cu-eu
-          - ssc378qe_apfpv
-
-          # FPV
-          - hi3516ev200_fpv
-          - hi3516ev300_fpv
-          - hi3536dv100_fpv
-          - gk7205v200_fpv
-          - gk7205v210_fpv
-          - gk7205v300_fpv
-          - ssc30kq_fpv
-          - ssc338q_fpv
-          - ssc378qe_fpv
-
-          # Ruby
-          - ssc30kq_rubyfpv_generic
-          - ssc338q_rubyfpv_generic
-          - ssc338q_rubyfpv_thinker_internal_wifi
-
-          # LTE
-          - hi3516ev200_lte
-          - hi3516ev300_lte
-          - gk7205v200_lte
-          - gk7205v300_lte
-
-          # Venc
-          - gk7205v200_venc
-          - gk7205v210_venc
-          - gk7205v300_venc
-
-          # Mini
-          - hi3516cv300_mini
-          - hi3518ev200_mini
-
-          # OTG (camera presents itself to a PC as a USB webcam)
-          - gk7205v200_otg_generic
-
+      # The device list lives in .github/scripts/ci-matrix.py, which is
+      # also what narrows it. Everything except pull_request gets all of it.
+      matrix: ${{ fromJson(needs.select.outputs.matrix) }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -345,7 +270,9 @@ jobs:
           fi
 
       - name: Upload firmware (dated)
-        if: env.NORFW || env.NANDFW
+        if: >-
+          github.event_name != 'pull_request' &&
+          (env.NORFW || env.NANDFW)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.preflight.outputs.build_id }}
@@ -360,7 +287,9 @@ jobs:
             ${{env.SIZES}}
 
       - name: Upload firmware (rolling nightly)
-        if: env.NORFW || env.NANDFW
+        if: >-
+          github.event_name != 'pull_request' &&
+          (env.NORFW || env.NANDFW)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: nightly
@@ -374,7 +303,9 @@ jobs:
             ${{env.SIZES}}
 
       - name: Upload firmware (latest — legacy alias)
-        if: env.NORFW || env.NANDFW
+        if: >-
+          github.event_name != 'pull_request' &&
+          (env.NORFW || env.NANDFW)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
@@ -384,7 +315,7 @@ jobs:
             ${{env.SIZES}}
 
       - name: Send binary
-        if: env.NORFW
+        if: github.event_name != 'pull_request' && env.NORFW
         run: |
           TG_MSG="Build: ${BUILD_ID}\nCommit: ${GIT_HASH}\nBranch: ${GIT_BRANCH}\nTime: ${TIME}\n\n"
           TG_ICON="\xE2\x9C\x85 GitHub Actions"
@@ -393,3 +324,46 @@ jobs:
           TG_CHANNEL=${{secrets.TELEGRAM_CHANNEL_OPENIPC_DEV}}
           HTTP=$(curl -s -o /dev/null -w %{http_code} https://api.telegram.org/bot${TG_TOKEN}/sendDocument -F chat_id=${TG_CHANNEL} -F caption="${TG_HEADER}" -F document=@${NORFW})
           echo Telegram response: ${HTTP}
+
+  # Single umbrella status check covering the whole run, so branch protection
+  # can require one context instead of a hardcoded "Build (<device>)" per
+  # device -- the matrix is now dynamic, and its job names change per PR.
+  # There was no gate here at all before: nothing reported a verdict on a
+  # change, because nothing built one.
+  ci-gate:
+    name: CI Gate
+    needs: [select, preflight, buildroot]
+    # always() so the gate still reports when a needed job fails -- but not on
+    # a run the guard above deliberately skipped, where it would read
+    # select=skipped and turn a saved build into a red run.
+    if: >-
+      always() && (github.repository == 'OpenIPC/builder' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && !github.event.repository.private))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require selection + device matrix to succeed
+        run: |
+          echo "select=${{ needs.select.result }} preflight=${{ needs.preflight.result }} buildroot=${{ needs.buildroot.result }}"
+          if [ "${{ needs.select.result }}" != "success" ]; then
+            echo "::error::device selection did not succeed"; exit 1
+          fi
+          if [ "${{ needs.preflight.result }}" != "success" ]; then
+            echo "::error::preflight did not succeed"; exit 1
+          fi
+          # Check the matrix against what select asked for. Blanket-accepting
+          # 'skipped' would mean a selector bug that narrowed a real change
+          # down to nothing reads as a green PR.
+          if [ "${{ needs.select.outputs.needs-build }}" = "true" ] && \
+             [ "${{ needs.preflight.outputs.should_build }}" = "true" ]; then
+            if [ "${{ needs.buildroot.result }}" != "success" ]; then
+              echo "::error::device matrix result=${{ needs.buildroot.result }}"; exit 1
+            fi
+            echo "device matrix OK (success)"
+          else
+            # Nothing in the change reaches a build, or the PR is still a draft.
+            if [ "${{ needs.buildroot.result }}" != "skipped" ]; then
+              echo "::error::device matrix ran when it should not have (${{ needs.buildroot.result }})"; exit 1
+            fi
+            echo "device matrix OK (no devices to build)"
+          fi
