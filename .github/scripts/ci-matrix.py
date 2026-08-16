@@ -34,7 +34,8 @@ upstream firmware fixes stayed invisible to users until something here happened
 to change. Every event except pull_request gets the whole matrix.
 
 Usage:
-    ci-matrix.py               # read GitHub Actions env, write $GITHUB_OUTPUT
+    ci-matrix.py               # read GitHub Actions env; append to $GITHUB_OUTPUT
+                               # when it is set, otherwise print the same lines
     ci-matrix.py --stdin       # read a file list on stdin, print the decision
     ci-matrix.py --self-test   # check this file still agrees with the tree
 """
@@ -501,9 +502,24 @@ def main():
     for target in decision["rows"]:
         print(f"  {target}", file=sys.stderr)
 
-    print(f"matrix={json.dumps(decision['matrix'], separators=(',', ':'))}")
-    print(f"needs-build={str(decision['needs_build']).lower()}")
-    print(f"reason={decision['reason']}")
+    lines = [
+        f"matrix={json.dumps(decision['matrix'], separators=(',', ':'))}",
+        f"needs-build={str(decision['needs_build']).lower()}",
+        f"reason={decision['reason']}",
+    ]
+    # Write $GITHUB_OUTPUT here rather than having the workflow redirect stdout
+    # into it. Under a redirect every print() in this file is one keystroke away
+    # from corrupting the step outputs, and a crash between the first line and
+    # the last leaves a half-written file that Actions still reads. Diagnostics
+    # go to stderr precisely so that cannot happen -- which is a rule that has
+    # to hold forever to stay safe, instead of a property of the code.
+    # Falls back to stdout so a local run still shows what it decided.
+    destination = None if args.stdin else os.environ.get("GITHUB_OUTPUT")
+    if destination:
+        with open(destination, "a") as handle:
+            handle.write("\n".join(lines) + "\n")
+    else:
+        print("\n".join(lines))
     return 0
 
 

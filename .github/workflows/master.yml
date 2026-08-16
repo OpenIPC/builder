@@ -52,7 +52,7 @@ jobs:
         name: Pick the affected devices
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python3 .github/scripts/ci-matrix.py >> ${GITHUB_OUTPUT}
+        run: python3 .github/scripts/ci-matrix.py
 
   preflight:
     name: Preflight
