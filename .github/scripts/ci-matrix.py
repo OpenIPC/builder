@@ -50,69 +50,22 @@ import urllib.request
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# The build matrix. This is the single copy --- .github/workflows/master.yml
-# reads it from here rather than carrying its own list. Every entry must have
-# exactly one devices/**/configs/<target>_defconfig; --self-test enforces that.
-ALL_TARGETS = [
-    # Consumer cameras, one devices/<dir>/ each
-    "gk7202v300_lite_cootli_camv0103", "gk7202v300_lite_ipg-g3-wr",
-    "gk7202v300_lite_xg521", "gk7205v200_lite_cpplus-cp-unc-ta21l2c",
-    "gk7205v200_lite_tiandy-tc-c321n", "gk7205v200_lite_vixand-ipc-1",
-    "gk7205v200_lite_vixand-iph-5-4g", "gk7205v210_lite_tiandy-tc-c32qn",
-    "gk7205v210_lite_vixand-ivg-g3s", "gk7205v210_lite_vixand-ivg-g4f-a",
-    "gk7205v210_lite_vixand-ivg-g4f-a-w", "gk7205v210_lite_vixand-ivg-g4h",
-    "gk7205v300_lite_vixand-ivg-g6s", "gk7205v300_lite_vixand-ivg-g6s-w",
-    "hi3516cv200_lite_trassir-tr-d4121ir1-v2",
-    "hi3516ev300_ultimate_rostelecom-ipc8232swc-we",
-    "hi3516ev300_ultimate_rvi-1ncmw2028",
-    "hi3518ev200_lite_smartwares-cip-37210", "hi3518ev200_lite_switcam-hs303",
-    "hi3518ev200_lite_switcam-hs303-v2", "hi3518ev200_lite_vstarcam-c8892wip",
-    "hi3518ev200_lite_qtech-qvc-ipc-136w", "hi3518ev300_lite_bathhouse",
-    "hi3518ev300_lite_xiaomi-mjsxj02hl", "hi3518ev200_ultimate_lenovo-snowman-1080p",
-    "ssc30kd_lite_cmcc-ds-ytj5301", "ssc325_lite_imilab-ec3-cmsxj25a",
-    "ssc325_lite_imou-c22cp", "ssc325_lite_tp-link-tapo-c310-v1",
-    "ssc325_lite_trassir-tr-w2c1-v1", "ssc325de_lite_imou-c22ep-s2",
-    "ssc333_lite_meari-speed-6s", "ssc333_lite_tp-link-tapo-c110-v2",
-    "ssc333_lite_tp-link-tapo-c110-v26", "ssc333_lite_babysense-see-hd-ip206",
-    "ssc333_lite_vstarcam-c43s_b", "ssc335_lite_tp-link-tapo-c110-v1",
-    "ssc335_lite_tp-link-tapo-c310-v220", "ssc335_lite_trassir-tr-w2c1-v2",
-    "ssc335de_lite_dahua-hfw1230sp-v2", "ssc335de_lite_imou-c22e-s2-v2",
-    "ssc335de_lite_uniview-c1l-2wn-g", "ssc337_lite_h3c-tc2101",
-    "ssc337_lite_tiandy-tc-c321n-v2", "ssc337_lite_tp-link-tapo-c110-v1",
-    "ssc337de_ultimate_foscam-x5", "ssc338q_fpv_caddx-fly",
-    "ssc338q_fpv_emax-wyvern-link", "ssc338q_fpv_openipc-mario-aio",
-    "ssc338q_fpv_openipc-thinker-aio", "ssc338q_fpv_openipc-urllc-aio",
-    "ssc338q_fpv_runcam-wifilink", "ssc377qe_fpv_ccdcam-im50q01-tipoman",
-    "t10_lite_hb-wifi-z6", "t10_lite_jvs-ingt10-gqs60ep", "t20_ultimate_azarton-c1",
-    "t20_lite_ec37-t11", "t31_lite_vstarcam-cs55",
-    "t21_lite_chinamobile-hdc-51-a5-v12", "t21_lite_smartwares-cip-37210at",
-    "t21_lite_xyx-06s", "t21_lite_wansview-q5-1080p", "t23_lite_jooan-a6m-u",
-    "t23_lite_jooan-q3r-u", "t23_lite_lsc-3215672", "t31_lite_aceline-aip-o4",
-    "t31_lite_wansview-q5-2k", "t31_lite_aoni-ep01j05",
-    "t31_lite_chinamobile-hdc-51-a6-v11", "t31_lite_cmcc-hdc-51-a6-v10",
-    "t31_lite_chinatelecom-y4h-50", "t31_lite_wyze-v3b",
-    "t31_lite_xiaomi-mjsxj03hl", "t31_lite_xiaomi-mjsxj03hl-jxq03",
-    "t31_lite_tuya-gv7630-t31-ptz", "t31_ultimate_azarton-c1-t31x",
-    "t31_ultimate_gcraftsman-gca50", "t31_lite_zte-k540", "t40_lite_movols-mo-805p",
-    # APFPV --- ssc338q_apfpv and ssc378qe_apfpv share devices/apfpv/
-    "ssc30kq_apfpv_greg-generic-bu-eu", "ssc30kq_apfpv_greg-generic-cu-eu",
-    "ssc338q_apfpv", "ssc338q_apfpv_greg-generic-bu-eu",
-    "ssc338q_apfpv_greg-generic-cu-eu", "ssc378qe_apfpv",
-    # FPV / Ruby / LTE / Venc / Mini / OTG --- these all live in devices/common/
-    "hi3516ev200_fpv", "hi3516ev300_fpv", "hi3536dv100_fpv", "gk7205v200_fpv",
-    "gk7205v210_fpv", "gk7205v300_fpv", "ssc30kq_fpv", "ssc338q_fpv",
-    "ssc378qe_fpv",
-    "ssc30kq_rubyfpv_generic", "ssc338q_rubyfpv_generic",
-    "ssc338q_rubyfpv_thinker_internal_wifi",
-    "hi3516ev200_lte", "hi3516ev300_lte", "gk7205v200_lte", "gk7205v300_lte",
-    "gk7205v200_venc", "gk7205v210_venc", "gk7205v300_venc",
-    "hi3516cv300_mini", "hi3518ev200_mini",
-    "gk7205v200_otg_generic",
-]
+# The build matrix is every device in the tree, minus the opt-outs below. It is
+# derived rather than listed because adding a camera IS the work here -- 8 of
+# the 10 PRs open when this landed add a device, and 14% of recent commits do.
+# A written-down list would mean every one of them also edits this file, and a
+# change to this file cannot narrow (it is what does the narrowing), so
+# registering a camera would cost a full 107-device build to prove one.
+#
+# This is the opposite call to OpenIPC/firmware's ci-matrix.py, deliberately.
+# There the matrix is curated -- 29 defconfigs are intentionally never built and
+# boards are not the product -- so the list is explicit and NOT_BUILT would be
+# noise. Here devices are the product and the list is just "all of them".
 
-# Defconfigs that exist but are in no matrix, so CI never builds them. Frozen
-# rather than inferred, so that a device silently falling out of the matrix is a
-# --self-test failure instead of a quiet skip. Changes to these still widen.
+# Devices that exist in the tree but are deliberately not built: the opt-out
+# from the rule above. Every entry must still have a defconfig, so a rename
+# leaves a name describing nothing and --self-test says so. Changes to these
+# narrow to nothing, exactly as they do today.
 NOT_BUILT = {
     "gk7102ca_lite_umea-qc01x", "gk7102ca_lite_vstarcam-g8896wip",
     "gk7205v200_rubyfpv_generic", "hi3518ev200_lite_lenovo-snowman-1080p",
@@ -131,9 +84,10 @@ NO_BUILD_FILES = {
 }
 
 # CI plumbing: decides how the build runs, cannot change a byte of what it
-# produces. Gets SMOKE_TARGETS. ci-matrix.py is deliberately absent -- adding a
-# device is an edit to ALL_TARGETS, and a smoke set would build the targets that
-# were already there and never the new one.
+# produces. Gets SMOKE_TARGETS. ci-matrix.py is deliberately absent: it is what
+# decides the matrix, so it cannot be trusted to decide a smaller one for
+# itself. Adding a device does not touch it -- that is the point of deriving
+# the list -- so this costs a full matrix only when the rules themselves move.
 SMOKE_WORKFLOWS = {"master.yml"}
 
 # One target per way a build can differ: every SoC vendor, every architecture,
@@ -188,7 +142,7 @@ class Tree:
             target = os.path.basename(path)[: -len("_defconfig")]
             self.directory_of[target] = "/".join(relative.split("/")[:2])
             self.traits_of[target] = self._traits(path)
-        self.built = [t for t in ALL_TARGETS if t in self.directory_of]
+        self.built = sorted(t for t in self.directory_of if t not in NOT_BUILT)
         self.smoke = [t for t in self.built if t in set(SMOKE_TARGETS)]
 
     def _traits(self, path):
@@ -346,39 +300,32 @@ def self_test():
     tree = Tree()
     problems = []
 
-    # 1. Every target we claim to build must be locatable exactly the way
-    #    builder.sh locates it, and must resolve to one directory.
-    for target in ALL_TARGETS:
+    # 1. Every target must be locatable exactly the way builder.sh locates it,
+    #    and must resolve to one directory.
+    for target in tree.built:
         matches = glob.glob(f"{REPO_ROOT}/devices/*/**/configs/{target}_defconfig",
                             recursive=True)
-        if not matches:
-            problems.append(f"{target} is in ALL_TARGETS but has no defconfig")
-        elif len(matches) > 1:
+        if len(matches) > 1:
             # builder.sh does `find ... | cut -d/ -f1,2` and copies the result
             # unquoted, so two matches make it copy two trees over each other.
             problems.append(
                 f"{target} has {len(matches)} defconfigs; builder.sh would "
                 f"resolve it to more than one directory")
 
-    # 2. Every defconfig in the tree is either built or knowingly not.
-    for path in sorted(glob.glob(f"{REPO_ROOT}/devices/*/**/configs/*_defconfig",
-                                 recursive=True)):
-        target = os.path.basename(path)[: -len("_defconfig")]
-        if target in tree.built or target in NOT_BUILT:
-            continue
-        problems.append(
-            f"{target} has a defconfig but is in no matrix; add it to "
-            f"ALL_TARGETS, or to NOT_BUILT if that is deliberate")
+    # 2. Every opt-out must still name something. A renamed device leaves its
+    #    old name here describing nothing, and the new one silently builds.
     for target in sorted(NOT_BUILT):
-        if target in tree.built:
-            problems.append(f"{target} is in NOT_BUILT and in ALL_TARGETS")
+        if target not in tree.directory_of:
+            problems.append(
+                f"{target} is in NOT_BUILT but has no defconfig; drop it, or "
+                f"fix the name if the device was renamed")
 
     # 3. The smoke set has to be real, smaller, and cover every way a build can
     #    differ -- including both shared device directories, since a plumbing
     #    change that only breaks devices/common/ would otherwise go unproven.
     for target in SMOKE_TARGETS:
         if target not in tree.built:
-            problems.append(f"{target} is in SMOKE_TARGETS but not in ALL_TARGETS")
+            problems.append(f"{target} is in SMOKE_TARGETS but is not built")
     if len(tree.smoke) >= len(tree.built):
         problems.append("SMOKE_TARGETS is not smaller than the full matrix")
     covered = set().union(*(tree.traits_of[t] for t in tree.smoke)) if tree.smoke else set()
