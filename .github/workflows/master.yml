@@ -269,50 +269,44 @@ jobs:
             echo "SIZES=sizes.${NAME}.json" >> ${GITHUB_ENV}
           fi
 
-      - name: Upload firmware (dated)
+      # Stage everything this device produced into one flat directory, so the
+      # artifact has a predictable shape no matter which of the two naming
+      # schemes the build used (compound devices rename to <device>-nor.tgz in
+      # the workspace root, simple ones leave openipc.<soc>-nor-<variant>.tgz
+      # under openipc/output/images/).
+      - name: Stage artifacts
         if: >-
           github.event_name != 'pull_request' &&
           (env.NORFW || env.NANDFW)
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.preflight.outputs.build_id }}
-          prerelease: true
-          body: |
-            sha=${{ needs.preflight.outputs.head_sha }}
-            short=${{ needs.preflight.outputs.short_sha }}
-            built_at=${{ needs.preflight.outputs.built_at }}
-          files: |
-            ${{env.NORFW}}
-            ${{env.NANDFW}}
-            ${{env.SIZES}}
+        run: |
+          mkdir -p dist
+          for f in "${NORFW:-}" "${NANDFW:-}" "${SIZES:-}"; do
+            # An `if` rather than a `&&` chain: the step runs under `bash -e`,
+            # where a trailing `&&` that tests false is only harmless because
+            # something after it resets the status.
+            if [ -n "$f" ] && [ -e "$f" ]; then
+              cp -a "$f" dist/
+            fi
+          done
+          ls -la dist
 
-      - name: Upload firmware (rolling nightly)
+      # Hand the images to the single `publish` job instead of writing releases
+      # from here. 107 matrix jobs each deleting and re-uploading assets on the
+      # SAME three shared releases is ~400 concurrent writes; OpenIPC/firmware
+      # ran exactly that design and the releases API answered HTTP 500 under the
+      # contention (run 27108181857: every board built, 14 jobs red in their
+      # upload step). Consolidating every release write into one job removes the
+      # concurrent-writer contention that causes it.
+      - name: Upload build artifacts
         if: >-
           github.event_name != 'pull_request' &&
           (env.NORFW || env.NANDFW)
-        uses: softprops/action-gh-release@v2
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: nightly
-          body: |
-            sha=${{ needs.preflight.outputs.head_sha }}
-            short=${{ needs.preflight.outputs.short_sha }}
-            built_at=${{ needs.preflight.outputs.built_at }}
-          files: |
-            ${{env.NORFW}}
-            ${{env.NANDFW}}
-            ${{env.SIZES}}
-
-      - name: Upload firmware (latest — legacy alias)
-        if: >-
-          github.event_name != 'pull_request' &&
-          (env.NORFW || env.NANDFW)
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: latest
-          files: |
-            ${{env.NORFW}}
-            ${{env.NANDFW}}
-            ${{env.SIZES}}
+          name: fw-${{ matrix.platform }}
+          if-no-files-found: ignore
+          retention-days: 1
+          path: dist/*
 
       - name: Send binary
         if: github.event_name != 'pull_request' && env.NORFW
@@ -325,6 +319,117 @@ jobs:
           HTTP=$(curl -s -o /dev/null -w %{http_code} https://api.telegram.org/bot${TG_TOKEN}/sendDocument -F chat_id=${TG_CHANNEL} -F caption="${TG_HEADER}" -F document=@${NORFW})
           echo Telegram response: ${HTTP}
 
+  # All release writes happen here, once, so only a SINGLE job ever touches the
+  # shared `nightly`/`latest` releases and the per-run dated one. Best-effort by
+  # design: publish whatever the matrix produced even if some devices failed,
+  # which matches enrich_manifest.py -- it indexes whatever assets exist. Never
+  # runs on a pull request; there are no artifacts to publish there.
+  publish:
+    name: Publish releases
+    needs: [preflight, select, buildroot]
+    if: >-
+      github.event_name != 'pull_request' &&
+      needs.preflight.outputs.should_build == 'true' &&
+      contains(fromJSON('["success", "failure"]'), needs.buildroot.result)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: fw-*
+          path: dist
+          merge-multiple: true
+
+      - name: Collect assets
+        id: collect
+        run: |
+          mkdir -p dist
+          count=$(find dist -type f | wc -l)
+          echo "Collected ${count} asset(s):"
+          ls -la dist || true
+          echo "count=${count}" >> "$GITHUB_OUTPUT"
+
+      # Drive the release writes with gh rather than softprops/action-gh-release,
+      # which uploads assets CONCURRENTLY with no throttle or retry knob. Firing
+      # a few hundred asset writes at three releases trips GitHub's per-actor
+      # secondary rate limit; here every asset goes up one at a time, paced under
+      # the per-minute mutation ceiling, with exponential backoff so a transient
+      # 403/429 is retried rather than failing the nightly.
+      - name: Publish releases (paced, retry-aware)
+        if: steps.collect.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          BUILD_ID:  ${{ needs.preflight.outputs.build_id }}
+          HEAD_SHA:  ${{ needs.preflight.outputs.head_sha }}
+          SHORT_SHA: ${{ needs.preflight.outputs.short_sha }}
+          BUILT_AT:  ${{ needs.preflight.outputs.built_at }}
+        run: |
+          set -euo pipefail
+
+          gh_retry() {
+            local n=0 max=6 delay=15
+            until "$@"; do
+              n=$((n + 1))
+              if [ "$n" -ge "$max" ]; then
+                echo "::error::gh failed after ${max} attempts: $*"
+                return 1
+              fi
+              echo "::warning::gh attempt ${n} failed, sleeping ${delay}s before retry"
+              sleep "$delay"
+              delay=$((delay * 2))
+            done
+          }
+
+          ensure_release() { # <tag> [extra gh release create args...]
+            local tag="$1"; shift
+            if ! gh release view "$tag" >/dev/null 2>&1; then
+              gh_retry gh release create "$tag" --target "$HEAD_SHA" --notes "$NOTES" "$@"
+            fi
+          }
+
+          # One asset at a time, paced ~1/s to stay under the per-minute
+          # content-mutation ceiling that triggers the secondary rate limit.
+          upload_paced() { # <tag> <file>...
+            local tag="$1"; shift
+            local total=$# i=0
+            for f in "$@"; do
+              i=$((i + 1))
+              echo "[${tag}] (${i}/${total}) ${f##*/}"
+              gh_retry gh release upload "$tag" "$f" --clobber
+              sleep 1
+            done
+          }
+
+          NOTES=$(printf 'sha=%s\nshort=%s\nbuilt_at=%s\n' "$HEAD_SHA" "$SHORT_SHA" "$BUILT_AT")
+
+          # Full asset set (images + size sidecars) -> the dated release, which
+          # is the only one enrich_manifest.py reads.
+          mapfile -t DATED < <(find dist -maxdepth 1 -type f | sort)
+          # nightly/latest are firmware-delivery aliases for flashers, so ship
+          # only the images there. Re-uploading the size sidecars to two more
+          # releases is pure rate-limit cost: the manifest never reads them from
+          # these tags, and nothing else does either.
+          mapfile -t IMAGES < <(find dist -maxdepth 1 -type f -name '*.tgz' | sort)
+
+          # --- dated: immutable per-build history ---
+          ensure_release "$BUILD_ID" --prerelease --title "$BUILD_ID"
+          upload_paced "$BUILD_ID" "${DATED[@]}"
+
+          # --- rolling nightly: move tag + body to this build, refresh images ---
+          ensure_release nightly
+          gh_retry gh release edit nightly --notes "$NOTES"
+          gh_retry gh api -X PATCH "repos/${GH_REPO}/git/refs/tags/nightly" -f sha="$HEAD_SHA" -F force=true
+          upload_paced nightly "${IMAGES[@]}"
+
+          # --- latest: legacy alias ---
+          ensure_release latest
+          gh_retry gh api -X PATCH "repos/${GH_REPO}/git/refs/tags/latest" -f sha="$HEAD_SHA" -F force=true
+          upload_paced latest "${IMAGES[@]}"
+
   # Single umbrella status check covering the whole run, so branch protection
   # can require one context instead of a hardcoded "Build (<device>)" per
   # device -- the matrix is now dynamic, and its job names change per PR.
@@ -332,7 +437,7 @@ jobs:
   # change, because nothing built one.
   ci-gate:
     name: CI Gate
-    needs: [select, preflight, buildroot]
+    needs: [select, preflight, buildroot, publish]
     # always() so the gate still reports when a needed job fails -- but not on
     # a run the guard above deliberately skipped, where it would read
     # select=skipped and turn a saved build into a red run.
@@ -344,7 +449,7 @@ jobs:
     steps:
       - name: Require selection + device matrix to succeed
         run: |
-          echo "select=${{ needs.select.result }} preflight=${{ needs.preflight.result }} buildroot=${{ needs.buildroot.result }}"
+          echo "select=${{ needs.select.result }} preflight=${{ needs.preflight.result }} buildroot=${{ needs.buildroot.result }} publish=${{ needs.publish.result }}"
           if [ "${{ needs.select.result }}" != "success" ]; then
             echo "::error::device selection did not succeed"; exit 1
           fi
@@ -367,3 +472,9 @@ jobs:
             fi
             echo "device matrix OK (no devices to build)"
           fi
+          # publish is skipped on PRs and on a run that built nothing; only a
+          # real failure of the single release-writer should fail the gate.
+          case "${{ needs.publish.result }}" in
+            success|skipped) echo "publish OK (${{ needs.publish.result }})" ;;
+            *) echo "::error::publish result=${{ needs.publish.result }}"; exit 1 ;;
+          esac
