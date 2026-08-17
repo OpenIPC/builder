@@ -335,7 +335,13 @@ jobs:
     permissions:
       contents: write
     steps:
+      # continue-on-error only so that a matrix where every device failed --
+      # and therefore uploaded no fw-* artifact at all -- does not hard-fail
+      # here before the gate can report why. Collect below turns that back into
+      # a failure for every case except that one, so a download that breaks can
+      # no longer publish nothing and call it success.
       - name: Download build artifacts
+        id: download
         uses: actions/download-artifact@v4
         continue-on-error: true
         with:
@@ -347,10 +353,29 @@ jobs:
         id: collect
         run: |
           mkdir -p dist
-          count=$(find dist -type f | wc -l)
+          # tr because wc pads its output on some platforms (BSD does, the GNU
+          # coreutils on the runner does not) and a padded "     0" would read
+          # as non-empty to the `!= '0'` guard below.
+          count=$(find dist -type f | wc -l | tr -d '[:space:]')
           echo "Collected ${count} asset(s):"
           ls -la dist || true
           echo "count=${count}" >> "$GITHUB_OUTPUT"
+
+          # A matrix that went green must have produced artifacts. Zero assets
+          # after that means the download failed, not that there was nothing to
+          # publish -- and publishing nothing quietly is exactly how a nightly
+          # goes missing while the run stays green.
+          if [ "${{ needs.buildroot.result }}" = "success" ]; then
+            if [ "${{ steps.download.outcome }}" != "success" ]; then
+              echo "::error::artifact download failed after a fully successful matrix"
+              exit 1
+            fi
+            if [ "${count}" -eq 0 ]; then
+              echo "::error::no artifacts collected although every device built"
+              exit 1
+            fi
+          elif [ "${count}" -eq 0 ]; then
+            echo "::notice::matrix failed and produced nothing; no release to write"
 
       # Drive the release writes with gh rather than softprops/action-gh-release,
       # which uploads assets CONCURRENTLY with no throttle or retry knob. Firing
@@ -419,16 +444,25 @@ jobs:
           ensure_release "$BUILD_ID" --prerelease --title "$BUILD_ID"
           upload_paced "$BUILD_ID" "${DATED[@]}"
 
-          # --- rolling nightly: move tag + body to this build, refresh images ---
-          ensure_release nightly
-          gh_retry gh release edit nightly --notes "$NOTES"
-          gh_retry gh api -X PATCH "repos/${GH_REPO}/git/refs/tags/nightly" -f sha="$HEAD_SHA" -F force=true
-          upload_paced nightly "${IMAGES[@]}"
+          # nightly and latest only ever move when there is firmware to move
+          # them to. dist/ can hold sidecars and no images -- one device that
+          # produced a size report and no .tgz is enough -- and pointing the two
+          # tags users flash from at a build with no images behind them is worse
+          # than leaving them on yesterday's.
+          if [ "${#IMAGES[@]}" -eq 0 ]; then
+            echo "::warning::no images in this build; leaving nightly and latest where they are"
+          else
+            # --- rolling nightly: move tag + body to this build, refresh images ---
+            ensure_release nightly
+            gh_retry gh release edit nightly --notes "$NOTES"
+            gh_retry gh api -X PATCH "repos/${GH_REPO}/git/refs/tags/nightly" -f sha="$HEAD_SHA" -F force=true
+            upload_paced nightly "${IMAGES[@]}"
 
-          # --- latest: legacy alias ---
-          ensure_release latest
-          gh_retry gh api -X PATCH "repos/${GH_REPO}/git/refs/tags/latest" -f sha="$HEAD_SHA" -F force=true
-          upload_paced latest "${IMAGES[@]}"
+            # --- latest: legacy alias ---
+            ensure_release latest
+            gh_retry gh api -X PATCH "repos/${GH_REPO}/git/refs/tags/latest" -f sha="$HEAD_SHA" -F force=true
+            upload_paced latest "${IMAGES[@]}"
+          fi
 
   # Single umbrella status check covering the whole run, so branch protection
   # can require one context instead of a hardcoded "Build (<device>)" per
