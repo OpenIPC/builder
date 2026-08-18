@@ -78,8 +78,8 @@ NOT_BUILT = {
 # whole filename, never as a prefix: one this list has never heard of is unknown,
 # and unknown widens. package.sh and repack.sh are developer and end-user tools
 # that no workflow invokes -- only builder.sh is on the CI path.
-NO_BUILD_WORKFLOWS = {"build-one.yml", "cleanup.yml", "manifest.yml"}
-NO_BUILD_SCRIPTS = {"enrich_manifest.py"}
+NO_BUILD_WORKFLOWS = {"build-one.yml", "cleanup.yml", "lint.yml", "manifest.yml"}
+NO_BUILD_SCRIPTS = {"enrich_manifest.py", "lint-workflow-shell.py"}
 NO_BUILD_FILES = {
     ".github/CODEOWNERS", ".gitignore", "LICENSE", "package.sh", "repack.sh",
 }
@@ -407,6 +407,8 @@ def self_test():
         ([".github/CODEOWNERS"], 0, "codeowners"),
         ([".github/workflows/manifest.yml"], 0, "manifest never builds"),
         ([".github/scripts/enrich_manifest.py"], 0, "manifest script"),
+        ([".github/workflows/lint.yml"], 0, "the workflow linter never builds"),
+        ([".github/scripts/lint-workflow-shell.py"], 0, "its script"),
         (["repack.sh"], 0, "end-user tool, no workflow runs it"),
         (["package.sh"], 0, "developer tool, no workflow runs it"),
         (["archive/gk7205v200_fpv/202607231714/openipc.tgz"], 0, "build output"),
