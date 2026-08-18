@@ -35,18 +35,28 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'pull_request' && !github.event.repository.private)
     runs-on: ubuntu-latest
+    # The work takes about a second. The default is six hours, which is how a
+    # step that hangs rather than fails sits there occupying a runner and
+    # telling nobody -- see the apt note below.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      # ubuntu-latest ships PyYAML today, so the linter imports it fine without
-      # this -- which is the problem. An undeclared dependency on whatever the
-      # runner image happens to include is a check that stops being about this
-      # repo the day the image changes. apt rather than pip because 24.04 is
-      # PEP 668 and this is the same shape as the busybox install in
-      # OpenIPC/firmware's shell-tests.
-      - name: Install PyYAML
+      # ubuntu-latest ships PyYAML, so the common path must not touch the
+      # network: the first master push after #122 ran an unconditional
+      # `apt-get update` here and sat on it for six minutes, on a job whose
+      # entire argument for existing is that it answers in seconds. Import
+      # first, install only if that fails -- the dependency is still handled
+      # rather than assumed, but a working runner pays nothing for it. apt
+      # rather than pip in the fallback because 24.04 is PEP 668.
+      - name: Ensure PyYAML
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq python3-yaml
+          if python3 -c 'import yaml' 2>/dev/null; then
+            echo "PyYAML already present; nothing to install."
+          else
+            echo "PyYAML missing from the runner image; installing."
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq python3-yaml
+          fi
       # Checks the checker before trusting it. The ${{ }} substitution it has to
       # do is the kind of thing that breaks by making everything pass, which
       # would look identical to a clean tree.
