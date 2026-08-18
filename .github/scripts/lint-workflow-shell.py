@@ -52,7 +52,14 @@ import sys
 import tempfile
 from pathlib import Path
 
-import yaml
+try:
+    import yaml
+except ImportError:  # pragma: no cover - depends on the host, not the tree
+    sys.exit(
+        "lint-workflow-shell: PyYAML is required and missing.\n"
+        "  CI installs it (see .github/workflows/lint.yml); locally:\n"
+        "    apt install python3-yaml   # or: pip install pyyaml"
+    )
 
 # Steps with no `shell:` run under bash on a Linux runner; GitHub's default is
 # `bash -e {0}`. The -e changes runtime behaviour, never parsing, so -n alone is
