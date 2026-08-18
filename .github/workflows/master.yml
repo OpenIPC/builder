@@ -376,6 +376,7 @@ jobs:
             fi
           elif [ "${count}" -eq 0 ]; then
             echo "::notice::matrix failed and produced nothing; no release to write"
+          fi
 
       # Drive the release writes with gh rather than softprops/action-gh-release,
       # which uploads assets CONCURRENTLY with no throttle or retry knob. Firing

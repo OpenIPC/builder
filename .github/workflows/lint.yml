@@ -1,0 +1,56 @@
+name: lint
+on:
+  pull_request:
+    branches:
+      - master
+  # A push trigger, unlike shell-tests in OpenIPC/firmware, which deliberately
+  # has none. The reasoning there -- every commit on master was already checked
+  # on its pull request -- holds only while master has not moved between the
+  # PR's last run and the merge. This job is the one thing standing between a
+  # workflow typo and a silently lost nightly, it costs seconds, and #121 cost
+  # a full night's release because nothing re-checked the merged result. Cheap
+  # enough to not be clever about.
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/**'
+      - '.github/scripts/lint-workflow-shell.py'
+  workflow_dispatch:
+
+# Reads the tree and reports; writes nothing. Declared rather than inherited so
+# the job keeps the narrow token whatever the repo or org default becomes.
+permissions:
+  contents: read
+
+jobs:
+  # Same guard the jobs in master.yml carry. A clone pushed to a new repository
+  # inherits this file, and on a private mirror every master sync push would
+  # otherwise run on that owner's bill. Upstream the first disjunct is true, so
+  # the condition is a tautology here.
+  workflow-shell:
+    name: workflow run blocks parse
+    if: >-
+      github.repository == 'OpenIPC/builder' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && !github.event.repository.private)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # ubuntu-latest ships PyYAML today, so the linter imports it fine without
+      # this -- which is the problem. An undeclared dependency on whatever the
+      # runner image happens to include is a check that stops being about this
+      # repo the day the image changes. apt rather than pip because 24.04 is
+      # PEP 668 and this is the same shape as the busybox install in
+      # OpenIPC/firmware's shell-tests.
+      - name: Install PyYAML
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-yaml
+      # Checks the checker before trusting it. The ${{ }} substitution it has to
+      # do is the kind of thing that breaks by making everything pass, which
+      # would look identical to a clean tree.
+      - name: Check the linter still catches what it should
+        run: python3 .github/scripts/lint-workflow-shell.py --self-test
+      - name: Parse every workflow run block
+        run: python3 .github/scripts/lint-workflow-shell.py
