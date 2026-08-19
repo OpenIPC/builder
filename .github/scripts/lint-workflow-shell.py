@@ -23,21 +23,26 @@ shellcheck pass over the same blocks is a strictly bigger change (it wants
 per-block disable lists for the ${{ }} substitution below) and is worth doing
 separately rather than smuggling in behind a syntax fix.
 
-DISCOVERY is by structure, not by path: any mapping anywhere in the document
-that has a `run:` key is a step. Hardcoding jobs.*.steps[*] would quietly miss
-anything that moves -- composite actions, reusable workflows, a `defaults`
-refactor -- and silently checking nothing looks exactly like a clean run, which
-is the failure mode this file is here to prevent. Hence the floor check at the
-end.
+DISCOVERY is a mapping with a scalar `run:` that came out of a `steps:`
+sequence -- the schema invariant that makes something a step, and no more than
+that. Hardcoding jobs.*.steps[*] would quietly miss anything that moves, and a
+composite action's `runs: steps:` is covered here by the same rule. Requiring
+the `steps:` parent is not decoration: without it an action input, an env var
+or a matrix field called `run` gets parsed as shell and fails a workflow that
+is fine. Silently checking nothing looks exactly like a clean run, which is the
+failure mode this file exists to prevent, so there is a floor check at the end.
 
 EXPRESSIONS. `${{ ... }}` is not shell and cannot be parsed as shell, so each
-one is replaced with a plain word before the check. That is a real limitation:
-an expression that interpolates to something with shell syntax in it -- a
-matrix value holding `foo && bar`, say -- is checked as the word, not as what
-it expands to. It is the same limitation `bash -n` has with any variable, and
-the substitution keeps the line count identical so reported line numbers still
-point at the right line of the workflow. --self-test asserts the substitution
-did not neuter the check.
+one is replaced with a plain word before the check. Finding where one ends is
+scanned rather than regexed, because `.*?\\}\\}` stops at the first `}}` even
+when it sits inside a string literal -- `${{ fromJSON('{"a": {"b": 1}}') }}`
+gets cut mid-literal and the leftover `') }}` then fails as an unbalanced
+quote. The substitution is still a real limitation: an expression that
+interpolates something with shell syntax in it -- a matrix value holding
+`foo && bar`, say -- is checked as the word, not as what it expands to. It is
+the same limitation `bash -n` has with any variable. Line counts are preserved
+so reported line numbers still point at the right line of the workflow, and
+--self-test asserts the substitution did not neuter the check.
 
 Usage:
     lint-workflow-shell.py               # check .github/workflows/
@@ -46,7 +51,6 @@ Usage:
 """
 
 import glob
-import re
 import subprocess
 import sys
 import tempfile
@@ -74,14 +78,47 @@ PARSERS = {
     "sh": ["sh", "-n"],
 }
 
-EXPR = re.compile(r"\$\{\{.*?\}\}", re.DOTALL)
+EXPR_OPEN = "${{"
 
 # The floor below is a discovery guard, not a target: it only has to catch "the
 # walk broke and found nothing", which is the case that would otherwise report
-# green. Deliberately well under the current count (20 across the four
+# green. Deliberately well under the current count (23 across the five
 # workflows) so ordinary churn never trips it, and only applied to a full-tree
 # scan -- checking one file by hand legitimately finds fewer.
 MIN_BLOCKS = 10
+
+
+def end_of_expression(text, start):
+    """Index just past the `}}` closing the expression opened at `start`.
+
+    Scanned rather than matched with `\\$\\{\\{.*?\\}\\}`, because that stops at
+    the first `}}` even when it is inside a quoted string:
+    `${{ fromJSON('{"a": {"b": 1}}') }}` would be cut mid-literal, leaving
+    `') }}` behind to be parsed as shell and failing a workflow that is fine.
+    GitHub string literals are single-quoted and escape a quote by doubling it.
+
+    Returns None if the expression is never closed, in which case the caller
+    leaves the text alone -- that is a malformed workflow, not our business.
+    """
+    i = start + len(EXPR_OPEN)
+    quote = None
+    while i < len(text):
+        c = text[i]
+        if quote is not None:
+            if c == quote:
+                if i + 1 < len(text) and text[i + 1] == quote:
+                    i += 2          # '' is an escaped quote, still inside
+                    continue
+                quote = None
+            i += 1
+        elif c in "'\"":
+            quote = c
+            i += 1
+        elif text.startswith("}}", i):
+            return i + 2
+        else:
+            i += 1
+    return None
 
 
 def substitute(text):
@@ -90,19 +127,36 @@ def substitute(text):
     Line numbers have to survive or the errors point at nothing. A multi-line
     expression is replaced by the word plus the newlines it spanned.
     """
+    out = []
+    i = 0
+    while True:
+        start = text.find(EXPR_OPEN, i)
+        if start < 0:
+            out.append(text[i:])
+            return "".join(out)
+        end = end_of_expression(text, start)
+        if end is None:
+            out.append(text[i:])
+            return "".join(out)
+        out.append(text[i:start])
+        out.append("__GHA_EXPR__" + "\n" * text.count("\n", start, end))
+        i = end
 
-    def repl(m):
-        return "__GHA_EXPR__" + "\n" * m.group(0).count("\n")
 
-    return EXPR.sub(repl, text)
-
-
-def walk(node, shell, out):
+def walk(node, shell, out, in_steps=False):
     """Collect (run_text, shell, line) for every step under `node`.
 
     `shell` is the default inherited from an enclosing `defaults.run.shell`,
     which is how both workflow-level and job-level defaults reach a step
     without this needing to know where in the document it is.
+
+    `in_steps` says this node came out of a `steps:` sequence, which is what
+    makes a mapping a step. An earlier version collected any mapping with a
+    scalar `run` key anywhere in the document; that is one key name away from
+    linting things that are not shell at all -- an action input or an env var
+    or a matrix field called `run` -- and failing a workflow that is fine.
+    Requiring the `steps:` parent is still not a hardcoded jobs.*.steps[*]
+    path, so composite actions (`runs: steps:`) are covered by the same rule.
     """
     if isinstance(node, yaml.MappingNode):
         keys = {}
@@ -125,7 +179,7 @@ def walk(node, shell, out):
                                 shell = rv.value
 
         run = keys.get("run")
-        if isinstance(run, yaml.ScalarNode):
+        if in_steps and isinstance(run, yaml.ScalarNode):
             step_shell = shell
             sh = keys.get("shell")
             if isinstance(sh, yaml.ScalarNode):
@@ -141,12 +195,15 @@ def walk(node, shell, out):
                 }
             )
 
-        for _, v in node.value:
-            walk(v, shell, out)
+        for k, v in node.value:
+            key = k.value if isinstance(k, yaml.ScalarNode) else None
+            walk(v, shell, out, in_steps=(key == "steps"))
 
     elif isinstance(node, yaml.SequenceNode):
+        # A sequence does not change what its items are; `steps:` points at the
+        # sequence, and its items are the steps.
         for v in node.value:
-            walk(v, shell, out)
+            walk(v, shell, out, in_steps)
 
 
 def parse_error(text, shell):
@@ -274,6 +331,16 @@ def self_test():
     expect("unbalanced quote", 'echo "unterminated\n', "bash", True)
     expect("plain block", "echo hello\n", None, False)
 
+    # A `}}` inside an expression's string literal must not end the expression.
+    # A regex stopping at the first `}}` leaves `') }}` behind, which is an
+    # unbalanced quote, so this block used to fail while being perfectly valid.
+    expect(
+        "expression whose string literal contains }}",
+        "x=${{ fromJSON('{\"a\": {\"b\": 1}}') }}\necho \"$x\"\n",
+        "bash",
+        False,
+    )
+
     # An expression spanning lines must not shift the reported line number.
     shifted = substitute("a\n${{ foo\n  .bar }}\nc\n")
     if shifted.count("\n") != 4:
@@ -281,6 +348,30 @@ def self_test():
         ok = False
     else:
         print("ok   self-test: substitution preserves line count")
+
+    # Only things in a `steps:` sequence are steps. An action input, an env
+    # var or a matrix field called `run` holds arbitrary text, and linting it
+    # as shell fails workflows that are fine.
+    doc = yaml.compose(
+        "jobs:\n"
+        "  j:\n"
+        "    env:\n"
+        "      run: not shell 'at all\n"
+        "    steps:\n"
+        "      - name: real\n"
+        "        run: echo hi\n"
+        "      - uses: some/action@v1\n"
+        "        with:\n"
+        "          run: also not shell 'at all\n"
+    )
+    found = []
+    walk(doc, DEFAULT_SHELL, found)
+    names = sorted(b["name"] for b in found)
+    if names != ["real"]:
+        print(f"FAIL self-test: expected only the real step, collected {names}")
+        ok = False
+    else:
+        print("ok   self-test: only steps under steps: are collected")
 
     print()
     if not ok:
