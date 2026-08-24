@@ -399,7 +399,7 @@ jobs:
             # did not build keep their PREVIOUS image on nightly/latest, which
             # is the right outcome for a flasher but is invisible next to the
             # freshly-written ones.
-            echo "::warning::partial publish: matrix failed, writing the ${count} asset(s) that did build; nightly and latest keep their previous image for every device that did not"
+            echo "::warning::partial publish: matrix failed, writing the ${count} asset(s) that did build; nightly and latest keep their previous image for every device that did not build — see the failed jobs in this run for which"
           fi
 
       # Drive the release writes with gh rather than softprops/action-gh-release,
