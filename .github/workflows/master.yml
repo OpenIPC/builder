@@ -327,7 +327,24 @@ jobs:
   publish:
     name: Publish releases
     needs: [preflight, select, buildroot]
+    # The leading status function is load-bearing. A job whose `needs` failed is
+    # skipped by default, and an `if:` lifts that only when it CONTAINS a status
+    # function -- reading `needs.buildroot.result` inside the `contains()` below
+    # does not count. So since #121 gave this job the matrix as a dependency,
+    # any single failing device skipped it outright and the whole release went
+    # unwritten: 2026-08-24 lost every device's nightly to one failure out of 98
+    # (ssc333_lite_meari-speed-6s), and 2026-08-21 lost it to two out of 98.
+    # There is no nightly-20260821-* or nightly-20260824-* release as a result.
+    # Before #121 each device uploaded from its own matrix job, so a bad device
+    # took down only itself; this restores that without giving up the
+    # single-writer fix that stopped the concurrent-upload rate limits.
+    #
+    # `!cancelled()` rather than `always()`: the `contains()` already drops a
+    # cancelled or skipped matrix, but a run cancelled AFTER a green matrix
+    # would still start uploading under `always()`, and a half-written nightly
+    # is the thing this job exists to avoid.
     if: >-
+      !cancelled() &&
       github.event_name != 'pull_request' &&
       needs.preflight.outputs.should_build == 'true' &&
       contains(fromJSON('["success", "failure"]'), needs.buildroot.result)
@@ -376,6 +393,13 @@ jobs:
             fi
           elif [ "${count}" -eq 0 ]; then
             echo "::notice::matrix failed and produced nothing; no release to write"
+          else
+            # The partial case this job was always meant to serve, unreachable
+            # until the `!cancelled()` above. Say so out loud: the devices that
+            # did not build keep their PREVIOUS image on nightly/latest, which
+            # is the right outcome for a flasher but is invisible next to the
+            # freshly-written ones.
+            echo "::warning::partial publish: matrix failed, writing the ${count} asset(s) that did build; nightly and latest keep their previous image for every device that did not build — see the failed jobs in this run for which"
           fi
 
       # Drive the release writes with gh rather than softprops/action-gh-release,
