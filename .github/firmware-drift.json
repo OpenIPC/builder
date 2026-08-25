@@ -1,0 +1,151 @@
+{
+  "_comment": [
+    "Records what has been reconciled against OpenIPC/firmware, so that a fleet-wide",
+    "change there cannot move under this repository unnoticed. See",
+    ".github/scripts/check-firmware-drift.py for why this exists and what each key means.",
+    "A pinned blob means a human looked at firmware's version of that file and was",
+    "satisfied; re-pinning it is the act of looking again."
+  ],
+  "shadows": [
+    {
+      "builder": "devices/common/br-ext-chip-goke/board/gk7205v200/gk7205v200.generic-fpv.config",
+      "firmware": "br-ext-chip-goke/board/gk7205v200/gk7205v200.generic.config",
+      "blob": "f97dce84c0f85d1a08a45bb7a173448d4a060e75",
+      "reconciled": "2026-08-25",
+      "note": "fpv/lte/venc variant of the generic config; backs 5 gk7205v200/v210 builds"
+    },
+    {
+      "builder": "devices/common/br-ext-chip-goke/board/gk7205v200/gk7205v300.generic-fpv.config",
+      "firmware": "br-ext-chip-goke/board/gk7205v200/gk7205v300.generic.config",
+      "blob": "1f36f13f42ed1b1616608e330c63719ae00a1e0a",
+      "reconciled": "2026-08-25",
+      "note": "fpv/lte/venc variant; backs 3 gk7205v300 builds"
+    },
+    {
+      "builder": "devices/common/br-ext-chip-hisilicon/board/hi3516ev200/hi3516ev200.generic-fpv.config",
+      "firmware": "br-ext-chip-hisilicon/board/hi3516ev200/hi3516ev200.generic.config",
+      "blob": "bccb6da3b61ea9ee15a08c676b41b820ddfc96f4",
+      "reconciled": "2026-08-25",
+      "note": "fpv/lte variant"
+    },
+    {
+      "builder": "devices/common/br-ext-chip-hisilicon/board/hi3516ev200/hi3516ev300.generic-fpv.config",
+      "firmware": "br-ext-chip-hisilicon/board/hi3516ev200/hi3516ev300.generic.config",
+      "blob": "dbf2a1630e2a81f30568a3a798cc777a5b7191f1",
+      "reconciled": "2026-08-25",
+      "note": "fpv/lte variant"
+    },
+    {
+      "builder": "devices/gk7202v300_lite_xg521/br-ext-chip-goke/board/gk7205v200/gk7202v300.generic.config",
+      "firmware": "br-ext-chip-goke/board/gk7205v200/gk7202v300.generic.config",
+      "blob": "a6b1534abde2aed025d61a1693bf9265176141df",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy"
+    },
+    {
+      "builder": "devices/gk7205v200_otg_generic/br-ext-chip-goke/board/gk7205v200/gk7205v200.generic-otg.config",
+      "firmware": "br-ext-chip-goke/board/gk7205v200/gk7205v200.generic.config",
+      "blob": "f97dce84c0f85d1a08a45bb7a173448d4a060e75",
+      "reconciled": "2026-08-25",
+      "note": "otg variant"
+    },
+    {
+      "builder": "devices/gk7205v200_rubyfpv_generic/br-ext-chip-goke/board/gk7205v200/gk7205v200.generic-fpv.config",
+      "firmware": "br-ext-chip-goke/board/gk7205v200/gk7205v200.generic.config",
+      "blob": "f97dce84c0f85d1a08a45bb7a173448d4a060e75",
+      "reconciled": "2026-08-25",
+      "note": "rubyfpv variant"
+    },
+    {
+      "builder": "devices/hi3516cv200_lite_trassir-tr-d4121ir1-v2/br-ext-chip-hisilicon/board/hi3516cv200/hi3516cv200.generic.config",
+      "firmware": "br-ext-chip-hisilicon/board/hi3516cv200/hi3516cv200.generic.config",
+      "blob": "68f8da5fb686dd93a405b0e2d8410db009b301f8",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy"
+    },
+    {
+      "builder": "devices/hi3518ev200_lite_lenovo-snowman-1080p/br-ext-chip-hisilicon/board/hi3516cv200/hi3518ev200.generic.config",
+      "firmware": "br-ext-chip-hisilicon/board/hi3516cv200/hi3518ev200.generic.config",
+      "blob": "92805f802503b38be9bb08843b5760e91bb3abd7",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy"
+    },
+    {
+      "builder": "devices/hi3518ev200_lite_vstarcam-c8892wip/br-ext-chip-hisilicon/board/hi3516cv200/hi3518ev200.generic.config",
+      "firmware": "br-ext-chip-hisilicon/board/hi3516cv200/hi3518ev200.generic.config",
+      "blob": "92805f802503b38be9bb08843b5760e91bb3abd7",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy"
+    },
+    {
+      "builder": "devices/hi3518ev200_ultimate_lenovo-snowman-1080p/br-ext-chip-hisilicon/board/hi3516cv200/hi3518ev200.generic.config",
+      "firmware": "br-ext-chip-hisilicon/board/hi3516cv200/hi3518ev200.generic.config",
+      "blob": "92805f802503b38be9bb08843b5760e91bb3abd7",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/br-ext-chip-goke/board/gk710x/gk7102c.generic.config",
+      "firmware": "br-ext-chip-goke/board/gk710x/gk710x.generic.config",
+      "blob": "ad93ad88301ebadeb5f9e3ea96a9d6439610272b",
+      "reconciled": "2026-08-25",
+      "note": "gk7102c variant of gk710x; keeps CONFIG_INPUT for its evdev consumer"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/br-ext-chip-goke/board/gk710x/gk7102c.generic.config",
+      "firmware": "br-ext-chip-goke/board/gk710x/gk710x.generic.config",
+      "blob": "ad93ad88301ebadeb5f9e3ea96a9d6439610272b",
+      "reconciled": "2026-08-25",
+      "note": "gk7102c variant of gk710x"
+    }
+  ],
+  "builder_only_symbols": {
+    "BR2_PACKAGE_ADAPTIVE_LINK": "FPV link adaptation; firmware ships the package but no firmware defconfig enables it",
+    "BR2_PACKAGE_ATBM_WIFI": "ATBM wifi, only retail models here carry the part",
+    "BR2_PACKAGE_ATBM_WIFI_INTERFACE_USB": "sub-option of ATBM_WIFI",
+    "BR2_PACKAGE_ATBM_WIFI_MODEL_6012B": "sub-option of ATBM_WIFI",
+    "BR2_PACKAGE_AUTONIGHT": "day/night switching for specific retail models",
+    "BR2_PACKAGE_BWM_NG": "upstream Buildroot bandwidth monitor, FPV debugging",
+    "BR2_PACKAGE_FFMPEG_OPENIPC": "only the waybeam/venc profiles need it",
+    "BR2_PACKAGE_HISILICON_OSDRV_HI3536DV100": "hi3536dv100 is a builder-only family",
+    "BR2_PACKAGE_HOSTAPD": "upstream Buildroot; AP mode for the apfpv profiles",
+    "BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_3_4": "upstream Buildroot; the 3.4 kernel families here",
+    "BR2_PACKAGE_IW": "upstream Buildroot; selected by wifibroadcast-ng, also set directly here",
+    "BR2_PACKAGE_JSONFILTER": {
+      "reason": "only devices/apfpv needs it: its own etc/init.d/S99msposd pipes majestic's config.json through jsonfilter, and those two devices do not enable wifibroadcast-ng, which carries the select for every other FPV device. See builder#128, which removed it from the 95 defconfigs that did not.",
+      "devices": [
+        "apfpv/*/configs/*_defconfig"
+      ]
+    },
+    "BR2_PACKAGE_KC110_BOARD_SUPPORT": "builder's own package, package/kc110-board-support",
+    "BR2_PACKAGE_LIBZIP": "upstream Buildroot; PHP webui profiles",
+    "BR2_PACKAGE_LINUX_FIRMWARE_OPENIPC_ATHEROS_9271": "ath9k_htc firmware for specific adapters",
+    "BR2_PACKAGE_LINUX_PATCHER_ATHEROS": "atheros patching for the FPV profiles",
+    "BR2_PACKAGE_MAVFWD": "FPV mavlink forwarding; selected by wifibroadcast-ng, also set directly",
+    "BR2_PACKAGE_MAVLINK_ROUTER": "FPV mavlink routing",
+    "BR2_PACKAGE_MINI": "the mini variant is builder-only",
+    "BR2_PACKAGE_MSPOSD": "FPV OSD; selected by wifibroadcast-ng, also set directly",
+    "BR2_PACKAGE_ONVIF_SIMPLE_SERVER": "ONVIF for retail models that advertise it",
+    "BR2_PACKAGE_PHP": "upstream Buildroot; the PHP webui profiles",
+    "BR2_PACKAGE_PHP_EXT_ZIP": "sub-option of PHP",
+    "BR2_PACKAGE_RCJOYSTICK": "FPV RC input",
+    "BR2_PACKAGE_RTL8192EU_OPENIPC": "wifi driver for specific retail models",
+    "BR2_PACKAGE_RTL8811CU_OPENIPC": "wifi driver for specific retail models",
+    "BR2_PACKAGE_RTL8812AU": "wifi driver for FPV adapters",
+    "BR2_PACKAGE_RTL8812AU_OPENIPC": "wifi driver for FPV adapters",
+    "BR2_PACKAGE_RTL88X2EU_OPENIPC": "wifi driver for FPV adapters",
+    "BR2_PACKAGE_RUBYFPV": "RubyFPV profiles are builder-only",
+    "BR2_PACKAGE_SSV635X_OPENIPC": "wifi driver for specific retail models",
+    "BR2_PACKAGE_UHTTPD": "upstream Buildroot; the PHP webui profiles",
+    "BR2_PACKAGE_VDEC_OPENIPC": "waybeam decode profile",
+    "BR2_PACKAGE_VENC_OPENIPC": "venc profiles are builder-only",
+    "BR2_PACKAGE_W1_DS18B20": "1-wire temperature sensor on specific models",
+    "BR2_PACKAGE_WEBUI": "the PHP webui, builder-only",
+    "BR2_PACKAGE_WIFIBROADCAST": "FPV, builder-only",
+    "BR2_PACKAGE_WIFIBROADCAST_NG": "FPV, builder-only"
+  },
+  "known_dead_symbols": {
+    "BR2_PACKAGE_APFPV_GREG": "no Kconfig in buildroot, firmware or here, so kconfig ignores the line. Set by the four *_apfpv_greg-generic-* devices, which suggests a package that was never landed. Left in place deliberately: removing it is a maintainer's call about those devices, not a side effect of adding this check.",
+    "BR2_PACKAGE_WIFIBROADCAST_EXT": "no Kconfig anywhere; set in devices/common beside BR2_PACKAGE_WIFIBROADCAST_NG, which does exist. Probably a rename that left this behind. Same reasoning as APFPV_GREG."
+  }
+}

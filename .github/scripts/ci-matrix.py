@@ -78,10 +78,16 @@ NOT_BUILT = {
 # whole filename, never as a prefix: one this list has never heard of is unknown,
 # and unknown widens. package.sh and repack.sh are developer and end-user tools
 # that no workflow invokes -- only builder.sh is on the CI path.
-NO_BUILD_WORKFLOWS = {"build-one.yml", "cleanup.yml", "lint.yml", "manifest.yml"}
-NO_BUILD_SCRIPTS = {"enrich_manifest.py", "lint-workflow-shell.py"}
+NO_BUILD_WORKFLOWS = {"build-one.yml", "cleanup.yml", "lint.yml", "manifest.yml",
+                      "firmware-drift.yml"}
+NO_BUILD_SCRIPTS = {"enrich_manifest.py", "lint-workflow-shell.py",
+                    "check-firmware-drift.py"}
 NO_BUILD_FILES = {
     ".github/CODEOWNERS", ".gitignore", "LICENSE", "package.sh", "repack.sh",
+    # The drift checker's config. It records what has been reconciled against
+    # OpenIPC/firmware; nothing reads it during a build, so re-pinning a blob
+    # must not cost 107 device builds.
+    ".github/firmware-drift.json",
 }
 
 # CI plumbing: decides how the build runs, cannot change a byte of what it
@@ -438,6 +444,9 @@ def self_test():
         ([".github/workflows/lint.yml"], 0, "the workflow linter never builds"),
         ([".github/scripts/lint-workflow-shell.py"], 0, "its script"),
         (["repack.sh"], 0, "end-user tool, no workflow runs it"),
+        ([".github/workflows/firmware-drift.yml"], 0, "the drift watcher never builds"),
+        ([".github/scripts/check-firmware-drift.py"], 0, "its script"),
+        ([".github/firmware-drift.json"], 0, "and what it reconciles against"),
         (["package.sh"], 0, "developer tool, no workflow runs it"),
         (["archive/gk7205v200_fpv/202607231714/openipc.tgz"], 0, "build output"),
         # Anchoring: the same names elsewhere are not them.
