@@ -64,3 +64,11 @@ jobs:
         run: python3 .github/scripts/lint-workflow-shell.py --self-test
       - name: Parse every workflow run block
         run: python3 .github/scripts/lint-workflow-shell.py
+      # The drift checker's own config has to keep describing this tree, the
+      # same way ci-matrix.py's NOT_BUILT does: a shadow entry for a device that
+      # was renamed is a name describing nothing, and it would go quiet exactly
+      # when it mattered. Self-test only -- the real check needs a firmware
+      # clone and runs on a schedule, because the drift it looks for is caused
+      # by commits in that repository and not by anything in a PR here.
+      - name: Check the drift checker still describes the tree
+        run: python3 .github/scripts/check-firmware-drift.py --self-test

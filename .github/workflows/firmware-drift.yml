@@ -1,0 +1,125 @@
+name: firmware-drift
+on:
+  # Scheduled, and that is the whole design. Every instance of this drift was
+  # caused by a commit in OpenIPC/firmware while this repository sat untouched,
+  # so a pull_request trigger would never have fired for any of them -- nobody
+  # opens a builder PR when firmware changes. An hour after firmware's own
+  # nightly, so the two do not race for a picture of the same HEAD.
+  schedule:
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+# Reads both trees and files an issue. No write access to code.
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  drift:
+    name: drift from OpenIPC/firmware
+    # Same guard the jobs in master.yml and lint.yml carry, for the same reason:
+    # a clone inherits this file, and a schedule fires on the fork's bill.
+    if: >-
+      github.repository == 'OpenIPC/builder' ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # Full history, not --depth=1: the report names the firmware commits that
+      # touched a shadowed file since it was last reconciled, and a shallow
+      # clone cannot walk back to the pinned blob to find them.
+      - name: Clone firmware
+        run: git clone -q https://github.com/OpenIPC/firmware.git "$RUNNER_TEMP/firmware"
+
+      # Buildroot is vendored by neither repository, so without it a symbol
+      # declared upstream is indistinguishable from one declared nowhere. The
+      # checker skips that half rather than guess, but skipping it here would
+      # give up the check that finds dead defconfig lines. Version comes from
+      # firmware's Makefile so this cannot drift from what builds actually use.
+      - name: Fetch the buildroot firmware pins
+        id: br
+        run: |
+          BR_VER=$(sed -n 's/^BR_VER *= *//p' "$RUNNER_TEMP/firmware/Makefile" | head -1)
+          if [ -z "$BR_VER" ]; then
+            echo "::error::could not read BR_VER from firmware's Makefile"
+            exit 1
+          fi
+          echo "ver=$BR_VER" >> "$GITHUB_OUTPUT"
+          echo "Buildroot $BR_VER"
+
+      - name: Cache buildroot
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/buildroot
+          key: buildroot-kconfig-${{ steps.br.outputs.ver }}
+
+      # Only the Kconfig files are wanted -- the checker reads declarations and
+      # nothing else -- so unpack those and leave the rest of a 6MB tarball on
+      # the floor.
+      - name: Unpack buildroot Kconfig
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          set -eu
+          ver='${{ steps.br.outputs.ver }}'
+          mkdir -p "$RUNNER_TEMP/buildroot"
+          wget -q "https://github.com/buildroot/buildroot/archive/${ver}.tar.gz" \
+            -O "$RUNNER_TEMP/br.tar.gz"
+          tar -xzf "$RUNNER_TEMP/br.tar.gz" -C "$RUNNER_TEMP/buildroot" \
+            --strip-components=1 --wildcards '*/package/*/Config*'
+          find "$RUNNER_TEMP/buildroot" -name 'Config*' | wc -l
+
+      - name: Check the checker still catches what it should
+        run: python3 .github/scripts/check-firmware-drift.py --self-test
+
+      - name: Look for drift
+        id: check
+        run: |
+          set -o pipefail
+          if python3 .github/scripts/check-firmware-drift.py \
+               --firmware "$RUNNER_TEMP/firmware" \
+               --buildroot "$RUNNER_TEMP/buildroot" 2>&1 | tee "$RUNNER_TEMP/report.txt"; then
+            echo "drift=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "drift=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      # An issue, not a failed job. This drift is introduced by commits in
+      # another repository, so failing here would paint the nightly red for
+      # something no builder change caused and nobody here can see from a diff.
+      # One issue, reopened and re-bodied rather than duplicated, so a week of
+      # unattended drift is one thread and not seven.
+      - name: File or refresh the drift issue
+        if: steps.check.outputs.drift == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          title='Drift from OpenIPC/firmware'
+          body="$(printf 'Found by `.github/workflows/firmware-drift.yml` on %s (run %s).\n\n```\n%s\n```\n\nEach finding is a decision, not a build failure. Reconcile the copy or the defconfig, then record the decision in `.github/firmware-drift.json` — re-pinning a blob is the act of saying someone looked.\n' \
+            "$(date -u +%Y-%m-%d)" \
+            "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            "$(cat "$RUNNER_TEMP/report.txt")")"
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state all \
+            --search "$title in:title" --json number,title,state \
+            --jq ".[] | select(.title == \"$title\") | .number" | head -1)
+          if [ -n "$existing" ]; then
+            gh issue edit "$existing" --repo "$GITHUB_REPOSITORY" --body "$body"
+            gh issue reopen "$existing" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true
+            echo "refreshed issue #$existing"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "$body"
+          fi
+
+      - name: Summarise
+        if: always()
+        run: |
+          {
+            echo '## Drift from OpenIPC/firmware'
+            echo
+            echo '```'
+            cat "$RUNNER_TEMP/report.txt" 2>/dev/null || echo 'no report produced'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
