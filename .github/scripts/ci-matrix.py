@@ -171,6 +171,15 @@ class Tree:
         """Every built target whose defconfig lives in devices/<dir>/."""
         return [t for t in self.built if self.directory_of[t] == directory]
 
+    def devices_in(self, directory):
+        """Every target in devices/<dir>/, whether CI builds it or not.
+
+        targets_in() answers "what would this build", which is what narrowing
+        needs. This answers "is this a directory we know", which is what telling
+        a deliberate opt-out apart from an unrecognised path needs.
+        """
+        return [t for t in self.directory_of if self.directory_of[t] == directory]
+
 
 def classify(tree, changed, labels=(), event="pull_request", draft=False):
     """Map a list of changed paths to {rows, needs_build, reason}."""
@@ -219,6 +228,14 @@ def classify(tree, changed, labels=(), event="pull_request", draft=False):
             hits = tree.targets_in(f"devices/{device.group(1)}")
             if hits:
                 targets.update(hits)
+                continue
+            if tree.devices_in(f"devices/{device.group(1)}"):
+                # The directory is known -- every device in it is in NOT_BUILT.
+                # Reaching nothing is the whole point of that list, and their
+                # defconfigs already behave this way, so an overlay or kernel
+                # config beside one has to as well. Without this the opt-out
+                # inverts: touching a device CI deliberately skips widens to
+                # all of them.
                 continue
             return _decision(full, True,
                              reason=f"{path} is in no directory CI builds")
@@ -382,6 +399,17 @@ def self_test():
         # A defconfig CI does not build contributes nothing.
         (["devices/t31_lite_tp-link-tapo-tc70-v3/br-ext-chip-ingenic/configs/"
           "t31_lite_tp-link-tapo-tc70-v3_defconfig"], 0, "an unbuilt device"),
+        # ...and so does anything else in that device's directory. Its kernel
+        # config is the case that regressed: OpenIPC/builder#126 touched three
+        # NOT_BUILT devices and got the full 107 for it.
+        (["devices/gk7205v200_rubyfpv_generic/br-ext-chip-goke/board/gk7205v200/"
+          "gk7205v200.generic-fpv.config"], 0, "a kernel config in an unbuilt device"),
+        (["devices/t31_lite_tp-link-tapo-tc70-v3/general/overlay/etc/inittab"],
+         0, "an overlay file in an unbuilt device"),
+        # A directory with no defconfig at all is still unknown, and unknown
+        # still widens -- that is the half of this rule worth keeping.
+        (["devices/a-device-that-does-not-exist/br-ext-chip-goke/board/x.config"],
+         full, "a devices/ directory with no defconfig widens"),
         # Everything shared or unknown widens.
         (["builder.sh"], full, "the build script"),
         (["package/kc110-board-support/Config.in"],
