@@ -48,6 +48,11 @@ BR2_OPENIPC_FLASH_SIZE="16"
 BR2_PACKAGE_DROPBEAR_OPENIPC=y
 BR2_PACKAGE_EXFAT_OPENIPC=y
 BR2_PACKAGE_IPCTOOL=y
+# devices/apfpv's own etc/init.d/S99msposd reads majestic's config.json with
+# jsonfilter, and nothing else here selects it -- these two do not enable
+# wifibroadcast-ng, which is what carries the select for every other FPV
+# device. Stated rather than inherited, the same way OpenIPC/firmware#2305
+# had to declare the runtime binaries its scripts had been getting for free.
 BR2_PACKAGE_JSONFILTER=y
 BR2_PACKAGE_LIBCURL_OPENIPC=y
 BR2_PACKAGE_LIBCURL_OPENIPC_CURL=y
