@@ -8,6 +8,20 @@
   ],
   "shadows": [
     {
+      "builder": "devices/apfpv/general/overlay/etc/init.d/S40network",
+      "firmware": "general/overlay/etc/init.d/S40network",
+      "blob": "b8fd109321b556bbfdc9f1671b376992897fb9f1",
+      "reconciled": "2026-08-25",
+      "note": "shared network init"
+    },
+    {
+      "builder": "devices/apfpv/general/overlay/etc/network/interfaces.d/wlan0",
+      "firmware": "general/overlay/etc/network/interfaces.d/wlan0",
+      "blob": "7bce98b97a24f2e45d09ad654328eab3b6ea2125",
+      "reconciled": "2026-08-25",
+      "note": "shared interface definition"
+    },
+    {
       "builder": "devices/common/br-ext-chip-goke/board/gk7205v200/gk7205v200.generic-fpv.config",
       "firmware": "br-ext-chip-goke/board/gk7205v200/gk7205v200.generic.config",
       "blob": "f97dce84c0f85d1a08a45bb7a173448d4a060e75",
@@ -36,11 +50,235 @@
       "note": "fpv/lte variant"
     },
     {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/br-ext-chip-goke/board/gk710x/gk7102c.generic.config",
+      "firmware": "br-ext-chip-goke/board/gk710x/gk710x.generic.config",
+      "blob": "ad93ad88301ebadeb5f9e3ea96a9d6439610272b",
+      "reconciled": "2026-08-25",
+      "note": "gk7102c variant of gk710x; keeps CONFIG_INPUT for its evdev consumer"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/kmod/audio.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/audio.ko",
+      "blob": "d7fd53da67d5bc3bcb12dd331a3b06b803bb94bc",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/kmod/hal.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/hal.ko",
+      "blob": "d8233486df56140502d018abc0fc233685a4edb1",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/kmod/hw_crypto.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/hw_crypto.ko",
+      "blob": "eb4c04f4ba4e503e4f5ab8ba4b7f08949f54cd31",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/kmod/i2s.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/i2s.ko",
+      "blob": "c2f1f8b313a4e93a26b9e1c235e60d082456d8d3",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/kmod/media.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/media.ko",
+      "blob": "3cec20d363cf0dde9761466c33b2ca1b6832b494",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/kmod/sensor.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/sensor.ko",
+      "blob": "77076209e044c7f08d569fae4d5a9cda026319bf",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/lib/libadi.so",
+      "firmware": "general/package/goke-osdrv-gk710x/files/lib/libadi.so",
+      "blob": "1455b648bd6b517b8615274eacdf0a2401d014b8",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/lib/libimage.so",
+      "firmware": "general/package/goke-osdrv-gk710x/files/lib/libimage.so",
+      "blob": "2d35911581d0bf18910e4117b9d468cc88b9b7ec",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/script/load_goke",
+      "firmware": "general/package/goke-osdrv-gk710x/files/script/load_goke",
+      "blob": "b4ae2a74154a7df0a224b4886b6fd2852e87dac9",
+      "reconciled": "2026-08-25",
+      "note": "vendor driver loader; fleet-wide fixes here land in firmware"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/sensor/config/mis2003.bin",
+      "firmware": "general/package/goke-osdrv-gk710x/files/sensor/config/mis2003.bin",
+      "blob": "1c8449d8b1fc2d961ce3b8aab17143375db53df6",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/sensor/config/mis2003_hw.bin",
+      "firmware": "general/package/goke-osdrv-gk710x/files/sensor/config/mis2003_hw.bin",
+      "blob": "ebcad21990816d4574b01dcd16eea5df5cfa8237",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/sensor/fw/gk_fw_710x.bin",
+      "firmware": "general/package/goke-osdrv-gk710x/files/sensor/fw/gk_fw_710x.bin",
+      "blob": "1f3d647655e1147d1d1a314d8160233bb2f31f39",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/files/sensor/fw/gk_fw_710xs.bin",
+      "firmware": "general/package/goke-osdrv-gk710x/files/sensor/fw/gk_fw_710xs.bin",
+      "blob": "002e71c69b9e562af3c0e98a1e8fec3ee373d91d",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_umea-qc01x/general/package/goke-osdrv-gk710x/goke-osdrv-gk710x.mk",
+      "firmware": "general/package/goke-osdrv-gk710x/goke-osdrv-gk710x.mk",
+      "blob": "d2d056f649b2fc9005d645a56691783375585729",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/br-ext-chip-goke/board/gk710x/gk7102c.generic.config",
+      "firmware": "br-ext-chip-goke/board/gk710x/gk710x.generic.config",
+      "blob": "ad93ad88301ebadeb5f9e3ea96a9d6439610272b",
+      "reconciled": "2026-08-25",
+      "note": "gk7102c variant of gk710x"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/files/kmod/audio.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/audio.ko",
+      "blob": "d7fd53da67d5bc3bcb12dd331a3b06b803bb94bc",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/files/kmod/hal.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/hal.ko",
+      "blob": "d8233486df56140502d018abc0fc233685a4edb1",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/files/kmod/hw_crypto.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/hw_crypto.ko",
+      "blob": "eb4c04f4ba4e503e4f5ab8ba4b7f08949f54cd31",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/files/kmod/i2s.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/i2s.ko",
+      "blob": "c2f1f8b313a4e93a26b9e1c235e60d082456d8d3",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/files/kmod/media.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/media.ko",
+      "blob": "3cec20d363cf0dde9761466c33b2ca1b6832b494",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/files/kmod/sensor.ko",
+      "firmware": "general/package/goke-osdrv-gk710x/files/kmod/sensor.ko",
+      "blob": "77076209e044c7f08d569fae4d5a9cda026319bf",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/files/lib/libadi.so",
+      "firmware": "general/package/goke-osdrv-gk710x/files/lib/libadi.so",
+      "blob": "1455b648bd6b517b8615274eacdf0a2401d014b8",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/files/lib/libimage.so",
+      "firmware": "general/package/goke-osdrv-gk710x/files/lib/libimage.so",
+      "blob": "2d35911581d0bf18910e4117b9d468cc88b9b7ec",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/files/script/load_goke",
+      "firmware": "general/package/goke-osdrv-gk710x/files/script/load_goke",
+      "blob": "b4ae2a74154a7df0a224b4886b6fd2852e87dac9",
+      "reconciled": "2026-08-25",
+      "note": "vendor driver loader; fleet-wide fixes here land in firmware"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/files/sensor/fw/gk_fw_710x.bin",
+      "firmware": "general/package/goke-osdrv-gk710x/files/sensor/fw/gk_fw_710x.bin",
+      "blob": "1f3d647655e1147d1d1a314d8160233bb2f31f39",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/files/sensor/fw/gk_fw_710xs.bin",
+      "firmware": "general/package/goke-osdrv-gk710x/files/sensor/fw/gk_fw_710xs.bin",
+      "blob": "002e71c69b9e562af3c0e98a1e8fec3ee373d91d",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/general/package/goke-osdrv-gk710x/goke-osdrv-gk710x.mk",
+      "firmware": "general/package/goke-osdrv-gk710x/goke-osdrv-gk710x.mk",
+      "blob": "d2d056f649b2fc9005d645a56691783375585729",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/gk7202v300_lite_cootli_camv0103/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/gk7202v300_lite_ipg-g3-wr/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
       "builder": "devices/gk7202v300_lite_xg521/br-ext-chip-goke/board/gk7205v200/gk7202v300.generic.config",
       "firmware": "br-ext-chip-goke/board/gk7205v200/gk7202v300.generic.config",
       "blob": "a6b1534abde2aed025d61a1693bf9265176141df",
       "reconciled": "2026-08-25",
       "note": "device-local copy"
+    },
+    {
+      "builder": "devices/gk7202v300_lite_xg521/general/overlay/etc/wireless/modem",
+      "firmware": "general/overlay/etc/wireless/modem",
+      "blob": "075faaf5b960cd02ca8e336d92bf95f18bedb7be",
+      "reconciled": "2026-08-25",
+      "note": "shared modem table"
+    },
+    {
+      "builder": "devices/gk7202v300_lite_xg521/general/package/goke-osdrv-gk7205v200/goke-osdrv-gk7205v200.mk",
+      "firmware": "general/package/goke-osdrv-gk7205v200/goke-osdrv-gk7205v200.mk",
+      "blob": "7238dd51068dadfc07c6156074dd39fe02cc842e",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
     },
     {
       "builder": "devices/gk7205v200_otg_generic/br-ext-chip-goke/board/gk7205v200/gk7205v200.generic-otg.config",
@@ -64,11 +302,32 @@
       "note": "device-local copy"
     },
     {
+      "builder": "devices/hi3516ev300_ultimate_rostelecom-ipc8232swc-we/general/package/hisilicon-osdrv-hi3516ev200/files/script/load_hisilicon",
+      "firmware": "general/package/hisilicon-osdrv-hi3516ev200/files/script/load_hisilicon",
+      "blob": "18f88b4f8fba3a3fdc317c0af293280b1ddf6754",
+      "reconciled": "2026-08-25",
+      "note": "vendor driver loader; carries the os_mem_size fix firmware regression-tests"
+    },
+    {
+      "builder": "devices/hi3516ev300_ultimate_rvi-1ncmw2028/general/package/hisilicon-osdrv-hi3516ev200/files/script/load_hisilicon",
+      "firmware": "general/package/hisilicon-osdrv-hi3516ev200/files/script/load_hisilicon",
+      "blob": "18f88b4f8fba3a3fdc317c0af293280b1ddf6754",
+      "reconciled": "2026-08-25",
+      "note": "vendor driver loader; carries the os_mem_size fix firmware regression-tests"
+    },
+    {
       "builder": "devices/hi3518ev200_lite_lenovo-snowman-1080p/br-ext-chip-hisilicon/board/hi3516cv200/hi3518ev200.generic.config",
       "firmware": "br-ext-chip-hisilicon/board/hi3516cv200/hi3518ev200.generic.config",
       "blob": "92805f802503b38be9bb08843b5760e91bb3abd7",
       "reconciled": "2026-08-25",
       "note": "device-local copy"
+    },
+    {
+      "builder": "devices/hi3518ev200_lite_lenovo-snowman-1080p/general/overlay/etc/init.d/S70vendor",
+      "firmware": "general/overlay/etc/init.d/S70vendor",
+      "blob": "d0a1dc58dae0a2c46b104274438cea2cae1106f1",
+      "reconciled": "2026-08-25",
+      "note": "shared vendor init"
     },
     {
       "builder": "devices/hi3518ev200_lite_vstarcam-c8892wip/br-ext-chip-hisilicon/board/hi3516cv200/hi3518ev200.generic.config",
@@ -85,18 +344,375 @@
       "note": "device-local copy"
     },
     {
-      "builder": "devices/gk7102ca_lite_umea-qc01x/br-ext-chip-goke/board/gk710x/gk7102c.generic.config",
-      "firmware": "br-ext-chip-goke/board/gk710x/gk710x.generic.config",
-      "blob": "ad93ad88301ebadeb5f9e3ea96a9d6439610272b",
+      "builder": "devices/hi3518ev200_ultimate_lenovo-snowman-1080p/general/overlay/etc/init.d/S70vendor",
+      "firmware": "general/overlay/etc/init.d/S70vendor",
+      "blob": "d0a1dc58dae0a2c46b104274438cea2cae1106f1",
       "reconciled": "2026-08-25",
-      "note": "gk7102c variant of gk710x; keeps CONFIG_INPUT for its evdev consumer"
+      "note": "shared vendor init"
     },
     {
-      "builder": "devices/gk7102ca_lite_vstarcam-g8896wip/br-ext-chip-goke/board/gk710x/gk7102c.generic.config",
-      "firmware": "br-ext-chip-goke/board/gk710x/gk710x.generic.config",
-      "blob": "ad93ad88301ebadeb5f9e3ea96a9d6439610272b",
+      "builder": "devices/hi3518ev300_lite_xiaomi-mjsxj02hl/general/overlay/etc/wireless/sdio",
+      "firmware": "general/overlay/etc/wireless/sdio",
+      "blob": "955032922fc2903353fb5c9c83f722e328d7d467",
       "reconciled": "2026-08-25",
-      "note": "gk7102c variant of gk710x"
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/hi3518ev300_lite_xiaomi-mjsxj02hl/general/package/hisilicon-osdrv-hi3516ev200/hisilicon-osdrv-hi3516ev200.mk",
+      "firmware": "general/package/hisilicon-osdrv-hi3516ev200/hisilicon-osdrv-hi3516ev200.mk",
+      "blob": "e4ee5c21d1771154facba266307709ddb0f913f3",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/ssc30kd_lite_cmcc-ds-ytj5301/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/ssc30kq_apfpv_greg-generic-bu-eu/general/overlay/etc/init.d/S40network",
+      "firmware": "general/overlay/etc/init.d/S40network",
+      "blob": "b8fd109321b556bbfdc9f1671b376992897fb9f1",
+      "reconciled": "2026-08-25",
+      "note": "shared network init"
+    },
+    {
+      "builder": "devices/ssc30kq_apfpv_greg-generic-bu-eu/general/overlay/etc/init.d/S99rc.local",
+      "firmware": "general/overlay/etc/init.d/S99rc.local",
+      "blob": "688a126281f9110458564c168a95c2a1a5995274",
+      "reconciled": "2026-08-25",
+      "note": "shared rc.local"
+    },
+    {
+      "builder": "devices/ssc30kq_apfpv_greg-generic-bu-eu/general/overlay/etc/network/interfaces.d/wlan0",
+      "firmware": "general/overlay/etc/network/interfaces.d/wlan0",
+      "blob": "7bce98b97a24f2e45d09ad654328eab3b6ea2125",
+      "reconciled": "2026-08-25",
+      "note": "shared interface definition"
+    },
+    {
+      "builder": "devices/ssc30kq_apfpv_greg-generic-bu-eu/general/overlay/usr/share/udhcpc/default.script",
+      "firmware": "general/overlay/usr/share/udhcpc/default.script",
+      "blob": "925137f983fb27cf22e56480a85978db668ca651",
+      "reconciled": "2026-08-25",
+      "note": "shared udhcpc handler"
+    },
+    {
+      "builder": "devices/ssc30kq_apfpv_greg-generic-cu-eu/general/overlay/etc/init.d/S40network",
+      "firmware": "general/overlay/etc/init.d/S40network",
+      "blob": "b8fd109321b556bbfdc9f1671b376992897fb9f1",
+      "reconciled": "2026-08-25",
+      "note": "shared network init"
+    },
+    {
+      "builder": "devices/ssc30kq_apfpv_greg-generic-cu-eu/general/overlay/etc/init.d/S99rc.local",
+      "firmware": "general/overlay/etc/init.d/S99rc.local",
+      "blob": "688a126281f9110458564c168a95c2a1a5995274",
+      "reconciled": "2026-08-25",
+      "note": "shared rc.local"
+    },
+    {
+      "builder": "devices/ssc30kq_apfpv_greg-generic-cu-eu/general/overlay/etc/network/interfaces.d/wlan0",
+      "firmware": "general/overlay/etc/network/interfaces.d/wlan0",
+      "blob": "7bce98b97a24f2e45d09ad654328eab3b6ea2125",
+      "reconciled": "2026-08-25",
+      "note": "shared interface definition"
+    },
+    {
+      "builder": "devices/ssc30kq_apfpv_greg-generic-cu-eu/general/overlay/usr/share/udhcpc/default.script",
+      "firmware": "general/overlay/usr/share/udhcpc/default.script",
+      "blob": "925137f983fb27cf22e56480a85978db668ca651",
+      "reconciled": "2026-08-25",
+      "note": "shared udhcpc handler"
+    },
+    {
+      "builder": "devices/ssc30kq_rubyfpv_generic/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "firmware": "general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "blob": "d56e9aeb776345db4322d2ec378f6b0e701f885e",
+      "reconciled": "2026-08-25",
+      "note": "vendor driver loader; firmware#2307 updated its sensor list"
+    },
+    {
+      "builder": "devices/ssc325_lite_imou-c22cp/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/ssc325_lite_tp-link-tapo-c310-v1/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/ssc325_lite_trassir-tr-w2c1-v1/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/ssc333_lite_vstarcam-c43s_b/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/ssc335_lite_tp-link-tapo-c110-v1/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/ssc335_lite_tp-link-tapo-c310-v220/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/ssc335_lite_tp-link-tapo-c310-v220/general/package/sigmastar-osdrv-infinity6b0/files/sensor/configs/sc3338.bin",
+      "firmware": "general/package/sigmastar-osdrv-infinity6b0/files/sensor/configs/sc3338.bin",
+      "blob": "4154f87d3027c8e9325587002336cfdeed4d677d",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/ssc335_lite_trassir-tr-w2c1-v2/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/ssc338q_apfpv_greg-generic-bu-eu/general/overlay/etc/init.d/S40network",
+      "firmware": "general/overlay/etc/init.d/S40network",
+      "blob": "b8fd109321b556bbfdc9f1671b376992897fb9f1",
+      "reconciled": "2026-08-25",
+      "note": "shared network init"
+    },
+    {
+      "builder": "devices/ssc338q_apfpv_greg-generic-bu-eu/general/overlay/etc/init.d/S99rc.local",
+      "firmware": "general/overlay/etc/init.d/S99rc.local",
+      "blob": "688a126281f9110458564c168a95c2a1a5995274",
+      "reconciled": "2026-08-25",
+      "note": "shared rc.local"
+    },
+    {
+      "builder": "devices/ssc338q_apfpv_greg-generic-bu-eu/general/overlay/etc/network/interfaces.d/wlan0",
+      "firmware": "general/overlay/etc/network/interfaces.d/wlan0",
+      "blob": "7bce98b97a24f2e45d09ad654328eab3b6ea2125",
+      "reconciled": "2026-08-25",
+      "note": "shared interface definition"
+    },
+    {
+      "builder": "devices/ssc338q_apfpv_greg-generic-bu-eu/general/overlay/usr/share/udhcpc/default.script",
+      "firmware": "general/overlay/usr/share/udhcpc/default.script",
+      "blob": "925137f983fb27cf22e56480a85978db668ca651",
+      "reconciled": "2026-08-25",
+      "note": "shared udhcpc handler"
+    },
+    {
+      "builder": "devices/ssc338q_apfpv_greg-generic-cu-eu/general/overlay/etc/init.d/S40network",
+      "firmware": "general/overlay/etc/init.d/S40network",
+      "blob": "b8fd109321b556bbfdc9f1671b376992897fb9f1",
+      "reconciled": "2026-08-25",
+      "note": "shared network init"
+    },
+    {
+      "builder": "devices/ssc338q_apfpv_greg-generic-cu-eu/general/overlay/etc/init.d/S99rc.local",
+      "firmware": "general/overlay/etc/init.d/S99rc.local",
+      "blob": "688a126281f9110458564c168a95c2a1a5995274",
+      "reconciled": "2026-08-25",
+      "note": "shared rc.local"
+    },
+    {
+      "builder": "devices/ssc338q_apfpv_greg-generic-cu-eu/general/overlay/etc/network/interfaces.d/wlan0",
+      "firmware": "general/overlay/etc/network/interfaces.d/wlan0",
+      "blob": "7bce98b97a24f2e45d09ad654328eab3b6ea2125",
+      "reconciled": "2026-08-25",
+      "note": "shared interface definition"
+    },
+    {
+      "builder": "devices/ssc338q_apfpv_greg-generic-cu-eu/general/overlay/usr/share/udhcpc/default.script",
+      "firmware": "general/overlay/usr/share/udhcpc/default.script",
+      "blob": "925137f983fb27cf22e56480a85978db668ca651",
+      "reconciled": "2026-08-25",
+      "note": "shared udhcpc handler"
+    },
+    {
+      "builder": "devices/ssc338q_fpv_openipc-mario-aio/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "firmware": "general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "blob": "d56e9aeb776345db4322d2ec378f6b0e701f885e",
+      "reconciled": "2026-08-25",
+      "note": "vendor driver loader; firmware#2307 updated its sensor list"
+    },
+    {
+      "builder": "devices/ssc338q_fpv_openipc-thinker-aio/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "firmware": "general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "blob": "d56e9aeb776345db4322d2ec378f6b0e701f885e",
+      "reconciled": "2026-08-25",
+      "note": "vendor driver loader; firmware#2307 updated its sensor list"
+    },
+    {
+      "builder": "devices/ssc338q_fpv_openipc-urllc-aio/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "firmware": "general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "blob": "d56e9aeb776345db4322d2ec378f6b0e701f885e",
+      "reconciled": "2026-08-25",
+      "note": "vendor driver loader; firmware#2307 updated its sensor list"
+    },
+    {
+      "builder": "devices/ssc338q_rubyfpv_generic/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "firmware": "general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "blob": "d56e9aeb776345db4322d2ec378f6b0e701f885e",
+      "reconciled": "2026-08-25",
+      "note": "vendor driver loader; firmware#2307 updated its sensor list"
+    },
+    {
+      "builder": "devices/ssc338q_rubyfpv_thinker_internal_wifi/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "firmware": "general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "blob": "d56e9aeb776345db4322d2ec378f6b0e701f885e",
+      "reconciled": "2026-08-25",
+      "note": "vendor driver loader; firmware#2307 updated its sensor list"
+    },
+    {
+      "builder": "devices/ssc377qe_fpv_ccdcam-im50q01-tipoman/general/package/linux-patcher/linux-patcher.mk",
+      "firmware": "general/package/linux-patcher/linux-patcher.mk",
+      "blob": "fac2fcbf7b0b24092690892341d3890ea0738cc7",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/t21_lite_wansview-q5-1080p/br-ext-chip-ingenic/board/t21/t21.generic.config",
+      "firmware": "br-ext-chip-ingenic/board/t21/t21.generic.config",
+      "blob": "f0c54d0af58f8127dfd9be0d3b43df413514b8a2",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/t21_lite_xyx-06s/br-ext-chip-ingenic/board/t21/t21.generic.config",
+      "firmware": "br-ext-chip-ingenic/board/t21/t21.generic.config",
+      "blob": "f0c54d0af58f8127dfd9be0d3b43df413514b8a2",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/t23_lite_jooan-a6m-u/general/overlay/etc/rc.local",
+      "firmware": "general/overlay/etc/rc.local",
+      "blob": "1426ecbbba979c0005f2dd5e465fc75284d4c5b3",
+      "reconciled": "2026-08-25",
+      "note": "shared rc.local"
+    },
+    {
+      "builder": "devices/t23_lite_jooan-a6m-u/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/t23_lite_jooan-q3r-u/general/overlay/etc/rc.local",
+      "firmware": "general/overlay/etc/rc.local",
+      "blob": "1426ecbbba979c0005f2dd5e465fc75284d4c5b3",
+      "reconciled": "2026-08-25",
+      "note": "shared rc.local"
+    },
+    {
+      "builder": "devices/t23_lite_jooan-q3r-u/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/t23_lite_lsc-3215672/general/overlay/etc/rc.local",
+      "firmware": "general/overlay/etc/rc.local",
+      "blob": "1426ecbbba979c0005f2dd5e465fc75284d4c5b3",
+      "reconciled": "2026-08-25",
+      "note": "shared rc.local"
+    },
+    {
+      "builder": "devices/t23_lite_lsc-3215672/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/t31_lite_aceline-aip-o4/br-ext-chip-ingenic/board/t31/t31.generic.config",
+      "firmware": "br-ext-chip-ingenic/board/t31/t31.generic.config",
+      "blob": "0518469cce944263b2b288e5ba8322e1c886bcab",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/t31_lite_aceline-aip-o4/general/overlay/etc/wireless/sdio",
+      "firmware": "general/overlay/etc/wireless/sdio",
+      "blob": "955032922fc2903353fb5c9c83f722e328d7d467",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/t31_lite_aoni-ep01j05/general/overlay/etc/init.d/S70vendor",
+      "firmware": "general/overlay/etc/init.d/S70vendor",
+      "blob": "d0a1dc58dae0a2c46b104274438cea2cae1106f1",
+      "reconciled": "2026-08-25",
+      "note": "shared vendor init"
+    },
+    {
+      "builder": "devices/t31_lite_tp-link-tapo-tc70-v3/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/t31_lite_tuya-gv7630-t31-ptz/br-ext-chip-ingenic/board/t31/t31.generic.config",
+      "firmware": "br-ext-chip-ingenic/board/t31/t31.generic.config",
+      "blob": "0518469cce944263b2b288e5ba8322e1c886bcab",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/t31_lite_tuya-gv7630-t31-ptz/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/t31_lite_vstarcam-cs55/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/t31_lite_wansview-q5-2k/br-ext-chip-ingenic/board/t31/t31.generic.config",
+      "firmware": "br-ext-chip-ingenic/board/t31/t31.generic.config",
+      "blob": "0518469cce944263b2b288e5ba8322e1c886bcab",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/t31_lite_wansview-q5-2k/general/overlay/etc/wireless/sdio",
+      "firmware": "general/overlay/etc/wireless/sdio",
+      "blob": "955032922fc2903353fb5c9c83f722e328d7d467",
+      "reconciled": "2026-08-25",
+      "note": "shared wireless adapter table"
+    },
+    {
+      "builder": "devices/t40_lite_movols-mo-805p/br-ext-chip-ingenic/board/t40/t40.generic.config",
+      "firmware": "br-ext-chip-ingenic/board/t40/t40.generic.config",
+      "blob": "d027af78c683d0cb625e94fb8b525d4d1d39466a",
+      "reconciled": "2026-08-25",
+      "note": "device-local copy of a firmware file"
     }
   ],
   "builder_only_symbols": {

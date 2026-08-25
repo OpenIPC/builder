@@ -121,6 +121,35 @@ def selected_in(directory, pattern="*_defconfig"):
     return {k: sorted(v) for k, v in out.items()}
 
 
+def discover_shadows(repo_root, firmware):
+    """Every devices/<dir>/<path> whose <path> also exists in firmware.
+
+    builder.sh copies devices/<item>/* over the firmware clone, so any file
+    sitting at a path firmware also has replaces it. That makes same-path
+    shadows discoverable rather than something to remember, which matters: the
+    hand-written list in the first version of this file covered 13 board configs
+    and missed 93 shadows across 35 firmware paths -- among them load_goke,
+    load_hisilicon, load_sigmastar and four vendor .mk files, exactly the shared
+    files a fleet-wide fix lands in. A shadow found here with no entry in
+    firmware-drift.json is itself a finding, so the list cannot silently rot.
+
+    Shadows whose name differs from the file they replace -- gk7205v200.generic-fpv
+    for gk7205v200.generic -- cannot be discovered this way and stay hand-authored.
+    """
+    found = {}
+    devices = os.path.join(repo_root, "devices")
+    for root, _dirs, files in os.walk(devices):
+        for name in files:
+            path = os.path.join(root, name)
+            rel = os.path.relpath(path, devices).split(os.sep)
+            if len(rel) < 2:
+                continue
+            in_firmware = os.path.join(*rel[1:])
+            if os.path.isfile(os.path.join(firmware, in_firmware)):
+                found[os.path.relpath(path, repo_root)] = in_firmware
+    return found
+
+
 def blob_sha(firmware, path):
     """firmware HEAD's blob SHA for `path`, or None if it is not there."""
     try:
@@ -151,6 +180,16 @@ def check(firmware, buildroot, config, repo_root=REPO_ROOT):
     devices = os.path.join(repo_root, "devices")
 
     # --- Check 1: shadowed files ---
+    entries = {e["builder"]: e for e in config.get("shadows", [])}
+    if firmware is not None:
+        for builder_path, firmware_path in sorted(discover_shadows(repo_root, firmware).items()):
+            if builder_path not in entries:
+                findings.append(
+                    f"{builder_path} sits at a path firmware also has "
+                    f"({firmware_path}), so builder.sh replaces firmware's copy, but "
+                    f"nothing has reconciled the two.\n"
+                    f"      Add it to firmware-drift.json with the blob it was checked against.")
+
     for entry in config.get("shadows", []):
         builder_path = os.path.join(repo_root, entry["builder"])
         if not os.path.exists(builder_path):
@@ -304,6 +343,29 @@ def self_test():
              "without --buildroot the dead-symbol half must be skipped, not guessed")
         want(any("--buildroot" in n for n in notices2),
              "skipping the dead-symbol half must be said out loud")
+
+        # Discovery: a file sitting at a path firmware also has, with no entry,
+        # is the omission that let 88 shadows go unlisted in the first version.
+        shadowed = os.path.join(repo, "devices", "thing", "general", "overlay", "etc", "rc.local")
+        os.makedirs(os.path.dirname(shadowed))
+        with open(shadowed, "w") as handle:
+            handle.write("# device copy\n")
+        fwcopy = os.path.join(tmp, "firmware", "general", "overlay", "etc", "rc.local")
+        os.makedirs(os.path.dirname(fwcopy))
+        with open(fwcopy, "w") as handle:
+            handle.write("# firmware copy\n")
+        findings4, _ = check(os.path.join(tmp, "firmware"),
+                             os.path.join(tmp, "buildroot"), cfg, repo_root=repo)
+        want(any("rc.local" in f and "nothing has reconciled" in f for f in findings4),
+             "a same-path shadow with no entry must be reported")
+
+        cfg5 = dict(cfg, shadows=[{"builder": "devices/thing/general/overlay/etc/rc.local",
+                                   "firmware": "general/overlay/etc/rc.local",
+                                   "blob": "deadbeef", "reconciled": "2026-01-01"}])
+        findings5, _ = check(os.path.join(tmp, "firmware"),
+                             os.path.join(tmp, "buildroot"), cfg5, repo_root=repo)
+        want(not any("nothing has reconciled" in f for f in findings5),
+             "an entry must silence the discovery finding for that path")
 
         # Rot: an allowlist entry nothing selects any more.
         cfg2 = dict(cfg, builder_only_symbols={"BR2_PACKAGE_KNOWN": "x",
