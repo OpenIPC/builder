@@ -117,6 +117,7 @@ SMOKE_TARGETS = [
     "ssc30kq_rubyfpv_generic",           # devices/common, rubyfpv
     "gk7205v200_otg_generic",            # otg
     "ssc338q_apfpv",                     # devices/apfpv
+    "xm530_lite_anbiux-a8b-3mp",         # Xiongmai
 ]
 
 # LICENSE and README anchored to whole filenames; unanchored they would also
