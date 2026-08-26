@@ -16,6 +16,7 @@ _(based on Buildroot)_
 
 ```
 Amcrest IP4M-1026E       S3L          OV4689    -                NOR_32M   testing, video-ok, ircut-ok, day/night-ok
+anbiux A8B-3MP           XM530AI      SC3335    ATBM603X_USB     NOR_8M    in progress
 Anjoy MC-L12D2           SSC377D      IMX335    -                NOR_16M   testing, video-ok, zoom/focus-ok (pelco-xm ttyS2), af-pending (OpenIPC/majestic#373)
 Anxinshi ASRIH698T       HI3516DV100  IMX291    -                NOR_8M    video-ok, pan/tilt-ok (pelco-d UART1), zoom/focus-no
 Aoni EP01J05             T31L         ?         RTL8188FU_USB    NOR_16M   new
