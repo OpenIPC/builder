@@ -122,12 +122,14 @@ size first (the README device table lists all of these for existing boards).
    `.github/workflows/master.yml` — it holds no device list, and a PR that adds one is just a
    merge conflict. The only written-down list is `NOT_BUILT` in `ci-matrix.py`, the opt-out
    for devices that exist but are deliberately not built; leave it alone unless you mean to
-   opt out. Opening the PR is therefore what gets the device built, narrowed to just it.
+   opt out. Opening the PR is therefore what gets the device built, narrowed to just it —
+   but a **draft** PR deliberately builds nothing, so mark it ready for review when you want
+   that build. `ci:full` as a PR label overrides the narrowing and builds every device.
 7. **Document it.** Add a row to the device table in `README.md` (and the clones table if it's
    a rebrand of an existing board).
 8. **Build & verify.** `./builder.sh <device>`, then check
    `archive/<device>/<timestamp>/` for the image and confirm it fits the flash size. Use
-   `package.sh <pkg>` to iterate on a single package without a full re-clone. Pushing the PR
+   `package.sh <pkg>` to iterate on a single package without a full re-clone. A non-draft PR
    builds it on CI too, but a local build is the faster loop while the defconfig is moving.
 
 ## `package/` — builder-local Buildroot packages
