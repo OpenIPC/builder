@@ -304,17 +304,21 @@ jobs:
       #
       # `publish` carries its own `github.event_name != 'pull_request'`, so
       # producing fw-* on a PR cannot reach a release; it only makes the image
-      # downloadable from the run that built it. 7 days rather than 1 because a
-      # nightly's artifact is consumed by `publish` in the same run and never
-      # needs to outlive it, while a contributor in another timezone plausibly
-      # cannot act on a one-day window.
+      # downloadable from the run that built it.
+      #
+      # Retention is per-event deliberately. A nightly's artifact is consumed by
+      # `publish` inside the same run and no one downloads it afterwards, and a
+      # nightly builds the entire device matrix -- holding those a week would
+      # keep seven full matrices in storage instead of one, for no reader. A PR
+      # builds a handful and has a person waiting on them, plausibly in another
+      # timezone, so one day is too short a window there.
       - name: Upload build artifacts
         if: env.NORFW || env.NANDFW
         uses: actions/upload-artifact@v4
         with:
           name: fw-${{ matrix.platform }}
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: ${{ github.event_name == 'pull_request' && 7 || 1 }}
           path: dist/*
 
       - name: Send binary
