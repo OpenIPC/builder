@@ -116,14 +116,21 @@ size first (the README device table lists all of these for existing boards).
    `libsns_<sensor>.so` not provided by the SoC osdrv, a patched `load_hisilicon`, a sensor
    `.ini`), or a custom kernel config at `br-ext-chip-<vendor>/board/<family>/<soc>.generic.config`.
    Keep the file count minimal — anything reusable belongs upstream in `OpenIPC/firmware`.
-6. **Register for nightly CI.** Add `- <device>` to the matrix in
-   `.github/workflows/master.yml` under the matching group (SoC/APFPV/FPV/Ruby/etc.). This
-   matrix is the *only* build registry — a device not listed here is never built or released.
+6. **CI registration is automatic — there is nothing to add.** The build matrix is derived
+   from the tree by `.github/scripts/ci-matrix.py`: a device is registered by having
+   `devices/<dir>/.../<dir>_defconfig`, full stop. Do **not** add the device to
+   `.github/workflows/master.yml` — it holds no device list, and a PR that adds one is just a
+   merge conflict. The only written-down list is `NOT_BUILT` in `ci-matrix.py`, the opt-out
+   for devices that exist but are deliberately not built; leave it alone unless you mean to
+   opt out. Opening the PR is therefore what gets the device built, narrowed to just it —
+   but a **draft** PR deliberately builds nothing, so mark it ready for review when you want
+   that build. `ci:full` as a PR label overrides the narrowing and builds every device.
 7. **Document it.** Add a row to the device table in `README.md` (and the clones table if it's
    a rebrand of an existing board).
-8. **Build & verify locally.** `./builder.sh <device>`, then check
+8. **Build & verify.** `./builder.sh <device>`, then check
    `archive/<device>/<timestamp>/` for the image and confirm it fits the flash size. Use
-   `package.sh <pkg>` to iterate on a single package without a full re-clone.
+   `package.sh <pkg>` to iterate on a single package without a full re-clone. A non-draft PR
+   builds it on CI too, but a local build is the faster loop while the defconfig is moving.
 
 ## `package/` — builder-local Buildroot packages
 
@@ -135,9 +142,10 @@ via `SITE_METHOD = local`), `demo-openipc`. Read the package `Config.in` help te
 
 ## CI (`.github/workflows/`)
 
-- **master.yml** ("Build") — nightly cron (03:00 UTC) + manual dispatch. Builds the full
-  device matrix; it always rebuilds (the input that actually changes is firmware HEAD /
-  toolchain / kernel, all *outside* this repo, so there is no skip-gate). Caches ccache and
+- **master.yml** ("Build") — nightly cron (03:00 UTC), manual dispatch, and pull requests.
+  Every event except `pull_request` builds the full device matrix and always rebuilds (the
+  input that actually changes is firmware HEAD / toolchain / kernel, all *outside* this repo,
+  so there is no skip-gate); a PR builds only the devices its diff can reach. Caches ccache and
   Buildroot's `BR2_DL_DIR` at `/tmp/builder-dl` (outside `openipc/` because `builder.sh`
   `rm -rf`s that tree each run). Uploads each image to three release tags: dated
   `nightly-YYYYMMDD-<sha>`, rolling `nightly`, and legacy `latest`; pushes the NOR build to
@@ -149,6 +157,15 @@ via `SITE_METHOD = local`), `demo-openipc`. Read the package `Config.in` help te
   `manifest.json` + `manifest.flat` on the `gh-pages` branch via
   `.github/scripts/enrich_manifest.py`.
 - **cleanup.yml** — weekly prune of dated `nightly-*` releases beyond the newest 90.
+- **ci-matrix.py** (`.github/scripts/`) — not a workflow, but where the device registry now
+  lives. It maps the paths a PR touches to the devices that build them, reading the mapping
+  off the tree the same way `builder.sh` does: a file affects exactly the devices whose
+  defconfig shares its directory (which is why `devices/common/` is 18 targets, not one).
+  Recognising a path can only *narrow*; anything it has never heard of widens back to the
+  full matrix, so a misclassification costs runner time, never coverage. The nightly is never
+  narrowed. `ci-matrix.py --self-test` checks the file still agrees with the tree and runs in
+  the `Select devices` job, so it fails the PR rather than silently skipping a device — run it
+  after touching anything under `devices/`.
 
 ### Moving-ref cache caveat
 The monthly `builder-dl` cache can freeze packages pinned to a moving ref (VERSION = HEAD /
