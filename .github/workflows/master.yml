@@ -274,10 +274,14 @@ jobs:
       # schemes the build used (compound devices rename to <device>-nor.tgz in
       # the workspace root, simple ones leave openipc.<soc>-nor-<variant>.tgz
       # under openipc/output/images/).
+      # Runs on pull_request too. Staging and the upload below are run-scoped
+      # and touch no secret and no shared state, so unlike `Send binary` and the
+      # `publish` job -- which stay gated, and must -- there is nothing here for
+      # a PR to leak or clobber. Without this a contributor's PR compiles a full
+      # image and then discards it, so they cannot test their own device profile
+      # without asking a maintainer to dispatch build-one for them.
       - name: Stage artifacts
-        if: >-
-          github.event_name != 'pull_request' &&
-          (env.NORFW || env.NANDFW)
+        if: env.NORFW || env.NANDFW
         run: |
           mkdir -p dist
           for f in "${NORFW:-}" "${NANDFW:-}" "${SIZES:-}"; do
@@ -297,15 +301,20 @@ jobs:
       # contention (run 27108181857: every board built, 14 jobs red in their
       # upload step). Consolidating every release write into one job removes the
       # concurrent-writer contention that causes it.
+      #
+      # `publish` carries its own `github.event_name != 'pull_request'`, so
+      # producing fw-* on a PR cannot reach a release; it only makes the image
+      # downloadable from the run that built it. 7 days rather than 1 because a
+      # nightly's artifact is consumed by `publish` in the same run and never
+      # needs to outlive it, while a contributor in another timezone plausibly
+      # cannot act on a one-day window.
       - name: Upload build artifacts
-        if: >-
-          github.event_name != 'pull_request' &&
-          (env.NORFW || env.NANDFW)
+        if: env.NORFW || env.NANDFW
         uses: actions/upload-artifact@v4
         with:
           name: fw-${{ matrix.platform }}
           if-no-files-found: ignore
-          retention-days: 1
+          retention-days: 7
           path: dist/*
 
       - name: Send binary
