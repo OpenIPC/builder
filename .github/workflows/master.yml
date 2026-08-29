@@ -10,8 +10,29 @@ on:
     branches:
       - master
     types: [opened, synchronize, reopened, ready_for_review]
-  schedule:
-    - cron: '0 3 * * *'
+  # There is deliberately no `schedule:` here any more, and adding one back
+  # would undo a fix rather than restore a feature.
+  #
+  # This is the last stage of a three-stage release train — widgetii/majestic
+  # publishes the majestic tarball, OpenIPC/firmware builds the images, this
+  # builds from that tree. Each stage used to be its own GitHub cron guessing at
+  # the previous stage's finish time (17:25, 22:30, 03:00 UTC). From 2026-08-26
+  # GitHub's dispatcher began delivering scheduled events hours late and
+  # independently per repo, and this repository was the worst affected of the
+  # three: +10h38m and +11h49m on successive nights, because a 03:00 slot sits
+  # in the deepest part of the congestion band. On the 08-28 cycle that made
+  # this stage run FIRST, at 14:49, ahead of both the repositories it is
+  # supposed to follow. Every run was green, because no stage checks that its
+  # inputs are newer than the ones it used last time.
+  #
+  # The diagnostic, if this is ever doubted: on every late run
+  # `created_at == run_started_at` to the second, so the delay was entirely
+  # upstream of run creation, inside GitHub's dispatcher rather than in any
+  # runner pool, concurrency group or matrix.
+  #
+  # The ordering now lives on the machine that runs majestic's self-hosted
+  # runners, which dispatches each stage and waits for it to succeed before
+  # starting the next. See widgetii/majestic docs/ci-runners.md.
   workflow_dispatch:
     inputs:
       platform:
@@ -58,10 +79,11 @@ jobs:
     name: Preflight
     # Guard rail for clones of this repo. A clone pushed to a new repository
     # (a private mirror, an internal re-host) inherits this file along with
-    # its cron, and the full platform matrix then runs on that owner's Actions
-    # bill, nightly and unattended, publishing nightlies nobody reads. Forks
-    # are partially covered (GitHub disables scheduled workflows there), a
-    # fresh repository is not. Mirrors OpenIPC/firmware#2255.
+    # and the full platform matrix then runs on that owner's Actions bill on
+    # every internal PR they open. It used to also inherit a `cron:` and do
+    # that nightly and unattended, publishing nightlies nobody reads; that half
+    # went with the schedule trigger, the PR half did not. Mirrors
+    # OpenIPC/firmware#2255.
     #
     # Unattended runs happen only on the canonical repo. Anywhere else a
     # workflow runs only if someone explicitly asked for it, or if it is both
@@ -88,14 +110,18 @@ jobs:
           SHORT=$(git rev-parse --short HEAD)
           BUILD_ID="nightly-$(date -u +%Y%m%d)-${SHORT}"
           BUILT_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          # Nightly rebuilds unconditionally on schedule. builder.sh re-clones
+          # The nightly rebuilds unconditionally. builder.sh re-clones
           # OpenIPC/firmware at HEAD on every run, so the relevant inputs are
           # mostly outside this repo (firmware HEAD, toolchain release, kernel
           # tarball, vendor osdrv, individual package upstreams). The previous
           # gate skipped when only this repo's HEAD matched the last published
           # nightly, which made upstream fixes (e.g. an openhisilicon mipi_rx
           # regression fix that lands in firmware) invisible to users until
-          # something here happened to change. Always build on schedule.
+          # something here happened to change. Always build.
+          #
+          # Note this is why removing the `schedule:` trigger needed no gate
+          # change here, unlike majestic and firmware: there is no event-name
+          # condition to go stale, because there is no skip.
           echo "Build: $BUILD_ID (event=${{ github.event_name }})"
           echo "should_build=true"  >> "$GITHUB_OUTPUT"
           echo "head_sha=$HEAD"      >> "$GITHUB_OUTPUT"
@@ -144,7 +170,7 @@ jobs:
       # builder.sh does `rm -rf openipc` at the top of every run to force a
       # clean re-clone of OpenIPC/firmware, which also nukes the default
       # `openipc/output/dl/` directory Buildroot uses for downloaded source
-      # tarballs. Without a cache, every cron run re-downloads ~1-3 GB of
+      # tarballs. Without a cache, every nightly run re-downloads ~1-3 GB of
       # tarballs from upstream mirrors — and any one of them randomly
       # failing (e.g. cgit `snapshot/` URLs that regenerate tarballs per
       # request with shifting sha256, like wireguard-tools on
