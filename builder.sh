@@ -154,7 +154,27 @@ echo_c 33 "\nCopying device files"
 cp -afv ${BUILDER_DIR}/${ITEM}/* ${FIRMWARE_DIR}
 
 echo_c 33 "\nBuilding the device"
+# Propagate make's status. Without this the script ALWAYS exits 0: the result is
+# discarded, copy_to_archive then runs over an empty output/images and still
+# prints "Assembled firmware available in:", and the caller sees success over an
+# empty directory.
+#
+# The expensive consequence is in CI. master.yml calls this inside a retry loop
+# written as `bash builder.sh ${NAME} && break`, wrapped in a six-step backoff
+# meant to absorb transient toolchain and CDN flakes. A script that cannot fail
+# breaks on the first attempt, so the budget never retried anything and the
+# `exit 1` after the loop was unreachable — a genuinely failed build reported
+# green instead of being re-attempted.
+#
+# Explicit rather than `set -e` at the top: this script does a lot of unguarded
+# cp/rm/cd, and enabling errexit globally would change failure behaviour well
+# beyond this line.
 make BOARD=${DEVICE}
+BUILD_RC=$?
+if [ ${BUILD_RC} -ne 0 ]; then
+    echo_c 31 "\nBuild FAILED (make exited ${BUILD_RC}) - not archiving"
+    exit ${BUILD_RC}
+fi
 
 # Best-effort: emit per-package/per-kernel-module size JSON next to the .tgz.
 # Target lives in firmware's Makefile (PR #2166); ignore failure so legacy
