@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set_gpio() {
+	[ "$2" -eq 1 ] && gpio set $1 || gpio clear $1
+	sleep 1
+}
+
+if [ "$1" = "ssv6x5x-generic" ]; then
+        modprobe ssv6x5x
+        exit 0
+fi
+
+exit 1
