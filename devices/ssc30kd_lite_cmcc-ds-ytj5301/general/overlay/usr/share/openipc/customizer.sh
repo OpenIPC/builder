@@ -37,7 +37,8 @@ cli -s .audio.speakerPin 11
 # Set motor and mmc
 #
 #fw_setenv gpio_mmc XX
-fw_setenv gpio_motors 111 112 113 114 59 60 8 9
+fw_setenv ptz_control gpio
+fw_setenv ptz_gpio 111 112 113 114 59 60 8 9
 #
 #
 #adduser viewer -s /bin/false -D -H ; echo viewer:123456 | chpasswd

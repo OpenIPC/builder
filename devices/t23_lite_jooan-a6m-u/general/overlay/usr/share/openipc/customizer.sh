@@ -44,7 +44,8 @@ fw_setenv rmem 19M@0x2D00000
 # Set motor and mmc
 #
 fw_setenv gpio_mmc 61
-#fw_setenv gpio_motors 53 52 54 14 17
+#fw_setenv ptz_control gpio
+#fw_setenv ptz_gpio 53 52 54 14 17
 #
 #
 #adduser viewer -s /bin/false -D -H ; echo viewer:123456 | chpasswd
