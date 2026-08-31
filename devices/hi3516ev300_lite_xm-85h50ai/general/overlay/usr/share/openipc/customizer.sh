@@ -25,6 +25,12 @@ fw_setenv ptz_port /dev/ttyAMA0
 fw_setenv ptz_caps 'zoom focus'
 #
 #
+# Autofocus: majestic's contrast AF engine over the ISP focus statistic,
+# driving the same zoom block. Default port/speed already match this board.
+#
+cli -s .isp.autofocus.enabled true
+#
+#
 # The MCU owns the console UART, so getty must not sit on it reading the
 # MCU's bytes. The edit lands in the overlay; an upgrade that wipes the
 # overlay also wipes /etc/custom.ok, so this script runs again and the
