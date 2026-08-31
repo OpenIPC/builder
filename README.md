@@ -90,6 +90,7 @@ Vixand IVG-G6S-W         GK7205V300   IMX335    ATBM6032i_USB    NOR_16M   w/ext
 VStarcam C43S(B)         SSC333       JXF37     MT7601U_USB      NOR_16M   in progress
 VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in progress
 VStarcam C8622           T23N         SC2336P   AIC8800DL_?      NOR_8M    **INIT** - in progress
+XiongMai 85H50AI         HI3516EV300  IMX335    -                NOR_8M    testing, motorized zoom+focus (pelco-xm)
 VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
 VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip
 Wansview Q5 1080p        T21Z         OV2735B   RTL8188FU_USB    NOR_16M   in progress
