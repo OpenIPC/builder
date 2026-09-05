@@ -72,3 +72,12 @@ jobs:
       # by commits in that repository and not by anything in a PR here.
       - name: Check the drift checker still describes the tree
         run: python3 .github/scripts/check-firmware-drift.py --self-test
+      # `cli -s` cannot fail: yaml-cli stores whatever dotted path it is given,
+      # and majestic silently ignores a key it does not recognise. So a typo in
+      # a setting path applies nothing and says nothing, for the life of the
+      # device. t40_lite_movols-mo-805p shipped six of them behind a trailing
+      # colon. Same shape as the checks above -- no runners, no matrix, seconds.
+      - name: Check the cli path linter still catches what it should
+        run: python3 .github/scripts/lint-cli-paths.py --self-test
+      - name: Check every shipped cli setting path
+        run: python3 .github/scripts/lint-cli-paths.py
