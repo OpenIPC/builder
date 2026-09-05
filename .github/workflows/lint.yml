@@ -16,6 +16,7 @@ on:
     paths:
       - '.github/workflows/**'
       - '.github/scripts/lint-workflow-shell.py'
+      - '.github/scripts/lint-cli-paths.py'
   workflow_dispatch:
 
 # Reads the tree and reports; writes nothing. Declared rather than inherited so
