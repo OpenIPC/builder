@@ -99,18 +99,15 @@ to_device() {
 	need_debugfs
 
 	if X=$(xhci_device) && [ -e "/sys/bus/platform/drivers/xhci-hcd/$X" ]; then
-		# Coming straight from boot the controller is still in its power-on
-		# GCTL.PRTCAPDIR = OTG(3) (see the header note: nothing moves it off
-		# OTG on its own). xhci-hcd binds and registers both buses on top of
-		# that anyway, but it is not actually driving the port -- so unbinding
-		# directly from OTG asks xhci_halt() to halt a host that was never
-		# really running, and it times out:
+		# Unbind only from the host role. Asking xhci_halt() to halt a
+		# controller whose GCTL.PRTCAPDIR is not HOST means halting a host
+		# that was never really running, and it times out:
 		#   xhci-hcd.0.auto: Host not halted after 16000 microseconds.
 		#   xhci-hcd.0.auto: Host controller not halted, aborting reset.
-		# Leaving the controller un-halted is precisely the live-DMA-engine
-		# state this unbind exists to avoid. Flip to host first so the already
-		# bound xHCI is genuinely running, and the unbind then halts cleanly.
-		# A switch from host is already in that state, so only boot pays for it.
+		# Leaving it un-halted is precisely the live-DMA-engine state this
+		# unbind exists to avoid. Since all-patches 0018 the core is already
+		# in the host role whenever xHCI is bound, so this flip is a no-op; it
+		# stays as the cheap guarantee that the unbind below halts cleanly.
 		[ "$(cat "$MODE_FILE")" = host ] || echo host > "$MODE_FILE"
 
 		echo "usb-mode: unbinding host controller $X"
@@ -141,11 +138,32 @@ to_host() {
 
 	teardown_gadget
 
+	# Remember which role we are leaving: it decides whether an already-bound
+	# host stack has to be re-probed. See below.
+	was=$(cat "$MODE_FILE")
 	echo host > "$MODE_FILE"
 
-	if X=$(xhci_device) && [ ! -e "/sys/bus/platform/drivers/xhci-hcd/$X" ]; then
-		echo "usb-mode: rebinding host controller $X"
-		echo "$X" > /sys/bus/platform/drivers/xhci-hcd/bind
+	if X=$(xhci_device); then
+		if [ ! -e "/sys/bus/platform/drivers/xhci-hcd/$X" ]; then
+			echo "usb-mode: rebinding host controller $X"
+			echo "$X" > /sys/bus/platform/drivers/xhci-hcd/bind
+		elif [ "$was" != host ]; then
+			# Bound, but bound while the core was in another role: it
+			# probed, reset the controller and brought up its root hubs
+			# against a port it was not driving, and it will never report a
+			# connect -- the port powers up and stays at CCS = 0, so lsusb
+			# shows nothing but the root hubs however many devices are
+			# plugged in. Writing MODE_FILE only flips GCTL.PRTCAPDIR; it
+			# does not re-initialise a live xHCI. Making it probe again is
+			# what actually brings the port up.
+			#
+			# The kernel now settles the role before registering the host
+			# (all-patches 0018), so this cannot trigger on a matching
+			# kernel. It is here for a rootfs running on an older one.
+			echo "usb-mode: re-probing host controller $X (was $was)"
+			echo "$X" > /sys/bus/platform/drivers/xhci-hcd/unbind
+			echo "$X" > /sys/bus/platform/drivers/xhci-hcd/bind
+		fi
 	fi
 
 	echo host > "$STATE"

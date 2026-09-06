@@ -18,11 +18,13 @@ same node (eps_directions, eps_map, snps,eps_new_init), which the vendor would
 only have added if device mode was exercised; and CONFIG_USB_DWC3_DUAL_ROLE is
 already enabled, so dwc3's gadget.o/ep0.o are already linked in.
 
-IMPORTANT: dr_mode = "otg" also makes dwc3_core_init() leave
+IMPORTANT: on its own, dr_mode = "otg" would also make dwc3_core_init() leave
 GCTL.PRTCAPDIR = OTG(3), and this 4.9 dwc3 has no working OTG role-detection
-block. A concrete role must be forced early in userspace -- see
-/etc/init.d/S72usbmode, which writes "host" at boot. Without it the controller
-sits in a role it cannot drive and USB does not work in either direction.
+block -- nothing would ever move it off OTG, and an xHCI host that probes in
+that state comes up unable to drive the port. Patch 0018 settles the role in
+the kernel instead, programming PRTCAPDIR = HOST before the host is
+registered, so the board boots usable as a host; /etc/init.d/S72usbmode then
+only has to apply a persisted "device" choice.
 
 This patch ships only in the gk7205v200_otg_generic device profile, so other
 gk7205v200 variants keep dr_mode = "host".

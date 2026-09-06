@@ -1,0 +1,60 @@
+From: OpenIPC
+Subject: [PATCH] usb: dwc3: start a dual-role part in the host role, not in OTG
+
+With dr_mode = "otg", dwc3_core_init() programs GCTL.PRTCAPDIR = OTG(3) and
+dwc3_core_init_mode() then registers the xHCI host on top of it. This 4.9 dwc3
+has no working OTG role-detection block, so nothing ever moves the controller
+off OTG on its own -- xhci-hcd probes, resets the controller and brings up its
+root hubs while the core is in a role it cannot drive.
+
+The result is a host controller that looks completely healthy and does nothing.
+Measured on gk7205v200 with a UVC webcam wired to the USB tail:
+
+    USBCMD  0x00000005   R/S set, controller running
+    PORTSC1 0x00000280   PP set, CCS clear -- no connect, ever
+    lsusb                only the two root hubs
+
+The port never reports the connect, so `lsusb` on the OTG image shows nothing
+attached while the same board on a dr_mode = "host" image enumerates the webcam
+normally. This is the bug users hit as "the OTG firmware does not see USB
+devices".
+
+Forcing the role from userspace afterwards does not repair it. Writing "host"
+to /sys/kernel/debug/<dwc3>/mode reaches dwc3_set_mode(), which flips
+GCTL.PRTCAPDIR and nothing else; the already-probed xHCI keeps the port state
+machine it initialised while the core was in OTG. Confirmed by experiment: the
+write leaves PORTSC1 at 0x00000280, and only unbinding and re-binding xhci-hcd
+-- i.e. making it probe again, with the core now in host role -- brings the
+port up (PORTSC1 0x0C000E63, device enumerated).
+
+So the role has to be concrete before the host stack is registered. Set
+PRTCAPDIR = HOST for the OTG case: dwc3_core_init() runs before
+dwc3_core_init_mode(), so xHCI probes into a role the core can drive.
+
+This costs the gadget nothing. dwc3_gadget_init() only registers a UDC, which
+does not care about PRTCAPDIR, and the device role is entered explicitly by
+`usb-mode device` (which flips PRTCAPDIR after unbinding the host). Booting in
+the host role is also what upstream settled on: __dwc3_set_mode() treats
+DWC3_GCTL_PRTCAP_OTG as "pick a role now" rather than as a state to sit in.
+
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -755,7 +755,17 @@
+ 		dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_HOST);
+ 		break;
+ 	case USB_DR_MODE_OTG:
+-		dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_OTG);
++		/*
++		 * Deliberately HOST and not OTG: dwc3_core_init_mode() is
++		 * about to register xhci-hcd, and a host that probes while
++		 * the core sits in OTG comes up unable to drive the port --
++		 * it runs, powers the port and never sees a connect. Nothing
++		 * in this tree moves the core off OTG later, and flipping
++		 * PRTCAPDIR afterwards does not re-initialise the host, so
++		 * the role must be settled here. The gadget path re-aims the
++		 * controller itself when it takes the port.
++		 */
++		dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_HOST);
+ 		break;
+ 	default:
+ 		dev_warn(dwc->dev, "Unsupported mode %d\n", dwc->dr_mode);
