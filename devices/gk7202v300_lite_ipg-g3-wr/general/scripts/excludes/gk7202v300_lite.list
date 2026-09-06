@@ -25,6 +25,16 @@
 /etc/sensors/gc5603_i2c_5M.ini
 /etc/sensors/imx327_i2c_1080p.ini
 /etc/sensors/iq/imx307.ini
+# imx307.ini above is the target of the osdrv package's
+# /etc/sensors/iq/default.ini symlink, and this list drops every IQ file
+# the package installs (imx307, imx335, sc2232), so there is nothing left
+# to aim it at. Drop the symlink too rather than ship a dangling one:
+# majestic's init_iq_monitor() takes the same silent no-profile path
+# either way, but a dangling link also starts resolving to the wrong
+# sensor's profile the moment one of these entries goes stale.
+# This board runs jxh63, which the package ships no IQ file for. If it
+# turns out to want one, keeping imx307.ini costs 126 KB.
+/etc/sensors/iq/default.ini
 /etc/sensors/mis2008_i2c_1080p.ini
 /etc/sensors/os02g10_i2c_1080p.ini
 /etc/sensors/sc223a_i2c_1080p.ini
