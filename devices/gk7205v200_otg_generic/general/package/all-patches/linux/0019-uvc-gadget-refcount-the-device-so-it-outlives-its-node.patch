@@ -1,0 +1,193 @@
+uvc gadget: reference-count the device so it outlives its video node
+
+Tearing down a UVC gadget that userspace still has open corrupts the V4L2 core.
+On gk7205v200 this is reachable from the shell -- `usb-mode host` while majestic
+holds /dev/videoN -- and it shows up as two things that look unrelated:
+
+  * the video node number is never reused. Across role switches the gadget comes
+    up as /dev/video0, then video1, then video2, with the lower numbers sitting
+    free. It resets only on reboot.
+  * a WARN during the teardown (Comm: usb-mode), and then, once the kernel is
+    tainted, an Oops:
+
+        Unable to handle kernel NULL pointer dereference at virtual address 8
+        Internal error: Oops: 5 [#1] ARM
+        Backtrace:
+          v4l2_device_release <- device_release <- kobject_put <- put_device
+          <- v4l2_release <- __fput <- ____fput <- task_work_run <- do_exit
+        Fixing recursive fault but reboot is needed!
+
+Both come from the same line. struct uvc_device embeds its struct video_device,
+and uvc_free() kfree()s the whole thing when the usb_function goes away. But the
+V4L2 core keeps a reference to that video_device for as long as /dev/videoN is
+open, and the last put lands in v4l2_device_release():
+
+	mutex_lock(&videodev_lock);
+	if (WARN_ON(video_device[vdev->minor] != vdev)) {
+		/* should not happen */
+		mutex_unlock(&videodev_lock);
+		return;
+	}
+	...
+	/* Mark device node number as free */
+	devnode_clear(vdev);
+
+Once the memory behind vdev is gone the comparison fails, so the WARN fires and
+the function returns *before* devnode_clear() -- which is the only thing that
+frees the node number. That is the leak. Reach the same path again with memory
+that has since been reused and the dereference is no longer merely stale, and
+that is the Oops.
+
+Ordering makes this ordinary rather than exotic. Removing a gadget is something
+an administrator does; closing the video node is something an application does.
+Expecting the second to have happened before the first is expecting a race to go
+one way every time.
+
+So do what the comment two lines above the release assignment has been asking
+for since the driver was written:
+
+	/* TODO reference counting. */
+
+One reference belongs to the usb_function and is dropped in uvc_free(); one
+belongs to the registered video device and is dropped by its release callback.
+Whichever goes last frees the structure, so vdev is always still there when the
+V4L2 core looks at it: the WARN cannot fire, devnode_clear() always runs, and
+the node number goes back into circulation.
+
+The release callback uses container_of rather than video_get_drvdata(), because
+drvdata lives in the struct device being released and there is no reason to
+depend on how far that teardown has got.
+
+uvc_unbind() additionally clears control_req and control_buf after freeing them.
+They were previously left dangling on a structure that could not outlive the
+unbind; now that it can, leaving them is an invitation.
+
+Verified on gk7205v200 with a UVC webcam on the USB tail: role switched back and
+forth repeatedly, the gadget returning to /dev/video0 every time instead of
+climbing, and no WARN or Oops in the log.
+
+--- a/drivers/usb/gadget/function/uvc.h
++++ b/drivers/usb/gadget/function/uvc.h
+@@ -14,6 +14,7 @@
+ #define _UVC_GADGET_H_
+ 
+ #include <linux/ioctl.h>
++#include <linux/kref.h>
+ #include <linux/types.h>
+ #include <linux/usb/ch9.h>
+ 
+@@ -157,6 +158,20 @@
+ 	struct usb_function func;
+ 	struct uvc_video video;
+ 
++	/*
++	 * This structure outlives the USB function it belongs to. vdev above is
++	 * embedded in it, and the V4L2 core holds a reference to that for as
++	 * long as userspace keeps /dev/videoN open -- which can easily be
++	 * longer than the gadget, because tearing a gadget down is something
++	 * the administrator does and closing the node is something the
++	 * application does, in that order about as often as not.
++	 *
++	 * One reference is held by the usb_function and dropped in uvc_free();
++	 * one is held by the registered video device and dropped by its release
++	 * callback. Whichever goes last frees us.
++	 */
++	struct kref ref;
++
+ 	/* Descriptors */
+ 	struct {
+ 		const struct uvc_descriptor_header * const *fs_control;
+--- a/drivers/usb/gadget/function/f_uvc.c
++++ b/drivers/usb/gadget/function/f_uvc.c
+@@ -414,23 +414,53 @@
+  * USB probe and disconnect
+  */
+ 
++static void uvc_release(struct kref *ref)
++{
++	struct uvc_device *uvc = container_of(ref, struct uvc_device, ref);
++
++	kfree(uvc);
++}
++
++/*
++ * Called by the V4L2 core once nothing refers to the video device any more.
++ * container_of rather than video_get_drvdata(): drvdata lives in the struct
++ * device we are in the middle of releasing, and not depending on how far that
++ * teardown has got is free.
++ */
++static void uvc_video_device_release(struct video_device *vdev)
++{
++	struct uvc_device *uvc = container_of(vdev, struct uvc_device, vdev);
++
++	kref_put(&uvc->ref, uvc_release);
++}
++
+ static int
+ uvc_register_video(struct uvc_device *uvc)
+ {
+ 	struct usb_composite_dev *cdev = uvc->func.config->cdev;
++	int ret;
+ 
+-	/* TODO reference counting. */
+ 	uvc->vdev.v4l2_dev = &uvc->v4l2_dev;
+ 	uvc->vdev.fops = &uvc_v4l2_fops;
+ 	uvc->vdev.ioctl_ops = &uvc_v4l2_ioctl_ops;
+-	uvc->vdev.release = video_device_release_empty;
++	uvc->vdev.release = uvc_video_device_release;
+ 	uvc->vdev.vfl_dir = VFL_DIR_TX;
+ 	uvc->vdev.lock = &uvc->video.mutex;
+ 	strlcpy(uvc->vdev.name, cdev->gadget->name, sizeof(uvc->vdev.name));
+ 
+ 	video_set_drvdata(&uvc->vdev, uvc);
+ 
+-	return video_register_device(&uvc->vdev, VFL_TYPE_GRABBER, -1);
++	/*
++	 * The reference the video device itself holds. Taken before it can
++	 * possibly be released, and handed back by uvc_video_device_release().
++	 */
++	kref_get(&uvc->ref);
++
++	ret = video_register_device(&uvc->vdev, VFL_TYPE_GRABBER, -1);
++	if (ret < 0)
++		kref_put(&uvc->ref, uvc_release);
++
++	return ret;
+ }
+ 
+ #define UVC_COPY_DESCRIPTOR(mem, dst, desc) \
+@@ -880,7 +910,12 @@
+ 	struct f_uvc_opts *opts = container_of(f->fi, struct f_uvc_opts,
+ 					       func_inst);
+ 	--opts->refcnt;
+-	kfree(uvc);
++	/*
++	 * Drops the usb_function's reference, not necessarily the last one: if
++	 * the video device is still open this returns without freeing, and the
++	 * release callback finishes the job whenever userspace lets go.
++	 */
++	kref_put(&uvc->ref, uvc_release);
+ }
+ 
+ static void uvc_unbind(struct usb_configuration *c, struct usb_function *f)
+@@ -895,6 +930,12 @@
+ 
+ 	usb_ep_free_request(cdev->gadget->ep0, uvc->control_req);
+ 	kfree(uvc->control_buf);
++	/*
++	 * uvc may outlive the unbind now, so leave nothing dangling behind for
++	 * a later path to find and use or free a second time.
++	 */
++	uvc->control_req = NULL;
++	uvc->control_buf = NULL;
+ 
+ 	usb_free_all_descriptors(f);
+ }
+@@ -909,6 +950,7 @@
+ 	if (uvc == NULL)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	kref_init(&uvc->ref);
+ 	mutex_init(&uvc->video.mutex);
+ 	uvc->state = UVC_STATE_DISCONNECTED;
+ 	opts = fi_to_f_uvc_opts(fi);
