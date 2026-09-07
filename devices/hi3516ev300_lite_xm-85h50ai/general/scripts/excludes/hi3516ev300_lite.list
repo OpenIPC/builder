@@ -48,6 +48,12 @@
 /etc/sensors/sp2305_i2c_1080p.ini
 /etc/sensors/sp2308_i2c_1080p.ini
 #
+# imx307.ini is what the osdrv package points /etc/sensors/iq/default.ini
+# at, so dropping it here would leave that symlink dangling and majestic
+# would load no IQ profile at all. general/overlay ships a default.ini
+# aimed at imx335.ini -- this board's sensor -- and the rootfs overlay is
+# rsynced before this list runs, so the replacement is already in place.
+#
 /etc/sensors/iq/f23.ini
 /etc/sensors/iq/imx307.ini
 /etc/sensors/high-fps/imx307_1280x720_60fps.ini
