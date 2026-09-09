@@ -491,6 +491,13 @@
       "note": "shared wireless adapter table"
     },
     {
+      "builder": "devices/ssc337de_lite_zte-k543/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-09-09",
+      "note": "shared wireless adapter table"
+    },
+    {
       "builder": "devices/ssc338q_apfpv_greg-generic-bu-eu/general/overlay/etc/init.d/S40network",
       "firmware": "general/overlay/etc/init.d/S40network",
       "blob": "b8fd109321b556bbfdc9f1671b376992897fb9f1",
