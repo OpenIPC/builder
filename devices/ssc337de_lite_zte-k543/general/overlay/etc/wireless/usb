@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set_gpio() {
+	[ "$2" -eq 1 ] && gpio set $1 || gpio clear $1
+	sleep 1
+}
+
+# SSC337DE ZTE K543
+if [ "$1" = "mt7601sta-ssc337de-zte-k543" ]; then
+	set_gpio 14 1
+	set_gpio 14 0
+	exec modprobe mt7601sta
+fi
+
+exit 1
