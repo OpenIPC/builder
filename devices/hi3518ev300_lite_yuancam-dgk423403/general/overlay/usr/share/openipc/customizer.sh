@@ -5,7 +5,7 @@
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3518ev300_lite_bathhouse-nor.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3518ev300_lite_yuancam-dgk423403-nor.tgz'
 fw_setenv wlandev rtl8188fu-generic
 #
 #
