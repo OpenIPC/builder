@@ -10,6 +10,7 @@
 /etc/sensors/sc2335.bin
 /etc/sensors/sc2336.bin
 /etc/sensors/sc2338.bin
+/etc/sensors/sc3336.bin
 /etc/sensors/sc3338.bin
 /etc/sensors/sc401ai.bin
 #
@@ -21,6 +22,7 @@
 /lib/modules/4.9.84/sigmastar/sensor_imx335_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_jxq03_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_os02g10_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor_os03b10_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc200ai_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc2239_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc223a_mipi.ko
@@ -28,6 +30,7 @@
 /lib/modules/4.9.84/sigmastar/sensor_sc2336_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc2338_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc3335_mipi.ko
+/lib/modules/4.9.84/sigmastar/sensor_sc3336_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc3338_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc401ai_mipi.ko
 #
