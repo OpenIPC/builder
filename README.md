@@ -19,7 +19,6 @@ Aoni EP01J05             T31L         ?         RTL8188FU_USB    NOR_16M   new
 Azarton C1               T20X         JXF23     RTL8189FS_SDIO   NOR_16M   done
 Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
 Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
-Bathhouse                HI3518EV300  ?         RTL8188FU_USB    NOR_8M    research
 Botslab C213             T23N         SC3332    ATBM6012B_USB    NOR_8M    **INIT** - frozen
 CCDCAM IM50Q01           SSC377QE     IMX335    -                NOR_16M   done
 ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no
@@ -101,6 +100,7 @@ Xiaomi MJSXJ02HL         HI3518EV300  JXF22     RTL8189FS_SDIO   NOR_16M   prepa
 Xiaomi MJSXJ03HL         T31N         JXQ03     RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ03HL         T31N         JXQ03P    RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   preparation
+YuanCam DGK-423403       HI3518EV300  JXH62     RTL8188FU_USB    NOR_8M    research
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 4G Camera XG521 V1.2     GK7202V300   GC1054    EC800E-CN_USB    NOR_8M    done
 XM IPG-G3-WR             GK7202V300   JXH63     ATBM60321S_USB   NOR_8M    done
