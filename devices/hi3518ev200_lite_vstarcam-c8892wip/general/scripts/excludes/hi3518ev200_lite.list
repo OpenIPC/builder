@@ -52,4 +52,3 @@
 /usr/lib/sensors/libsns_sc2235.so
 #
 /lib/modules/4.9.37/kernel/drivers/staging/rtl8188eu/r8188eu.ko
-/lib/modules/4.9.37/kernel/fs/f2fs/f2fs.ko
