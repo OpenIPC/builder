@@ -60,6 +60,7 @@ Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   done
 Smartwares CIP-37210AT   T21N         JXF37     RTL8188FU_USB    NOR_16M   done
 Switcam HS303 v1         HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   done
 Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
+Switcam B200             SSC337DE     SC223A                     NAND      done
 Tiandy TC-C321N          GK7205V200   OS02G10   -                NOR_8M    done
 Tiandy TC-C321N v2       SSC337       SC2336P   -                NOR_8M    done
 Tiandy TC-C32QN          GK7205V210   OS02G10   -                NOR_8M    done
