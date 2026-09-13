@@ -202,6 +202,6 @@ Please **_[support our project](https://openipc.org/support-open-source)_** with
 [opencollective]: https://opencollective.com/openipc
 [paypal]: https://www.paypal.com/donate/?hosted_button_id=C6F7UJLA58MBS
 [project]: https://github.com/openipc
-[telegram]: https://openipc.org/our-channels
+[telegram]: https://openipc.org/community
 [website]: https://openipc.org
 [wiki]: https://github.com/openipc/wiki
