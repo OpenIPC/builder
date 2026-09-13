@@ -720,6 +720,13 @@
       "blob": "d027af78c683d0cb625e94fb8b525d4d1d39466a",
       "reconciled": "2026-08-25",
       "note": "device-local copy of a firmware file"
+    },
+    {
+      "builder": "devices/hi3518ev300_lite_generic-rtl8188eu/br-ext-chip-hisilicon/board/hi3516ev200/hi3518ev300.generic-rtl8188eu.config",
+      "firmware": "br-ext-chip-hisilicon/board/hi3516ev200/hi3518ev300.generic.config",
+      "blob": "8534433dca5ef19f2132ad2d1f73f6f3e83ae1f5",
+      "reconciled": "2026-09-13",
+      "note": "rtl8188eu variant of the generic config: R8188EU=y instead of unset, which brings WIRELESS_EXT back; identical otherwise"
     }
   ],
   "builder_only_symbols": {
