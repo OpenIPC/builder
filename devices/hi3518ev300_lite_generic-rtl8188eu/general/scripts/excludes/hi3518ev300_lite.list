@@ -1,0 +1,6 @@
+#
+# This build drives an RTL8188EU dongle, so the MT7601U driver and its
+# near-incompressible firmware blob are the ones that do not belong on it.
+#
+/lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek/mt7601u/mt7601u.ko
+/lib/firmware/mediatek/mt7601u.bin

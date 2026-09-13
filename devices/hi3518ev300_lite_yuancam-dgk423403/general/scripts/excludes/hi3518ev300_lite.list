@@ -58,10 +58,7 @@
 #
 /lib/modules/4.9.37/kernel/drivers/i2c/busses/i2c-tiny-usb.ko
 /lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek/mt7601u/mt7601u.ko
-/lib/modules/4.9.37/kernel/drivers/scsi/scsi_mod.ko
 /lib/modules/4.9.37/kernel/drivers/scsi/scsi_transport_fc.ko
-/lib/modules/4.9.37/kernel/drivers/scsi/sd_mod.ko
-/lib/modules/4.9.37/kernel/drivers/staging/rtl8188eu/r8188eu.ko
 /lib/modules/4.9.37/kernel/drivers/usb/gadget/libcomposite.ko
 /lib/modules/4.9.37/kernel/drivers/usb/gadget/function/u_ether.ko
 /lib/modules/4.9.37/kernel/drivers/usb/gadget/function/u_serial.ko
