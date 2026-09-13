@@ -1,0 +1,8 @@
+#
+# R8188EU is built into the kernel on this variant, so the rootfs carries no
+# Wi-Fi driver at all. MT7601U goes, and mac80211 goes with it -- modules.dep
+# shows mt7601u is its only consumer, and the in-tree r8188eu talks cfg80211,
+# which is built in.
+#
+/lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek/mt7601u/mt7601u.ko
+/lib/modules/4.9.37/kernel/net/mac80211/mac80211.ko
