@@ -19,6 +19,7 @@ cli -s .nightMode.irCutPin2 5
 
 cli -s .nightMode.backlightEnabled true
 cli -s .nightMode.backlightPin 42
+cli -s .nightMode.lightMonitor true
 
 
 # Reboot once so the updated boot-time environment takes effect.
