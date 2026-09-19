@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set_gpio() {
+	[ "$2" -eq 1 ] && gpio set $1 || gpio clear $1
+	sleep 1
+}
+
+# The RTL8188FTV sits on a USB daughterboard whose power is gated by GPIO 42
+if [ "$1" = "rtl8188fu-tapo-c120" ]; then
+	set_gpio 42 1
+	sleep 2
+	modprobe 8188fu
+	exit 0
+fi
+
+exit 1

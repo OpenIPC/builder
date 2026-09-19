@@ -1,0 +1,33 @@
+#!/bin/sh
+# Tapo C120: majestic drives the IR-cut filter on GPIO 81 (1 = day, 0 = night) but has no
+# IR-LED output in this build, so mirror the night state onto the IR LEDs (GPIO 12 + 13).
+PID=/var/run/irled.pid
+case "$1" in
+	start)
+		for p in 12 13; do
+			[ -d /sys/class/gpio/gpio$p ] || echo $p > /sys/class/gpio/export
+			echo out > /sys/class/gpio/gpio$p/direction
+		done
+		(
+			last=
+			while :; do
+				v=$(cat /sys/class/gpio/gpio81/value 2>/dev/null)
+				if [ -n "$v" ] && [ "$v" != "$last" ]; then
+					for p in 12 13; do echo $((1 - v)) > /sys/class/gpio/gpio$p/value; done
+					last=$v
+				fi
+				sleep 3
+			done
+		) &
+		echo $! > $PID
+		;;
+	stop)
+		[ -f $PID ] && kill "$(cat $PID)" 2>/dev/null; rm -f $PID
+		;;
+	restart)
+		$0 stop; $0 start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"; exit 1
+		;;
+esac
