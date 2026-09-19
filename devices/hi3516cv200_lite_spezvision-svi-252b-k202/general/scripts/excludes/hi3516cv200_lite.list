@@ -67,6 +67,3 @@
 /lib/modules/4.9.37/hisilicon/ir.ko
 /lib/modules/4.9.37/hisilicon/hi_rtc.ko
 /lib/modules/4.9.37/hisilicon/piris.ko
-#
-/lib/modules/4.9.37/kernel/drivers/staging/*/*.ko
-/lib/modules/4.9.37/kernel/fs/f2fs/*.ko
