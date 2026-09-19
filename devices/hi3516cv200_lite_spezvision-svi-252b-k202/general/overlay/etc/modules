@@ -1,0 +1,2 @@
+# SVI-252B K202 has no removable storage.
+# Override OpenIPC's common /etc/modules (vfat, exfat), so S35modules loads nothing here.
