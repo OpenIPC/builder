@@ -1,0 +1,4 @@
+config BR2_PACKAGE_MORSE_MICRO
+	bool "morse-micro"
+	help
+        Morse Micro Wi-Fi HaLow driver for OpenIPC
