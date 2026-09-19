@@ -1,0 +1,14 @@
+#!/bin/sh
+# Imou Cue 2: late boot — green LED on (or off if disabled)
+case "$1" in
+  start)
+    if [ "$(fw_printenv -n led_disabled 2>/dev/null)" = "1" ]; then
+      gpio set 0; gpio set 9; gpio clear 4
+    else
+      gpio clear 0; gpio set 9; gpio clear 4
+    fi
+    ;;
+  stop)
+    gpio set 0; gpio set 9; gpio clear 4
+    ;;
+esac

@@ -1,0 +1,7 @@
+#!/bin/sh
+# Imou Cue 2: early boot — red LED on (GPIO 9 active low)
+case "$1" in
+  start)
+    gpio set 0; gpio clear 9; gpio clear 4
+    ;;
+esac
