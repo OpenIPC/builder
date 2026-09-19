@@ -68,6 +68,7 @@ TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    done
 TP-Link Tapo C110 v1     SSC337       SC3335    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v26    SSC333       ?         ?                NOR_?     done
+TP-Link Tapo C120        SSC377       SC430AI   RTL8188FU_USB    NOR_16M   testing
 TP-Link Tapo C310 v1     SSC325       SC3335    RTL8192EU_USB    NOR_8M    in progress
 TP-Link Tapo C310 v2.20  SSC335       SC3338    RTL8192EU_USB    NOR_8M    testing
 TP-Link Tapo TC60 V5     T23N                   WQ9001_?         NOR_8M    **INIT** - frozen
