@@ -16,8 +16,9 @@
 # The board pinmux is reapplied on every boot by /usr/share/openipc/muxes.sh,
 # independently of the selected streamer.
 #
-# The IR illuminator control is still unresolved, so backlightPin remains
-# intentionally unset.
+# The IR illuminator is switched autonomously by the board's daylight-sensor
+# circuitry. The SoC only observes that light state on GPIO3_0 and controls
+# the IR-cut filter, so there is no backlightPin to configure.
 #
 
 fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3516cv200_lite_spezvision-svi-252b-k202-nor.tgz'
