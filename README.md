@@ -102,6 +102,7 @@ Xiaomi MJSXJ02HL         HI3518EV300  JXF22     RTL8189FS_SDIO   NOR_16M   prepa
 Xiaomi MJSXJ03HL         T31N         JXQ03     RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ03HL         T31N         JXQ03P    RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   preparation
+XVI ISI-2010C            T31N         GC2053    -                NOR_8M    done
 YuanCam DGK-423403       HI3518EV300  JXH62     RTL8188FU_USB    NOR_8M    research
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 ZTE K543                 SSC337DE     SC401AI   MT7601U_USB      NOR_16M   done
