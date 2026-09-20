@@ -27,6 +27,7 @@ cli -s .isp.sensorConfig /etc/sensors/imx323_i2c_dc_1080p.ini
 cli -s .nightMode.lightMonitor true
 cli -s .nightMode.lightSensorPin 24
 cli -s .nightMode.lightSensorInvert false
+cli -s .nightMode.transitionDelayMs 150
 cli -s .nightMode.irCutPin1 34
 cli -s .nightMode.irCutPin2 33
 cli -s .video0.codec h264
