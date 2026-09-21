@@ -177,7 +177,7 @@ cd builder
 ./builder.sh
 ```
 
-### Recreate firmware with built-in router credentials
+### Create firmware with built-in credentials
 - Usage: `repack.sh [uboot] [firmware] [ssid] [pass]`
 ```
 sh repack.sh ssc337de ssc337de_ultimate_foscam-x5-nor router password
