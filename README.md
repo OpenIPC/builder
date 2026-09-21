@@ -41,6 +41,7 @@ Imou IPC-C22E-S2-v2      SSC335DE     GC2053    RTL8188FU_USB    NOR_16M   done
 Imou IPC-C22EP-S2        SSC325DE     SC2239    RTL8188FU_USB    NAND      testing stage 1
 Imou IPC-C22EP-S2 ?      SSC325DE     SC2335    RTL8188FU_USB    NAND      wait sensor driver
 Imou IPC-С22СP           SSC325       SC2239    RTL8188FU_USB    NOR_8M    in progress
+Jienuo JN-107AR-E-WIFI   T31X         SC5235    RTL8733BU_USB    NOR_16M   done
 Jooan A6M-U              T23N         SC1346    ATBM6012B_USB    NOR_8M    **INIT** - in progress
 Jooan A6M-U vB           T23N         SC1A4T    ATBM6012B_USB    NOR_8M    **INIT** - in progress
 Jooan Q3R-U              T23N         SC1346    ATBM6012B_USB    NOR_8M    **INIT** - in progress
