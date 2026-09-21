@@ -1,0 +1,7 @@
+# XVI ISI-2010C has no SD/MMC, Wi-Fi, USB path or removable FAT storage.
+# CONFIG_MMC is not set
+# CONFIG_WLAN is not set
+# CONFIG_WIRELESS is not set
+# CONFIG_USB_SUPPORT is not set
+# CONFIG_VFAT_FS is not set
+# CONFIG_FAT_FS is not set

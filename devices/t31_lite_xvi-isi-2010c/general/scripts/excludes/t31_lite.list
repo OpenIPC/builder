@@ -1,0 +1,4 @@
+# No pan/tilt motor or PWM peripheral is populated on XVI ISI-2010C.
+/lib/modules/3.10.14__isvp_swan_1.0__/ingenic/motor.ko
+/lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sample_pwm_core.ko
+/lib/modules/3.10.14__isvp_swan_1.0__/ingenic/sample_pwm_hal.ko
