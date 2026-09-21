@@ -30,6 +30,7 @@ Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in pr
 CP Plus CP-UNC-TA21L2C   GK7205V200   SC223A    -                NOR_16M   video-ok, ir-cut-no, audio-no
 Emax Wyvern Link         SSC338Q      IMX415                     NOR_16M   done
 Foscam X5                SSC337DE     GC4653    RTL8188FU_USB    NOR_16M   done
+GARUS GSL-5030X-30AP-NM HI3516EV200  SC2315E?  -                NOR_8M    done
 G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
 EC37-T11                 T20L         SC2232    RTL8188FU_USB    MOR_16M   in progress
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done

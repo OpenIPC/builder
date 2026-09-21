@@ -1,0 +1,28 @@
+# GARUS: wired, fixed-lens, NOR-only 1080p camera; no USB/SD peripherals.
+# Merge into hi3516ev200.generic.config, never replace the common config.
+# Keep the NOR/FMC controller, MIPI/I2C, GPIO, UART, MMZ/CMA and recovery stack.
+
+# No wireless adapter, USB devices/gadgets, modem or SD card in this target.
+# CONFIG_WIRELESS is not set
+# CONFIG_WLAN is not set
+# CONFIG_CFG80211 is not set
+# CONFIG_MAC80211 is not set
+# CONFIG_MT7601U is not set
+# CONFIG_USB_SUPPORT is not set
+# CONFIG_USB is not set
+# CONFIG_USB_GADGET is not set
+# CONFIG_PHY_HISI_XVP_USB2 is not set
+# CONFIG_MMC is not set
+# CONFIG_VFAT_FS is not set
+# CONFIG_FAT_FS is not set
+
+# This image boots SquashFS on SPI NOR with a JFFS2 writable overlay.
+# CONFIG_MTD_NAND is not set
+# CONFIG_MTD_SPI_NAND_HISI_BVT is not set
+# CONFIG_MTD_SPI_NAND_HIFMC100 is not set
+# CONFIG_MTD_UBI is not set
+# CONFIG_UBIFS_FS is not set
+# CONFIG_YAFFS_FS is not set
+
+# No bundled VPN client on this 8 MiB profile.
+# CONFIG_TUN is not set
