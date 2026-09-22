@@ -34,6 +34,7 @@ GARUS GSL-5030X-30AP-NM  HI3516EV200  SC2315E?  -                NOR_8M    done
 G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
 EC37-T11                 T20L         SC2232    RTL8188FU_USB    MOR_16M   in progress
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
+HiWatch DS-I203          HI3518EV100  IMX122    -                NOR_16M   done, requires hi3518ev100-ddr3-256m U-Boot
 HB-WIFI-Z6 v1.2          T10          JXH62     RTL8188EU_USB    NOR_8M    in progress
 iFlytek XFP301-M         T31ZX        JXQ03     RTL8188FU_USB    NOR_16    research
 Imilab EC3 CMSXJ25A      SSC325       GC2053    MT7603UN_?       NOR_16M   in progress
