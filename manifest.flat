@@ -1,5 +1,5 @@
 # OpenIPC builder build index
-# generated_at=2026-09-21T22:15:39Z
+# generated_at=2026-09-22T08:52:29Z
 # columns: build_id platform flash size url
 nightly-20260921-01328cd gk7202v300_lite_cootli_camv0103 nor 7018589 https://github.com/OpenIPC/builder/releases/download/nightly-20260921-01328cd/gk7202v300_lite_cootli_camv0103-nor.tgz
 nightly-20260921-01328cd gk7202v300_lite_generic-w7 nor 7039039 https://github.com/OpenIPC/builder/releases/download/nightly-20260921-01328cd/gk7202v300_lite_generic-w7-nor.tgz
