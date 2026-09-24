@@ -435,6 +435,13 @@
       "note": "vendor driver loader; firmware#2307 updated its sensor list"
     },
     {
+      "builder": "devices/ssc325_lite_chuangmi-ipc017/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
+      "reconciled": "2026-09-25",
+      "note": "firmware's copy plus the mt7601u-ssc325-chuangmi-ipc017 arm"
+    },
+    {
       "builder": "devices/ssc325_lite_imou-c22cp/general/overlay/etc/wireless/usb",
       "firmware": "general/overlay/etc/wireless/usb",
       "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",

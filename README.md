@@ -23,6 +23,7 @@ Botslab C213             T23N         SC3332    ATBM6012B_USB    NOR_8M    **INI
 CCDCAM IM50Q01           SSC377QE     IMX335    -                NOR_16M   done
 ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no
 ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
+Chuangmi IPC017          SSC323       GC2053    MT7601U_USB      NOR_16M   video-yes, wifi-yes, ir-yes (vendor U-Boot)
 CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   done
 CMCC HDC-51 A6-V10       T31L         JXF37     RTL8188FU_USB    NOR_16M   done
 CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
