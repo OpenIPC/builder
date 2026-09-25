@@ -9,7 +9,9 @@ case "$1" in
 	start)
 		env=$(awk -F: '/"env"/ {print $1}' /proc/mtd)
 		if [ -n "$env" ]; then
-			echo "/dev/$env 0x0 0x10000 0x10000" > /etc/fw_env.config
+			line="/dev/$env 0x0 0x10000 0x10000"
+			[ "$(cat /etc/fw_env.config 2>/dev/null)" = "$line" ] ||
+				echo "$line" > /etc/fw_env.config
 		else
 			rm -f /etc/fw_env.config
 		fi

@@ -7,8 +7,3 @@
 /lib/modules/4.9.84/sigmastar/sensor_sc2239_parl.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc2335_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc2335_parl.ko
-#
-/lib/modules/4.9.84/kernel/fs/lockd/*.ko
-/lib/modules/4.9.84/kernel/fs/nfs/*.ko
-/lib/modules/4.9.84/kernel/fs/nfs_common/*.ko
-/lib/modules/4.9.84/kernel/net/sunrpc/*.ko
