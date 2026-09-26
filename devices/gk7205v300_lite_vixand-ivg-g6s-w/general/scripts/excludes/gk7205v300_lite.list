@@ -1,8 +1,10 @@
 /etc/sensors/4l_sc223a_i2c_1080p.ini
 #/etc/sensors/5M_imx335.ini
+#/etc/sensors/imx335_i2c_5M.ini
 /etc/sensors/60fps/720p_imx307_i2c_2l.ini
 #/etc/sensors/WDR/5M_imx335.ini
-#/etc/sensors/WDR/imx335_i2c_4M.ini
+#/etc/sensors/WDR/imx335_i2c_5M.ini
+#/etc/sensors/WDR/4M_imx335_i2c.ini
 /etc/sensors/high-fps/imx307_1280x720_60fps.ini
 /etc/sensors/high-fps/imx307_1920x1080_60fps.ini
 /etc/sensors/high-fps/imx307_368x304_200fps.ini
@@ -19,7 +21,7 @@
 /etc/sensors/gc4653_i2c_4M.ini
 /etc/sensors/gc5603_i2c_5M.ini
 /etc/sensors/imx307_i2c_2l_1080p.ini
-#/etc/sensors/imx335_i2c_4M.ini
+#/etc/sensors/4M_imx335_i2c.ini
 /etc/sensors/imx327_i2c_1080p.ini
 /etc/sensors/jxf23_i2c_1080p.ini
 /etc/sensors/jxf23_i2c_dc_1080p.ini
