@@ -80,7 +80,8 @@ NOT_BUILT = {
 NO_BUILD_WORKFLOWS = {"build-one.yml", "cleanup.yml", "lint.yml", "manifest.yml",
                       "firmware-drift.yml"}
 NO_BUILD_SCRIPTS = {"enrich_manifest.py", "lint-workflow-shell.py",
-                    "check-firmware-drift.py"}
+                    "check-firmware-drift.py", "push_build.py", "soc_aliases.py",
+                    "test_push_build.py"}
 NO_BUILD_FILES = {
     ".github/CODEOWNERS", ".gitignore", "LICENSE", "package.sh", "repack.sh",
     # The drift checker's config. It records what has been reconciled against
