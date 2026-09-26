@@ -17,6 +17,9 @@ on:
       - '.github/workflows/**'
       - '.github/scripts/lint-workflow-shell.py'
       - '.github/scripts/lint-cli-paths.py'
+      - '.github/scripts/push_build.py'
+      - '.github/scripts/soc_aliases.py'
+      - '.github/scripts/test_push_build.py'
   workflow_dispatch:
 
 # Reads the tree and reports; writes nothing. Declared rather than inherited so
@@ -82,3 +85,8 @@ jobs:
         run: python3 .github/scripts/lint-cli-paths.py --self-test
       - name: Check every shipped cli setting path
         run: python3 .github/scripts/lint-cli-paths.py
+      # The nightly's report job is the only way openipc.org learns about a
+      # build, and it runs once, after publish, where nobody watches it. What
+      # it sends and how it authenticates are checked here instead.
+      - name: Test the build push
+        run: python3 .github/scripts/test_push_build.py
