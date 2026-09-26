@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# The vendor U-Boot keeps its environment in the erase block that also holds the
+# end of U-Boot, so fw_setenv must never reach it. This profile's mtdparts gives
+# the environment a 64 KB partition of its own: point fw_printenv and fw_setenv
+# at it, and at nothing while the vendor partitions are still in use.
+
+case "$1" in
+	start)
+		env=$(awk -F: '/"env"/ {print $1}' /proc/mtd)
+		if [ -n "$env" ]; then
+			line="/dev/$env 0x0 0x10000 0x10000"
+			[ "$(cat /etc/fw_env.config 2>/dev/null)" = "$line" ] ||
+				echo "$line" > /etc/fw_env.config
+		else
+			rm -f /etc/fw_env.config
+		fi
+		;;
+
+	stop)
+		;;
+
+	*)
+		echo "Usage: $0 {start|stop}"
+		exit 1
+		;;
+esac

@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# The ipc017 has no Ethernet connector, but the SoC still registers eth0 and
+# S40network gives it a fallback address, so majestic sends its ONVIF discovery
+# there instead of on wlan0. Take eth0 down while it has no carrier.
+
+case "$1" in
+	start)
+		if [ "$(cat /sys/class/net/eth0/carrier 2>/dev/null)" = 0 ]; then
+			ip addr flush dev eth0
+			ip link set dev eth0 down
+		fi
+		;;
+
+	stop)
+		;;
+
+	*)
+		echo "Usage: $0 {start|stop}"
+		exit 1
+		;;
+esac

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set_gpio() {
+	[ "$2" -eq 1 ] && gpio set $1 || gpio clear $1
+	sleep 1
+}
+
+# GPIO 14 powers the MT7601U. The vendor FACTORY partition holds the factory
+# MAC as a NUL-separated mac=XX:XX:XX:XX:XX:XX record; mt7601sta takes it from
+# MacAddress= in its .dat file. That path is compiled into the driver, so the
+# edited copy lives in /tmp and is bind-mounted over it: editing it in place
+# would copy the .dat up into the overlay, where it would shadow the one a
+# later firmware ships.
+if [ "$1" = "mt7601u-ssc325-chuangmi-ipc017" ]; then
+	set_gpio 14 1
+	dat=/etc/mediatek/MT7601USTA.dat
+	factory=$(awk -F: '/"(factory|FACTORY)"/ {print $1}' /proc/mtd)
+	mac=$([ -n "$factory" ] && tr '\0' '\n' < "/dev/$factory" | sed -n 's/^mac=//p')
+	if [ -n "$mac" ] && ! grep -qx "MacAddress=$mac" $dat; then
+		sed '/^MacAddress=/d' $dat > /tmp/MT7601USTA.dat
+		echo "MacAddress=$mac" >> /tmp/MT7601USTA.dat
+		mount --bind /tmp/MT7601USTA.dat $dat
+	fi
+	modprobe mt7601sta
+	exit 0
+fi
+
+exit 1
