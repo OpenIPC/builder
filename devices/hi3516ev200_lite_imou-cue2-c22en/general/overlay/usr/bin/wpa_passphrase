@@ -1,0 +1,8 @@
+#!/bin/sh
+cat <<CONF
+network={
+	ssid="$1"
+	#psk="$2"
+	psk="$2"
+}
+CONF
