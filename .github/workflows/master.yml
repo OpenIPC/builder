@@ -667,33 +667,49 @@ jobs:
       github.event_name != 'pull_request' &&
       needs.publish.result == 'success'
     runs-on: ubuntu-latest
+    # id-token is what authorizes the push, so nothing but this repository's
+    # own push script, at the built commit, runs here: the artifacts are read
+    # as data, never executed. actions: read is for counting the reports-*
+    # artifacts the matrix uploaded (the guard below).
     permissions:
       id-token: write
       contents: read
+      actions: read
     timeout-minutes: 20
     steps:
-      # The reports only. The images are described from the release itself,
-      # so nothing here depends on the one-day fw-* artifacts.
-      - name: Download reports
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          pattern: reports-*
-          path: reports
-          merge-multiple: true
-
+      # First: checkout cleans the workspace, so anything downloaded before it
+      # would be deleted.
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.preflight.outputs.head_sha }}
           sparse-checkout: .github/scripts
 
+      # The reports only, outside the checkout. The images are described from
+      # the release itself, so nothing here depends on the one-day fw-*
+      # artifacts.
+      - name: Download reports
+        id: reports
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: reports-*
+          path: ${{ runner.temp }}/reports
+          merge-multiple: true
+
       # What was published, as GitHub has it: each device image's size and the
       # sha256 GitHub computed on upload. publish creates no dated release when
       # there were no images, and then there is nothing to report.
+      #
+      # "No reports produced" and "reports lost" look the same to the push, and
+      # only the first is acceptable: if the matrix uploaded any reports-*
+      # artifact, some report has to be here.
       - name: Push the build
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          REPORTS: ${{ runner.temp }}/reports
+          DOWNLOAD: ${{ steps.reports.outcome }}
           BUILD_ID: ${{ needs.preflight.outputs.build_id }}
           HEAD_SHA: ${{ needs.preflight.outputs.head_sha }}
           BUILT_AT: ${{ needs.preflight.outputs.built_at }}
@@ -703,12 +719,24 @@ jobs:
             echo "::notice::no release $BUILD_ID; nothing to report"
             exit 0
           fi
+          uploaded=$(gh api "repos/${GH_REPO}/actions/runs/${RUN_ID}/artifacts" --paginate \
+            --jq '.artifacts[] | select(.name | startswith("reports-")) | select(.expired | not) | .name' | wc -l)
+          # A missing directory is zero reports, not a failed step.
+          found=0
+          if [ -d "$REPORTS" ]; then
+            found=$(find "$REPORTS" -maxdepth 1 -name '*.json' | wc -l)
+          fi
+          echo "reports-* artifacts uploaded: ${uploaded}; report files here: ${found}"
+          if [ "$uploaded" -gt 0 ] && { [ "$DOWNLOAD" != success ] || [ "$found" -eq 0 ]; }; then
+            echo "::error::the matrix uploaded ${uploaded} reports-* artifact(s) but none reached this job (download: ${DOWNLOAD}); refusing to push devices without their reports"
+            exit 1
+          fi
           python3 .github/scripts/push_build.py \
             --source builder \
             --build-id "$BUILD_ID" \
             --sha "$HEAD_SHA" \
             --built-at "$BUILT_AT" \
-            --reports reports \
+            --reports "$REPORTS" \
             --release-json release.json \
             --match '\.tgz$'
 
