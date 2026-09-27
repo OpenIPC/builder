@@ -23,6 +23,7 @@ Botslab C213             T23N         SC3332    ATBM6012B_USB    NOR_8M    **INI
 CCDCAM IM50Q01           SSC377QE     IMX335    -                NOR_16M   done
 ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no
 ChinaTelecom Y4H-50      T31L         ?         ?                NOR_16M   new
+Chuangmi IPC017          SSC323       GC2053    MT7601U_USB      NOR_16M   video-yes, wifi-yes, ir-yes (vendor U-Boot)
 CMCC HDC-51 A5-V12       T21N         SC2235    RTL8189FTV_SDIO  NOR_16M   done
 CMCC HDC-51 A6-V10       T31L         JXF37     RTL8188FU_USB    NOR_16M   done
 CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
@@ -30,6 +31,7 @@ Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in pr
 CP Plus CP-UNC-TA21L2C   GK7205V200   SC223A    -                NOR_16M   video-ok, ir-cut-no, audio-no
 Emax Wyvern Link         SSC338Q      IMX415                     NOR_16M   done
 Foscam X5                SSC337DE     GC4653    RTL8188FU_USB    NOR_16M   done
+GARUS GSL-5030X-30AP-NM  HI3516EV200  SC2315E?  -                NOR_8M    done
 G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
 EC37-T11                 T20L         SC2232    RTL8188FU_USB    MOR_16M   in progress
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
@@ -41,6 +43,7 @@ Imou IPC-C22E-S2-v2      SSC335DE     GC2053    RTL8188FU_USB    NOR_16M   done
 Imou IPC-C22EP-S2        SSC325DE     SC2239    RTL8188FU_USB    NAND      testing stage 1
 Imou IPC-C22EP-S2 ?      SSC325DE     SC2335    RTL8188FU_USB    NAND      wait sensor driver
 Imou IPC-С22СP           SSC325       SC2239    RTL8188FU_USB    NOR_8M    in progress
+Jienuo JN-107AR-E-WIFI   T31X         SC5235    RTL8733BU_USB    NOR_16M   done
 Jooan A6M-U              T23N         SC1346    ATBM6012B_USB    NOR_8M    **INIT** - in progress
 Jooan A6M-U vB           T23N         SC1A4T    ATBM6012B_USB    NOR_8M    **INIT** - in progress
 Jooan Q3R-U              T23N         SC1346    ATBM6012B_USB    NOR_8M    **INIT** - in progress
@@ -58,6 +61,8 @@ RunCam WiFiLink          SSC338Q      IMX415                     NOR_16M   done
 RVi-1NCMW2028 (2.8)      HI3516EV300  SC2330    RTL8188FU_USB    NAND      testing
 Smartwares CIP-37210     HI3518EV200  OV9732    RTL8188FU_USB    NOR_16M   done
 Smartwares CIP-37210AT   T21N         JXF37     RTL8188FU_USB    NOR_16M   done
+Smitch 360 PTZ           HI3518EV300  JXF23     RTL8188FU_USB    NOR_16M   video-yes, wifi-yes, motors-no
+SpezVision SVI-252B K202 HI3516CV200  IMX323    -                NOR_8M    done
 Switcam HS303 v1         HI3518EV200  JXF22     RTL8188FU_USB    NOR_16M   done
 Switcam HS303 v2         HI3518EV200  OV9732    RTL8188EU_USB    NOR_16M   done
 Tiandy TC-C321N          GK7205V200   OS02G10   -                NOR_8M    done
@@ -68,6 +73,7 @@ TP-Link Tapo C110 v1     SSC335       SC3335    ATBM6032i_USB    NOR_8M    done
 TP-Link Tapo C110 v1     SSC337       SC3335    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v2     SSC333       SC3338    SSW101B_USB      NOR_8M    done
 TP-Link Tapo C110 v26    SSC333       ?         ?                NOR_?     done
+TP-Link Tapo C120        SSC377       SC430AI   RTL8188FU_USB    NOR_16M   testing
 TP-Link Tapo C310 v1     SSC325       SC3335    RTL8192EU_USB    NOR_8M    in progress
 TP-Link Tapo C310 v2.20  SSC335       SC3338    RTL8192EU_USB    NOR_8M    testing
 TP-Link Tapo TC60 V5     T23N                   WQ9001_?         NOR_8M    **INIT** - frozen
@@ -90,6 +96,7 @@ VStarcam C43S(B)         SSC333       JXF37     MT7601U_USB      NOR_16M   in pr
 VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in progress
 VStarcam C8622           T23N         SC2336P   AIC8800DL_?      NOR_8M    **INIT** - in progress
 XiongMai 85H50AI         HI3516EV300  IMX335    -                NOR_8M    testing, motorized zoom+focus (pelco-xm)
+XiongMai HI3516D_N81820  HI3516DV100  IMX291    -                NOR_16M   testing, motorized zoom+focus (ms41908 SPI)
 VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
 VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip
 Wansview Q5 1080p        T21Z         OV2735B   RTL8188FU_USB    NOR_16M   in progress
@@ -100,6 +107,7 @@ Xiaomi MJSXJ02HL         HI3518EV300  JXF22     RTL8189FS_SDIO   NOR_16M   prepa
 Xiaomi MJSXJ03HL         T31N         JXQ03     RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ03HL         T31N         JXQ03P    RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   preparation
+XVI ISI-2010C            T31N         GC2053    -                NOR_8M    done
 YuanCam DGK-423403       HI3518EV300  JXH62     RTL8188FU_USB    NOR_8M    research
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 ZTE K543                 SSC337DE     SC401AI   MT7601U_USB      NOR_16M   done

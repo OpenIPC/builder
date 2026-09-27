@@ -16,11 +16,12 @@
 /usr/lib/sensors/libsns_mis2008.so
 #
 /etc/sensors/5M_imx335.ini
+/etc/sensors/imx335_i2c_5M.ini
 /etc/sensors/camhi_imx307_i2c_4l_1080p.ini
 /etc/sensors/gc2053_i2c_1080p.ini
 /etc/sensors/gc4653_i2c_4M.ini
 /etc/sensors/imx307_i2c_2l_1080p.ini
-/etc/sensors/imx335_i2c_4M.ini
+/etc/sensors/4M_imx335_i2c.ini
 /etc/sensors/jxf22_i2c_1080p.ini
 /etc/sensors/jxf23_i2c_1080p.ini
 /etc/sensors/jxf37_i2c_1080p.ini
@@ -32,7 +33,8 @@
 /etc/sensors/sc3335_i2c_3M.ini
 /etc/sensors/sc4236_i2c_3M.ini
 /etc/sensors/WDR/5M_imx335.ini
-/etc/sensors/WDR/imx335_i2c_4M.ini
+/etc/sensors/WDR/imx335_i2c_5M.ini
+/etc/sensors/WDR/4M_imx335_i2c.ini
 #
 /etc/sensors/iq/f23.ini
 /etc/sensors/iq/imx335.ini

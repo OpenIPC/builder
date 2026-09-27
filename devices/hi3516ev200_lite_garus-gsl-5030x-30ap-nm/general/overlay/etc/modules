@@ -1,0 +1,2 @@
+# GARUS GSL-5030X-30AP-NM has no removable storage.
+# Override the common vfat/exfat module list; load nothing here.

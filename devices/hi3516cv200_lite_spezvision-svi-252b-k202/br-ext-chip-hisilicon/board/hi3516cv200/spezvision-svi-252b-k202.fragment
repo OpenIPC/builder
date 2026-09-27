@@ -1,0 +1,39 @@
+# SVI-252B K202 hardware population on BLK16CV-0323-38X38-V1.01:
+# no SD/MMC socket, no Wi-Fi radio, no used USB path, NOR flash only.
+# Keep Ethernet, UART, GPIO/I2C and the HiSilicon media/audio path.
+
+# No SD/MMC controller on this camera. HIMCI otherwise stalls boot probing it.
+# CONFIG_MMC is not set
+# CONFIG_HIMCI is not set
+
+# No Wi-Fi hardware. Drop cfg80211/mac80211 and the generic USB Wi-Fi drivers.
+# CONFIG_WIRELESS is not set
+# CONFIG_WLAN is not set
+# CONFIG_CFG80211 is not set
+# CONFIG_MAC80211 is not set
+# CONFIG_MT7601U is not set
+# CONFIG_RTL_CARDS is not set
+# CONFIG_RTL8192CU is not set
+# CONFIG_RTLWIFI is not set
+# CONFIG_RTLWIFI_USB is not set
+# CONFIG_RTL8XXXU is not set
+# CONFIG_R8188EU is not set
+
+# The retail camera does not use the module's optional USB expansion interface.
+# CONFIG_USB_SUPPORT is not set
+# CONFIG_USB is not set
+# CONFIG_USB_GADGET is not set
+# CONFIG_USB_HISI_UDC is not set
+# CONFIG_USB_MASS_STORAGE is not set
+# CONFIG_PHY_HISI_USB2 is not set
+
+# With no USB/SD storage there is no SCSI disk or FAT filesystem consumer.
+# CONFIG_SCSI is not set
+# CONFIG_BLK_DEV_SD is not set
+# CONFIG_FAT_FS is not set
+# CONFIG_VFAT_FS is not set
+
+# This board is 8 MiB SPI NOR only; do not probe the absent SPI NAND controller.
+# CONFIG_MTD_NAND is not set
+# CONFIG_MTD_SPI_NAND_HISI_BVT is not set
+# CONFIG_MTD_SPI_NAND_HIFMC100 is not set

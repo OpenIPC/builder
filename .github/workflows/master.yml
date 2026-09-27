@@ -402,8 +402,12 @@ jobs:
       - name: Stage artifacts
         if: env.NORFW || env.NANDFW
         run: |
-          mkdir -p dist
-          for f in "${NORFW:-}" "${NANDFW:-}" "${SIZES:-}"; do
+          mkdir -p dist reports
+          # The size report goes to its own artifact below, not with the image.
+          if [ -n "${SIZES:-}" ] && [ -e "${SIZES}" ]; then
+            cp -a "${SIZES}" reports/
+          fi
+          for f in "${NORFW:-}" "${NANDFW:-}"; do
             # An `if` rather than a `&&` chain: the step runs under `bash -e`,
             # where a trailing `&&` that tests false is only harmless because
             # something after it resets the status.
@@ -411,7 +415,7 @@ jobs:
               cp -a "$f" dist/
             fi
           done
-          ls -la dist
+          ls -la dist reports
 
       # Hand the images to the single `publish` job instead of writing releases
       # from here. 107 matrix jobs each deleting and re-uploading assets on the
@@ -439,6 +443,20 @@ jobs:
           if-no-files-found: ignore
           retention-days: ${{ github.event_name == 'pull_request' && 7 || 1 }}
           path: dist/*
+
+      # The size report, for the `report` job that pushes it to openipc.org.
+      # A few tens of KB, kept a week -- unlike the image, which publish
+      # consumes within the run -- so a push that could not reach openipc.org
+      # can be re-run days later. Optional, so is this.
+      - name: Upload report
+        if: github.event_name != 'pull_request' && (env.NORFW || env.NANDFW)
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: reports-${{ matrix.platform }}
+          if-no-files-found: ignore
+          retention-days: 7
+          path: reports/*
 
       - name: Send binary
         if: github.event_name != 'pull_request' && env.NORFW
@@ -599,27 +617,22 @@ jobs:
 
           NOTES=$(printf 'sha=%s\nshort=%s\nbuilt_at=%s\n' "$HEAD_SHA" "$SHORT_SHA" "$BUILT_AT")
 
-          # Full asset set (images + size sidecars) -> the dated release, which
-          # is the only one enrich_manifest.py reads.
-          mapfile -t DATED < <(find dist -maxdepth 1 -type f | sort)
-          # nightly/latest are firmware-delivery aliases for flashers, so ship
-          # only the images there. Re-uploading the size sidecars to two more
-          # releases is pure rate-limit cost: the manifest never reads them from
-          # these tags, and nothing else does either.
+          # Releases carry firmware and nothing else. The per-device size
+          # reports that used to ride along as sizes.*.json sidecars reach
+          # openipc.org once, from the report job below, out of their own
+          # reports-* artifacts.
           mapfile -t IMAGES < <(find dist -maxdepth 1 -type f -name '*.tgz' | sort)
 
-          # --- dated: immutable per-build history ---
-          ensure_release "$BUILD_ID" --prerelease --title "$BUILD_ID"
-          upload_paced "$BUILD_ID" "${DATED[@]}"
-
-          # nightly and latest only ever move when there is firmware to move
-          # them to. dist/ can hold sidecars and no images -- one device that
-          # produced a size report and no .tgz is enough -- and pointing the two
-          # tags users flash from at a build with no images behind them is worse
-          # than leaving them on yesterday's.
+          # Nothing moves when there is no firmware to move it to. A dated
+          # release with nothing in it, or the two tags users flash from
+          # pointing at one, is worse than leaving everything on yesterday's.
           if [ "${#IMAGES[@]}" -eq 0 ]; then
-            echo "::warning::no images in this build; leaving nightly and latest where they are"
+            echo "::warning::no images in this build; no dated release, and nightly and latest stay where they are"
           else
+            # --- dated: immutable per-build history ---
+            ensure_release "$BUILD_ID" --prerelease --title "$BUILD_ID"
+            upload_paced "$BUILD_ID" "${IMAGES[@]}"
+
             # --- rolling nightly: move tag + body to this build, refresh images ---
             ensure_release nightly
             gh_retry gh release edit nightly --notes "$NOTES"
@@ -631,6 +644,101 @@ jobs:
             gh_retry gh api -X PATCH "repos/${GH_REPO}/git/refs/tags/latest" -f sha="$HEAD_SHA" -F force=true
             upload_paced latest "${IMAGES[@]}"
           fi
+
+  # openipc.org learns about the build here, once: which device images were
+  # published and their digests, and each device's size report. It never polls
+  # GitHub for any of it, and none of it is uploaded to a release. The
+  # contract, and who may push, is
+  # https://github.com/OpenIPC/website/blob/master/service/internal/builds/PUSH.md
+  #
+  # Authorization is this job's OIDC token (audience https://openipc.org),
+  # which openipc.org checks against the repository, this workflow and
+  # master. There is no secret to store or rotate.
+  #
+  # A job of its own, after publish and outside ci-gate, so that openipc.org
+  # being down costs a published nightly nothing, and the push can be re-run by
+  # itself: it is idempotent by build id. It reads the release and the
+  # reports-* artifacts, which are kept a week.
+  report:
+    name: Report build to openipc.org
+    needs: [preflight, publish]
+    if: >-
+      !cancelled() &&
+      github.event_name != 'pull_request' &&
+      needs.publish.result == 'success'
+    runs-on: ubuntu-latest
+    # id-token is what authorizes the push, so nothing but this repository's
+    # own push script, at the built commit, runs here: the artifacts are read
+    # as data, never executed. actions: read is for counting the reports-*
+    # artifacts the matrix uploaded (the guard below).
+    permissions:
+      id-token: write
+      contents: read
+      actions: read
+    timeout-minutes: 20
+    steps:
+      # First: checkout cleans the workspace, so anything downloaded before it
+      # would be deleted.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.preflight.outputs.head_sha }}
+          sparse-checkout: .github/scripts
+
+      # The reports only, outside the checkout. The images are described from
+      # the release itself, so nothing here depends on the one-day fw-*
+      # artifacts.
+      - name: Download reports
+        id: reports
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: reports-*
+          path: ${{ runner.temp }}/reports
+          merge-multiple: true
+
+      # What was published, as GitHub has it: each device image's size and the
+      # sha256 GitHub computed on upload. publish creates no dated release when
+      # there were no images, and then there is nothing to report.
+      #
+      # "No reports produced" and "reports lost" look the same to the push, and
+      # only the first is acceptable: if the matrix uploaded any reports-*
+      # artifact, some report has to be here.
+      - name: Push the build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          REPORTS: ${{ runner.temp }}/reports
+          DOWNLOAD: ${{ steps.reports.outcome }}
+          BUILD_ID: ${{ needs.preflight.outputs.build_id }}
+          HEAD_SHA: ${{ needs.preflight.outputs.head_sha }}
+          BUILT_AT: ${{ needs.preflight.outputs.built_at }}
+        run: |
+          set -euo pipefail
+          if ! gh release view "$BUILD_ID" --json assets > release.json; then
+            echo "::notice::no release $BUILD_ID; nothing to report"
+            exit 0
+          fi
+          uploaded=$(gh api "repos/${GH_REPO}/actions/runs/${RUN_ID}/artifacts" --paginate \
+            --jq '.artifacts[] | select(.name | startswith("reports-")) | select(.expired | not) | .name' | wc -l)
+          # A missing directory is zero reports, not a failed step.
+          found=0
+          if [ -d "$REPORTS" ]; then
+            found=$(find "$REPORTS" -maxdepth 1 -name '*.json' | wc -l)
+          fi
+          echo "reports-* artifacts uploaded: ${uploaded}; report files here: ${found}"
+          if [ "$uploaded" -gt 0 ] && { [ "$DOWNLOAD" != success ] || [ "$found" -eq 0 ]; }; then
+            echo "::error::the matrix uploaded ${uploaded} reports-* artifact(s) but none reached this job (download: ${DOWNLOAD}); refusing to push devices without their reports"
+            exit 1
+          fi
+          python3 .github/scripts/push_build.py \
+            --source builder \
+            --build-id "$BUILD_ID" \
+            --sha "$HEAD_SHA" \
+            --built-at "$BUILT_AT" \
+            --reports "$REPORTS" \
+            --release-json release.json \
+            --match '\.tgz$'
 
   # Single umbrella status check covering the whole run, so branch protection
   # can require one context instead of a hardcoded "Build (<device>)" per
