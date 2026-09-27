@@ -66,7 +66,9 @@ BR2_PACKAGE_MBEDTLS_OPENIPC=y
 BR2_PACKAGE_OPENIPC_MSPOSD=y
 BR2_PACKAGE_OPUS_OPENIPC=y
 BR2_PACKAGE_OPUS_OPENIPC_FIXED_POINT=y
-BR2_PACKAGE_RTL8812AU_OPENIPC=y
+# APFPV's adapter script loads the standard 8812au module by name.
+# Do not select rtl8812au-openipc together with rtl8812au: both packages
+# build a module named 8812au and the AP helper expects this implementation.
 BR2_PACKAGE_RTL8812AU=y
 BR2_PACKAGE_SIGMASTAR_OSDRV_INFINITY6C=y
 BR2_PACKAGE_VTUND_OPENIPC=y
