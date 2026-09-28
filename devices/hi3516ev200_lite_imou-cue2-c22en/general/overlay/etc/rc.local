@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# IR illuminator: the LED driver needs a PWM signal on GPIO4_7 (pin 39),
+# not a static level. Not in muxes.sh: S30customizer runs that before
+# S70vendor loads open_sys_config and open_pwm, which set the pinmux and
+# PWM block up again.
+(
+	sleep 8
+	devmem 0x120101BC 32 $(( $(devmem 0x120101BC 32) | 0x80 ))
+	devmem 0x100C0010 32 0x1001
+	devmem 0x12080020 32 0x3e8
+	devmem 0x12080024 32 0x3b0
+	devmem 0x12080028 32 0xa
+	devmem 0x1208002c 32 0x5
+) &
+
+exit 0

@@ -40,6 +40,7 @@ iFlytek XFP301-M         T31ZX        JXQ03     RTL8188FU_USB    NOR_16    resea
 Imilab EC3 CMSXJ25A      SSC325       GC2053    MT7603UN_?       NOR_16M   in progress
 Dahua IPC-HFW1230SP-V2   SSC335DE     GC2053                     NOR_16M   done
 Imou IPC-C22E-S2-v2      SSC335DE     GC2053    RTL8188FU_USB    NOR_16M   done
+Imou IPC-C22EN (Cue 2)   HI3516EV200  SC2235    RTL8188FU_USB    NOR_8M    in progress
 Imou IPC-C22EP-S2        SSC325DE     SC2239    RTL8188FU_USB    NAND      testing stage 1
 Imou IPC-C22EP-S2 ?      SSC325DE     SC2335    RTL8188FU_USB    NAND      wait sensor driver
 Imou IPC-С22СP           SSC325       SC2239    RTL8188FU_USB    NOR_8M    in progress

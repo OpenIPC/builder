@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Early-boot LED state: red on while booting, like the stock firmware.
+# Top LED is bi-colour, both halves active low: GPIO 0 = green, GPIO 9 = red.
+# Bottom LED: GPIO 4 = red, active high; kept off.
+# The shutdown state is set by S99leds, which rcK stops first.
+
+case "$1" in
+	start | "")
+		gpio set 0; gpio clear 9; gpio clear 4
+		;;
+	stop)
+		;;
+esac
+
+exit 0
