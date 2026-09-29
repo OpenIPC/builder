@@ -98,6 +98,7 @@ VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in pr
 VStarcam C8622           T23N         SC2336P   AIC8800DL_?      NOR_8M    **INIT** - in progress
 XiongMai 85H50AI         HI3516EV300  IMX335    -                NOR_8M    testing, motorized zoom+focus (pelco-xm)
 XiongMai HI3516D_N81820  HI3516DV100  IMX291    -                NOR_16M   testing, motorized zoom+focus (ms41908 SPI)
+XiongMai XM72050200      GK7201V200   SC2336    RTL8733BU_USB    NOR_16M   done
 VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
 VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip
 Wansview Q5 1080p        T21Z         OV2735B   RTL8188FU_USB    NOR_16M   in progress
@@ -115,7 +116,6 @@ ZTE K543                 SSC337DE     SC401AI   MT7601U_USB      NOR_16M   done
 ZTE K545                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 4G Camera XG521 V1.2     GK7202V300   GC1054    EC800E-CN_USB    NOR_8M    done
 XM IPG-G3-WR             GK7202V300   JXH63     ATBM60321S_USB   NOR_8M    done
-XiongMai XM72050200      GK7201V200   SC2336    RTL8733BU_USB    NOR_16M   done
 ```
 
 
