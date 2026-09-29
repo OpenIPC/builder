@@ -7,8 +7,9 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/g
 fw_setenv totalmem 64M
 fw_setenv osmem 32M
 
-# Set sensor
+# Set sensor boot variable and Majestic ISP profile
 fw_setenv sensor sc2336
+cli -s .isp.sensorConfig /etc/sensors/sc2336_i2c_1080p.ini
 
 # Wireless driver configuration (configured via Web UI / CLI by the user)
 fw_setenv wlandev rtl8733bu-gk7201v200-xm
