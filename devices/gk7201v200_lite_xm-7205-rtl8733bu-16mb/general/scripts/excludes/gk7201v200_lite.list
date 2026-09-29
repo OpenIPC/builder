@@ -20,12 +20,10 @@
 /etc/sensors/sc401ai_i2c_4M.ini
 /etc/sensors/smtsec_imx307_i2c_4l_1080p.ini
 #
-/etc/sensors/iq/f23.ini
-/etc/sensors/iq/gc2053.ini
-/etc/sensors/iq/sc2335.ini
-#
 /usr/lib/sensors/libsns_mis2008.so
 /usr/lib/sensors/libsns_sc223a.so
 /usr/lib/sensors/libsns_sc401ai.so
 #
-/lib/modules/4.9.37/kernel/drivers/scsi/*.ko
+/lib/modules/4.9.37/kernel/drivers/scsi/scsi_mod.ko
+/lib/modules/4.9.37/kernel/drivers/scsi/scsi_transport_fc.ko
+/lib/modules/4.9.37/kernel/drivers/scsi/sd_mod.ko

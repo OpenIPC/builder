@@ -2,15 +2,8 @@
 # RTL8733BU stability tuning for mains-powered OpenIPC cameras.
 
 WIFI_IF=wlan0
-MODULE=/sys/module/8733bu/parameters
 RTW=/proc/net/rtl8733bu/$WIFI_IF
 TAG=wifi-tune
-
-set_zero() {
-	p=$1
-	[ -e "$p" ] || return
-	echo 0 > "$p" 2>/dev/null
-}
 
 wait_associated() {
 	i=0
@@ -33,30 +26,21 @@ tune() {
 	done
 	[ -e "/sys/class/net/$WIFI_IF" ] || { logger -t "$TAG" "$WIFI_IF not found"; return; }
 
-	# Realtek module-level power saving. Runtime values on the original setup
-	# were power_mgnt=2, ips_mode=1 and enusbss=0; force all three off.
-	set_zero "$MODULE/rtw_power_mgnt"
-	set_zero "$MODULE/rtw_ips_mode"
-	set_zero "$MODULE/rtw_enusbss"
-
-	# This proc knob controls Turbo-EDCA re-tuning. en_fwps is deliberately not
-	# written: on this driver it controls FW-PS state checking, not PS itself.
+	# Disable Turbo-EDCA re-tuning
 	[ -e "$RTW/dis_turboedca" ] && echo 1 > "$RTW/dis_turboedca" 2>/dev/null
 
+	# Disable interface power management after association
 	wait_associated
 	command -v iwconfig >/dev/null 2>&1 && iwconfig "$WIFI_IF" power off >/dev/null 2>&1
 
-	pm=$(cat "$MODULE/rtw_power_mgnt" 2>/dev/null)
-	ips=$(cat "$MODULE/rtw_ips_mode" 2>/dev/null)
-	usb=$(cat "$MODULE/rtw_enusbss" 2>/dev/null)
 	ps=$(iwconfig "$WIFI_IF" 2>/dev/null | sed -n 's/.*Power Management:\([A-Za-z]*\).*/\1/p')
 	edca=$(sed -n '1p' "$RTW/dis_turboedca" 2>/dev/null)
-	logger -t "$TAG" "RTL8733BU: power_mgnt=${pm:-?} ips=${ips:-?} usbss=${usb:-?} WEXT=${ps:-?}; ${edca:-Turbo-EDCA ?}"
+	logger -t "$TAG" "RTL8733BU tuned: WEXT=${ps:-?}; ${edca:-Turbo-EDCA ?}"
 }
 
 case "$1" in
 	start|restart|reload) ( tune ) & ;;
-	stop) : ;; # Do not re-enable power saving during service restarts.
+	stop) : ;;
 	*) echo "Usage: $0 {start|stop|restart|reload}"; exit 1 ;;
 esac
 

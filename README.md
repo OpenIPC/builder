@@ -115,6 +115,7 @@ ZTE K543                 SSC337DE     SC401AI   MT7601U_USB      NOR_16M   done
 ZTE K545                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 4G Camera XG521 V1.2     GK7202V300   GC1054    EC800E-CN_USB    NOR_8M    done
 XM IPG-G3-WR             GK7202V300   JXH63     ATBM60321S_USB   NOR_8M    done
+XiongMai XM72050200      GK7201V200   SC2336    RTL8733BU_USB    NOR_16M   done
 ```
 
 
