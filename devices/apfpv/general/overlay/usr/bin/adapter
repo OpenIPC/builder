@@ -4,8 +4,9 @@ set_config() {
 cat << EOF > /tmp/wpa_supplicant.conf
 network={
 	mode=2
-	frequency=$(fw_printenv -n wlanfreq || echo 5200)
+	frequency=$(fw_printenv -n wlanfreq || echo 5180)
 	ssid="$(fw_printenv -n wlanssid || echo OpenIPC)"
+	key_mgmt=WPA-PSK
 	psk="$(fw_printenv -n wlanpass || echo 12345678)"
 }
 EOF
@@ -15,19 +16,19 @@ case "$1" in
 	setup)
 		for card in $(lsusb | awk '{print $6}' | uniq); do
 			case "$card" in
-				"0bda:8812" | "0bda:881a" | "0b05:17d2" | "2357:0101" | "2604:0012")
-					driver=8812au
-					;;
+			"0bda:8812" | "0bda:881a" | "0b05:17d2" | "2357:0101" | "2604:0012")
+				driver=8812au
+				;;
 
-				"0bda:a81a")
-					driver=8812eu
-					;;
+			"0bda:a81a")
+				driver=8812eu
+				;;
 
-				"0bda:f72b" | "0bda:b733")
-					driver=8733bu
-					;;
+			"0bda:f72b" | "0bda:b733")
+				driver=8733bu
+				;;
 			esac
-		done
+	done
 
 		if [ -z "$driver" ]; then
 			echo "Wireless module not detected!"
@@ -36,12 +37,14 @@ case "$1" in
 
 		echo "Detected driver: $driver"
 		modprobe "$driver" rtw_tx_pwr_by_rate=0 rtw_tx_pwr_lmt_enable=0
+		iw reg set BR
 		;;
 
 	start)
+		iw reg set BR
 		iw wlan0 set txpower fixed $(fw_printenv -n wlanpwr || echo 1500)
 		set_config
-		wpa_supplicant -B -i wlan0 -c /tmp/wpa_supplicant.conf
+		wpa_supplicant -B -Dnl80211 -i wlan0 -c /tmp/wpa_supplicant.conf
 		udhcpd -S
 		;;
 
