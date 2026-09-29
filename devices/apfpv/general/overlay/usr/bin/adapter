@@ -2,11 +2,15 @@
 
 set_config() {
 cat << EOF > /tmp/wpa_supplicant.conf
+ap_scan=2
 network={
 	mode=2
 	frequency=$(fw_printenv -n wlanfreq || echo 5180)
 	ssid="$(fw_printenv -n wlanssid || echo OpenIPC)"
 	key_mgmt=WPA-PSK
+	proto=RSN
+	pairwise=CCMP
+	group=CCMP
 	psk="$(fw_printenv -n wlanpass || echo 12345678)"
 }
 EOF
