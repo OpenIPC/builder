@@ -136,13 +136,16 @@ FW_REPO="${OPENIPC_FW_REPO:-https://github.com/OpenIPC/firmware.git}"
 if [ ! -d "$FIRMWARE_DIR" ]; then
     if [ -n "$OPENIPC_FW_REV" ]; then
         echo_c 33 "\nDownloading Firmware @ ${OPENIPC_FW_REV}"
-        git clone "$FW_REPO" "$FIRMWARE_DIR"
-        git -C "$FIRMWARE_DIR" checkout "$OPENIPC_FW_REV"
+        git clone "$FW_REPO" "$FIRMWARE_DIR" || exit 1
+        # A ref missing from the selected repo would leave its default branch
+        # checked out; without this the build proceeds and may publish an
+        # image built from the wrong firmware.
+        git -C "$FIRMWARE_DIR" checkout "$OPENIPC_FW_REV" || exit 1
     else
         echo_c 33 "\nDownloading Firmware"
-        git clone --depth=1 "$FW_REPO" "$FIRMWARE_DIR"
+        git clone --depth=1 "$FW_REPO" "$FIRMWARE_DIR" || exit 1
     fi
-    cd "$FIRMWARE_DIR"
+    cd "$FIRMWARE_DIR" || exit 1
 else
     echo_c 33 "\nUpdating Firmware"
     cd "$FIRMWARE_DIR"
