@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# SSC377D/IMX335: keep the JPEG/MJPEG frame small enough for the
+# SigmaStar VENC memory pool.  The default 2560x1920 JPEG channel
+# can fail with CreateRingPool err=0xa009200c and prevent chn2
+# (MJPEG fallback) from starting.
+case "$1" in
+	start)
+		if command -v cli >/dev/null 2>&1; then
+			cli -s .jpeg.size 640x360
+			cli -s .jpeg.fps 5
+		fi
+		;;
+esac
