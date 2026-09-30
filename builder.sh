@@ -139,8 +139,10 @@ if [ ! -d "$FIRMWARE_DIR" ]; then
         git clone "$FW_REPO" "$FIRMWARE_DIR" || exit 1
         # A ref missing from the selected repo would leave its default branch
         # checked out; without this the build proceeds and may publish an
-        # image built from the wrong firmware.
-        git -C "$FIRMWARE_DIR" checkout "$OPENIPC_FW_REV" || exit 1
+        # image built from the wrong firmware. Exit 64, distinct from a
+        # transient clone/build failure, so the caller can fail fast instead
+        # of retrying a deterministic miss through the backoff budget.
+        git -C "$FIRMWARE_DIR" checkout "$OPENIPC_FW_REV" || exit 64
     else
         echo_c 33 "\nDownloading Firmware"
         git clone --depth=1 "$FW_REPO" "$FIRMWARE_DIR" || exit 1

@@ -29,10 +29,18 @@ jobs:
           REF="${{ inputs.commit }}"
           [ -z "$REF" ] && REF="${{ github.sha }}"
           SHORT="$(printf '%s' "$REF" | cut -c1-7)"
+          # A custom firmware source changes the image built for the same
+          # builder commit; keep those releases distinct from the
+          # default-source tag (the suffix is stable per repo|ref, so a
+          # re-run of the same selection stays reproducible).
+          FW_SUFFIX=""
+          if [ -n "${{ inputs.firmware_repo }}" ] || [ -n "${{ inputs.firmware_ref }}" ]; then
+            FW_SUFFIX="-fw$(printf '%s|%s' "${{ inputs.firmware_repo }}" "${{ inputs.firmware_ref }}" | sha256sum | cut -c1-7)"
+          fi
           if [ -n "${{ inputs.commit }}" ]; then
-            TAG="nightly-bisect-${SHORT}"
+            TAG="nightly-bisect-${SHORT}${FW_SUFFIX}"
           else
-            TAG="nightly-bisect-${SHORT}-$(date -u +%Y%m%d%H%M%S)"
+            TAG="nightly-bisect-${SHORT}${FW_SUFFIX}-$(date -u +%Y%m%d%H%M%S)"
           fi
           echo "ref=$REF"               >> "$GITHUB_OUTPUT"
           echo "short_sha=$SHORT"       >> "$GITHUB_OUTPUT"
@@ -107,7 +115,17 @@ jobs:
           backoffs="30 60 120 300 600 1200"
           attempt=1
           for sleep_for in $backoffs ""; do
-            bash builder.sh ${NAME} && break
+            bash builder.sh ${NAME}
+            rc=$?
+            [ ${rc} -eq 0 ] && break
+            if [ ${rc} -eq 64 ]; then
+              # builder.sh reserves 64 for a firmware ref that does not
+              # exist in the selected repo: deterministic, so retrying the
+              # unchanged ref through the backoff budget would only burn
+              # ~38 minutes before failing.
+              echo "::error::firmware ref '${OPENIPC_FW_REV}' not found in '${OPENIPC_FW_REPO:-default firmware repo}' - not retrying"
+              exit 1
+            fi
             if [ -z "$sleep_for" ]; then
               echo "::error::build failed after ${attempt} attempts"
               exit 1
@@ -117,6 +135,13 @@ jobs:
             attempt=$((attempt + 1))
           done
           cd openipc
+
+          # Record the firmware source that actually produced the image so
+          # a fork/moving-ref build can be reconstructed from the release.
+          FW_SRC_URL=$(git remote get-url origin)
+          FW_SRC_COMMIT=$(git rev-parse HEAD)
+          echo FW_SRC_URL=${FW_SRC_URL} >> ${GITHUB_ENV}
+          echo FW_SRC_COMMIT=${FW_SRC_COMMIT} >> ${GITHUB_ENV}
 
           TIME=$(date -d @${SECONDS} +%M:%S)
           echo TIME=${TIME} >> ${GITHUB_ENV}
@@ -156,6 +181,9 @@ jobs:
             sha=${{ needs.resolve.outputs.ref }}
             short=${{ needs.resolve.outputs.short_sha }}
             platform=${{ inputs.platform }}
+            firmware_repo=${{env.FW_SRC_URL}}
+            firmware_commit=${{env.FW_SRC_COMMIT}}
+            firmware_ref=${{ inputs.firmware_ref || 'default branch' }}
             one_off=true
           files: |
             ${{env.NORFW}}
