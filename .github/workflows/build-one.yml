@@ -25,6 +25,9 @@ jobs:
       tag_name:  ${{ steps.r.outputs.tag_name }}
     steps:
       - id: r
+        env:
+          FW_REPO_IN: ${{ inputs.firmware_repo }}
+          FW_REF_IN:  ${{ inputs.firmware_ref }}
         run: |
           REF="${{ inputs.commit }}"
           [ -z "$REF" ] && REF="${{ github.sha }}"
@@ -34,8 +37,8 @@ jobs:
           # default-source tag (the suffix is stable per repo|ref, so a
           # re-run of the same selection stays reproducible).
           FW_SUFFIX=""
-          if [ -n "${{ inputs.firmware_repo }}" ] || [ -n "${{ inputs.firmware_ref }}" ]; then
-            FW_SUFFIX="-fw$(printf '%s|%s' "${{ inputs.firmware_repo }}" "${{ inputs.firmware_ref }}" | sha256sum | cut -c1-7)"
+          if [ -n "$FW_REPO_IN" ] || [ -n "$FW_REF_IN" ]; then
+            FW_SUFFIX="-fw$(printf '%s|%s' "$FW_REPO_IN" "$FW_REF_IN" | sha256sum | cut -c1-7)"
           fi
           if [ -n "${{ inputs.commit }}" ]; then
             TAG="nightly-bisect-${SHORT}${FW_SUFFIX}"
@@ -115,8 +118,10 @@ jobs:
           backoffs="30 60 120 300 600 1200"
           attempt=1
           for sleep_for in $backoffs ""; do
-            bash builder.sh ${NAME}
-            rc=$?
+            # Actions runs this step under `bash -e`: a bare failing command
+            # would end the step here, before the retry or the rc=64 check.
+            rc=0
+            bash builder.sh ${NAME} || rc=$?
             [ ${rc} -eq 0 ] && break
             if [ ${rc} -eq 64 ]; then
               # builder.sh reserves 64 for a firmware ref that does not
@@ -138,7 +143,9 @@ jobs:
 
           # Record the firmware source that actually produced the image so
           # a fork/moving-ref build can be reconstructed from the release.
-          FW_SRC_URL=$(git remote get-url origin)
+          # Drop any user:token@ so credentials for a private fork never
+          # reach the public release body.
+          FW_SRC_URL=$(git remote get-url origin | sed -E 's#^([a-z+]+://)[^/@]*@#\1#')
           FW_SRC_COMMIT=$(git rev-parse HEAD)
           echo FW_SRC_URL=${FW_SRC_URL} >> ${GITHUB_ENV}
           echo FW_SRC_COMMIT=${FW_SRC_COMMIT} >> ${GITHUB_ENV}
