@@ -9,7 +9,10 @@ on:
         description: 'Builder commit SHA to build (optional; defaults to current branch HEAD). Use this from `git bisect run` or for one-off historic rebuilds.'
         required: false
       firmware_ref:
-        description: 'OpenIPC/firmware ref (SHA/tag/branch) to clone — for cross-repo bisect of size/regression issues. Defaults to firmware HEAD.'
+        description: 'Firmware ref (SHA/tag/branch) to clone — for cross-repo bisect of size/regression issues. Defaults to firmware HEAD.'
+        required: false
+      firmware_repo:
+        description: 'Firmware repo URL to clone (defaults to OpenIPC/firmware). Point at a fork to build unmerged changes together with firmware_ref.'
         required: false
 
 jobs:
@@ -22,14 +25,25 @@ jobs:
       tag_name:  ${{ steps.r.outputs.tag_name }}
     steps:
       - id: r
+        env:
+          FW_REPO_IN: ${{ inputs.firmware_repo }}
+          FW_REF_IN:  ${{ inputs.firmware_ref }}
         run: |
           REF="${{ inputs.commit }}"
           [ -z "$REF" ] && REF="${{ github.sha }}"
           SHORT="$(printf '%s' "$REF" | cut -c1-7)"
+          # A custom firmware source changes the image built for the same
+          # builder commit; keep those releases distinct from the
+          # default-source tag (the suffix is stable per repo|ref, so a
+          # re-run of the same selection stays reproducible).
+          FW_SUFFIX=""
+          if [ -n "$FW_REPO_IN" ] || [ -n "$FW_REF_IN" ]; then
+            FW_SUFFIX="-fw$(printf '%s|%s' "$FW_REPO_IN" "$FW_REF_IN" | sha256sum | cut -c1-7)"
+          fi
           if [ -n "${{ inputs.commit }}" ]; then
-            TAG="nightly-bisect-${SHORT}"
+            TAG="nightly-bisect-${SHORT}${FW_SUFFIX}"
           else
-            TAG="nightly-bisect-${SHORT}-$(date -u +%Y%m%d%H%M%S)"
+            TAG="nightly-bisect-${SHORT}${FW_SUFFIX}-$(date -u +%Y%m%d%H%M%S)"
           fi
           echo "ref=$REF"               >> "$GITHUB_OUTPUT"
           echo "short_sha=$SHORT"       >> "$GITHUB_OUTPUT"
@@ -85,6 +99,7 @@ jobs:
           BUILD_SHA:      ${{ needs.resolve.outputs.ref }}
           BUILD_PLATFORM: ${{ inputs.platform }}
           OPENIPC_FW_REV: ${{ inputs.firmware_ref }}
+          OPENIPC_FW_REPO: ${{ inputs.firmware_repo }}
         run: |
           export GIT_HASH=$(git rev-parse --short ${GITHUB_SHA})
           export GIT_BRANCH=${GITHUB_REF_NAME}
@@ -103,7 +118,19 @@ jobs:
           backoffs="30 60 120 300 600 1200"
           attempt=1
           for sleep_for in $backoffs ""; do
-            bash builder.sh ${NAME} && break
+            # Actions runs this step under `bash -e`: a bare failing command
+            # would end the step here, before the retry or the rc=64 check.
+            rc=0
+            bash builder.sh ${NAME} || rc=$?
+            [ ${rc} -eq 0 ] && break
+            if [ ${rc} -eq 64 ]; then
+              # builder.sh reserves 64 for a firmware ref that does not
+              # exist in the selected repo: deterministic, so retrying the
+              # unchanged ref through the backoff budget would only burn
+              # ~38 minutes before failing.
+              echo "::error::firmware ref '${OPENIPC_FW_REV}' not found in '${OPENIPC_FW_REPO:-default firmware repo}' - not retrying"
+              exit 1
+            fi
             if [ -z "$sleep_for" ]; then
               echo "::error::build failed after ${attempt} attempts"
               exit 1
@@ -113,6 +140,15 @@ jobs:
             attempt=$((attempt + 1))
           done
           cd openipc
+
+          # Record the firmware source that actually produced the image so
+          # a fork/moving-ref build can be reconstructed from the release.
+          # Drop any user:token@ so credentials for a private fork never
+          # reach the public release body.
+          FW_SRC_URL=$(git remote get-url origin | sed -E 's#^([a-z+]+://)[^/@]*@#\1#')
+          FW_SRC_COMMIT=$(git rev-parse HEAD)
+          echo FW_SRC_URL=${FW_SRC_URL} >> ${GITHUB_ENV}
+          echo FW_SRC_COMMIT=${FW_SRC_COMMIT} >> ${GITHUB_ENV}
 
           TIME=$(date -d @${SECONDS} +%M:%S)
           echo TIME=${TIME} >> ${GITHUB_ENV}
@@ -152,6 +188,9 @@ jobs:
             sha=${{ needs.resolve.outputs.ref }}
             short=${{ needs.resolve.outputs.short_sha }}
             platform=${{ inputs.platform }}
+            firmware_repo=${{env.FW_SRC_URL}}
+            firmware_commit=${{env.FW_SRC_COMMIT}}
+            firmware_ref=${{ inputs.firmware_ref || 'default branch' }}
             one_off=true
           files: |
             ${{env.NORFW}}
