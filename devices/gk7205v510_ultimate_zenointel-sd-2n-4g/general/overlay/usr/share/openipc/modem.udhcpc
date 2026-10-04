@@ -1,30 +1,67 @@
 #!/bin/sh
 #
-# udhcpc script for the 4G modem's usb0. Unlike /usr/share/udhcpc/default.script it
-# installs the default route at metric 100, behind eth0's, and touches DNS only when
-# eth0 has no default route of its own.
+# udhcpc script for the 4G modem's usb0, and the DNS switch between the two links.
+# Unlike /usr/share/udhcpc/default.script it installs the default route at metric
+# 100, behind eth0's, and leaves /etc/resolv.conf to eth0 while eth0 can carry
+# traffic.
+#
+# `modem.udhcpc sync` (S45modem's monitor runs it every few seconds, and every
+# lease event below ends with it) puts the modem's DNS in place while eth0 has no
+# carrier or no default route of its own, and gives eth0's back once it has both.
+# A route listed on a link that is down is not a usable one, so the carrier is
+# what decides, not the route table alone.
 
 METRIC=100
+ETH=${MODEM_ETH:-eth0}
+DNS_FILE=/var/run/modem.dns         # the modem's servers, one per line
+SAVED=/var/run/modem.eth-resolv     # eth0's resolv.conf while the modem's is in place
+
+eth_usable() {
+	[ "$(cat /sys/class/net/$ETH/carrier 2>/dev/null)" = 1 ] &&
+		ip route show default dev "$ETH" 2>/dev/null | grep -q .
+}
+
+sync_dns() {
+	if eth_usable || [ ! -s $DNS_FILE ]; then
+		# eth0 carries traffic, or the modem has nothing to offer: eth0's DNS.
+		if [ -f $SAVED ]; then
+			cat $SAVED > /etc/resolv.conf
+			rm -f $SAVED
+		fi
+		return
+	fi
+	[ -f $SAVED ] || cp /etc/resolv.conf $SAVED 2>/dev/null || : > $SAVED
+	sed 's/^/nameserver /' $DNS_FILE > /etc/resolv.conf
+}
+
+drop_route() {
+	while ip route del default dev "$interface" 2>/dev/null; do :; done
+}
 
 case "$1" in
 	deconfig)
+		drop_route
 		ip -4 addr flush dev "$interface"
 		ip link set "$interface" up
+		rm -f $DNS_FILE
+		sync_dns
 		;;
 	bound|renew)
 		ifconfig "$interface" "$ip" netmask "${subnet:-255.255.255.0}" up
-		while ip route del default dev "$interface" 2>/dev/null; do :; done
+		drop_route
 		for r in $router; do
 			ip route add default via "$r" dev "$interface" metric $METRIC
 			break
 		done
-		if ! ip route show default | grep -qv "dev $interface"; then
-			: > /etc/resolv.conf
-			for d in $dns; do
-				echo "nameserver $d" >> /etc/resolv.conf
-			done
-		fi
+		: > $DNS_FILE
+		for d in $dns; do
+			echo "$d" >> $DNS_FILE
+		done
+		sync_dns
 		logger -t modem "usb0 $1: $ip via ${router%% *}"
+		;;
+	sync)
+		sync_dns
 		;;
 esac
 exit 0
