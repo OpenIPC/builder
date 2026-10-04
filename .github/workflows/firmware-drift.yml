@@ -8,11 +8,20 @@ on:
   schedule:
     - cron: '0 5 * * *'
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Where to push the report: prod (openipc.org) or dev (dev.openipc.org, to try a service change)'
+        type: choice
+        options: [prod, dev]
+        default: prod
 
-# Reads both trees and files an issue. No write access to code.
+# Reads both trees, files an issue, and pushes the report to openipc.org. The
+# OIDC token is how the service knows the report came from this workflow on
+# master; nothing else here can write.
 permissions:
   contents: read
   issues: write
+  id-token: write
 
 jobs:
   drift:
@@ -80,11 +89,31 @@ jobs:
           set -o pipefail
           if python3 .github/scripts/check-firmware-drift.py \
                --firmware "$RUNNER_TEMP/firmware" \
-               --buildroot "$RUNNER_TEMP/buildroot" 2>&1 | tee "$RUNNER_TEMP/report.txt"; then
+               --buildroot "$RUNNER_TEMP/buildroot" \
+               --buildroot-version '${{ steps.br.outputs.ver }}' \
+               --json "$RUNNER_TEMP/drift.json" 2>&1 | tee "$RUNNER_TEMP/report.txt"; then
             echo "drift=no" >> "$GITHUB_OUTPUT"
           else
             echo "drift=yes" >> "$GITHUB_OUTPUT"
           fi
+
+      # The firmware explorer's per-device view of this report, which is where
+      # a device's contributor can see what their device replaces in firmware
+      # and what firmware changed since. Pushed whether or not there is drift:
+      # "all reconciled" is news too, and the page shows how long each finding
+      # has stood. A refused or failed push fails the job -- the issue below
+      # still covers the findings, but a page that silently stops updating
+      # would be read as current.
+      - name: Push the report to openipc.org
+        if: always() && steps.check.outcome == 'success'
+        env:
+          TARGET: ${{ inputs.target || 'prod' }}
+        run: |
+          case "$TARGET" in
+            dev) url=https://dev.openipc.org ;;
+            *)   url=https://openipc.org ;;
+          esac
+          python3 .github/scripts/check-firmware-drift.py --push "$RUNNER_TEMP/drift.json" --url "$url"
 
       # An issue, not a failed job. This drift is introduced by commits in
       # another repository, so failing here would paint the nightly red for
