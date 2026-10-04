@@ -104,8 +104,13 @@ jobs:
       # has stood. A refused or failed push fails the job -- the issue below
       # still covers the findings, but a page that silently stops updating
       # would be read as current.
+      # Only from this repository's master: that is the one workflow ref the
+      # service accepts a token from, so a fork's dispatch or a branch's would
+      # only be refused.
       - name: Push the report to openipc.org
-        if: always() && steps.check.outcome == 'success'
+        if: >-
+          always() && steps.check.outcome == 'success' &&
+          github.repository == 'OpenIPC/builder' && github.ref == 'refs/heads/master'
         env:
           TARGET: ${{ inputs.target || 'prod' }}
         run: |
@@ -120,8 +125,9 @@ jobs:
       # something no builder change caused and nobody here can see from a diff.
       # One issue, reopened and re-bodied rather than duplicated, so a week of
       # unattended drift is one thread and not seven.
+      # always(): a push that failed above must not also cost the issue.
       - name: File or refresh the drift issue
-        if: steps.check.outputs.drift == 'yes'
+        if: always() && steps.check.outputs.drift == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

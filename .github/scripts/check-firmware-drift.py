@@ -202,7 +202,10 @@ def resolve_pin(firmware, path, blob, commit=None, reconciled=None):
                 rows.append({"sha": parts[0], "date": parts[1], "author": parts[2], "subject": parts[3]})
         return rows
 
-    if commit:
+    # A recorded commit is used only if git agrees it left `path` with this
+    # blob; a mistyped or unrelated one would otherwise print an empty list
+    # that reads as "nothing changed".
+    if commit and (_git(firmware, "rev-parse", f"{commit}:{path}") or "").strip() == blob:
         rows = parse(_git(firmware, "log", fmt, f"{commit}..HEAD", "--", path))
         return commit, rows[:COMMIT_CAP], False, len(rows) > COMMIT_CAP
 
@@ -611,6 +614,12 @@ def self_test():
         want(pinned == run("rev-parse", "HEAD~1"), "a pin must resolve to the commit that left that blob")
         _, since, unknown, _ = resolve_pin(fw, "general/S40network", "0" * 40, reconciled="2000-01-01")
         want(unknown and len(since) == 3, "a blob the history never had must be flagged, not placed")
+        pinned, since, _, _ = resolve_pin(fw, "general/S40network", blobs[1], commit=run("rev-parse", "HEAD~2"))
+        want(pinned == run("rev-parse", "HEAD~1") and [c["subject"] for c in since] == ["change 3"],
+             "a recorded commit that does not hold the pinned blob must be ignored, not trusted")
+        pinned, since, _, _ = resolve_pin(fw, "general/S40network", blobs[1], commit="f" * 40)
+        want(pinned == run("rev-parse", "HEAD~1") and len(since) == 1,
+             "a recorded commit git does not know must be ignored, not trusted")
 
     # Attribution follows builder.sh: a vendor tree reaches its own configs/,
     # anything else in the directory reaches every device there.
