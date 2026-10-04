@@ -37,3 +37,4 @@
 /lib/modules/4.9.84/kernel/fs/nfs/nfsv3.ko
 /lib/modules/4.9.84/kernel/fs/nfs_common/grace.ko
 /lib/modules/4.9.84/kernel/net/sunrpc/sunrpc.ko
+/usr/share/openipc/sounds/ready_48k.pcm
