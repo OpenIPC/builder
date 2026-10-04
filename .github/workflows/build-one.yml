@@ -65,6 +65,12 @@ jobs:
     name: Firmware (${{inputs.platform}})
     needs: resolve
     runs-on: ubuntu-latest
+    # Stated rather than inherited from the repository default: the release
+    # upload writes contents, and a build request is read from and answered
+    # on its issue.
+    permissions:
+      contents: write
+      issues: write
 
     steps:
       - name: Checkout source
@@ -113,6 +119,10 @@ jobs:
           mkdir -p .ci
           curl -fsSL --retry 3 -o .ci/build_request.sh \
             https://raw.githubusercontent.com/OpenIPC/firmware/master/.github/scripts/build_request.sh
+          # The firmware Makefile puts this after every defconfig; what it
+          # sets is build machinery a request does not get to switch off.
+          curl -fsSL --retry 3 -o .ci/openipc.fragment \
+            https://raw.githubusercontent.com/OpenIPC/firmware/master/general/openipc.fragment
 
       # The issue body is untrusted text. build_request.sh accepts only
       # `# BR2_<NAME> is not set` lines from it and refuses the request on
@@ -132,7 +142,7 @@ jobs:
             echo "::error::no defconfig for platform '$PLATFORM'"
             exit 1
           fi
-          sh .ci/build_request.sh apply /tmp/request.md "$DEFCONFIG" /tmp/request.symbols
+          sh .ci/build_request.sh apply /tmp/request.md "$DEFCONFIG" /tmp/request.symbols .ci/openipc.fragment
 
       - name: Build firmware
         env:
@@ -224,7 +234,10 @@ jobs:
       - name: Check build request
         if: inputs.request_issue != ''
         run: |
-          KEPT=$(sh .ci/build_request.sh verify /tmp/request.symbols openipc/output/.config | tr '\n' ' ')
+          # Into a file first: in a pipe, a verify that fails would be hidden
+          # behind tr's success and the release would go out unchecked.
+          sh .ci/build_request.sh verify /tmp/request.symbols openipc/output/.config > /tmp/request.kept
+          KEPT=$(tr '\n' ' ' < /tmp/request.kept)
           echo "REQUEST_KEPT=${KEPT}" >> ${GITHUB_ENV}
           if [ -n "$KEPT" ]; then
             echo "::warning::still enabled after the request (selected by another package): ${KEPT}"
