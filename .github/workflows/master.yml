@@ -388,6 +388,41 @@ jobs:
             echo "SIZES=sizes.${NAME}.json" >> ${GITHUB_ENV}
           fi
 
+      # The Kconfig dependency graph and help text, which openipc.org's
+      # firmware explorer needs for its "What if" tab -- and with it the
+      # "Request this build" button. Mirrors OpenIPC/firmware's build.yml
+      # (firmware#2171); da13271 brought the size report over a day before
+      # that landed and this half was never followed, so no builder device
+      # had the tab. Best-effort like the size report: an image never fails
+      # for want of its graph.
+      - name: Build kconfig graph
+        if: env.NORFW || env.NANDFW
+        run: |
+          python3 -m pip install --user --break-system-packages kconfiglib || \
+            { echo "::warning::kconfiglib install failed for ${{matrix.platform}}"; exit 0; }
+          cd openipc
+          NAME=${{matrix.platform}}
+          make BOARD=${NAME} kconfig-graph || \
+            { echo "::warning::kconfig-graph failed for ${NAME}"; exit 0; }
+          # Same rename as the size report, for the same reason: compound
+          # devices share the firmware-side `<soc>-<variant>` name, and
+          # push_build.py takes the platform from the file name.
+          COMMON=$(echo ${NAME} | awk -F_ '{print NF-1}')
+          KREPORTS=""
+          for kind in kconfig-graph kconfig-help; do
+            F=$(find output/images -name "${kind}.*.json" | head -1)
+            if [ -z "${F}" ]; then
+              continue
+            fi
+            if [ ${COMMON} -eq 1 ]; then
+              KREPORTS="${KREPORTS} openipc/${F}"
+            else
+              mv ${F} ../${kind}.${NAME}.json
+              KREPORTS="${KREPORTS} ${kind}.${NAME}.json"
+            fi
+          done
+          echo "KREPORTS=${KREPORTS}" >> ${GITHUB_ENV}
+
       # Stage everything this device produced into one flat directory, so the
       # artifact has a predictable shape no matter which of the two naming
       # schemes the build used (compound devices rename to <device>-nor.tgz in
@@ -407,6 +442,11 @@ jobs:
           if [ -n "${SIZES:-}" ] && [ -e "${SIZES}" ]; then
             cp -a "${SIZES}" reports/
           fi
+          for f in ${KREPORTS:-}; do
+            if [ -e "$f" ]; then
+              cp -a "$f" reports/
+            fi
+          done
           for f in "${NORFW:-}" "${NANDFW:-}"; do
             # An `if` rather than a `&&` chain: the step runs under `bash -e`,
             # where a trailing `&&` that tests false is only harmless because
@@ -444,7 +484,8 @@ jobs:
           retention-days: ${{ github.event_name == 'pull_request' && 7 || 1 }}
           path: dist/*
 
-      # The size report, for the `report` job that pushes it to openipc.org.
+      # The size report and kconfig graph, for the `report` job that pushes
+      # them to openipc.org.
       # A few tens of KB, kept a week -- unlike the image, which publish
       # consumes within the run -- so a push that could not reach openipc.org
       # can be re-run days later. Optional, so is this.
