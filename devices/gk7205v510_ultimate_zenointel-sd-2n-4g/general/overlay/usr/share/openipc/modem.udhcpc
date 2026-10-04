@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# udhcpc script for the 4G modem's usb0. Unlike /usr/share/udhcpc/default.script it
+# installs the default route at metric 100, behind eth0's, and touches DNS only when
+# eth0 has no default route of its own.
+
+METRIC=100
+
+case "$1" in
+	deconfig)
+		ip -4 addr flush dev "$interface"
+		ip link set "$interface" up
+		;;
+	bound|renew)
+		ifconfig "$interface" "$ip" netmask "${subnet:-255.255.255.0}" up
+		while ip route del default dev "$interface" 2>/dev/null; do :; done
+		for r in $router; do
+			ip route add default via "$r" dev "$interface" metric $METRIC
+			break
+		done
+		if ! ip route show default | grep -qv "dev $interface"; then
+			: > /etc/resolv.conf
+			for d in $dns; do
+				echo "nameserver $d" >> /etc/resolv.conf
+			done
+		fi
+		logger -t modem "usb0 $1: $ip via ${router%% *}"
+		;;
+esac
+exit 0
