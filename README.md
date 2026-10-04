@@ -111,6 +111,7 @@ Xiaomi MJSXJ03HL         T31N         JXQ03P    RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   preparation
 XVI ISI-2010C            T31N         GC2053    -                NOR_8M    done
 YuanCam DGK-423403       HI3518EV300  JXH62     RTL8188FU_USB    NOR_8M    research
+Zenointel SD-2N-4G       GK7205V510   MIS2008   EC200A_USB       NAND      done, pan/tilt (gpiostep), 2x IR lamps
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 ZTE K543                 SSC337DE     SC401AI   MT7601U_USB      NOR_16M   done
 ZTE K545                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done

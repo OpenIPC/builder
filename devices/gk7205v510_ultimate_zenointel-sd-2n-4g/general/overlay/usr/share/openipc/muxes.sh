@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# Zenointel SD-2N-4G board setup. S30customizer runs this on every boot, before
+# the network, the vendor modules and majestic. Pins are from the stock firmware's
+# board config (cfgshow) and its init.sh.
+#
+# Image sensor (MIS2008) power-down: the stock firmware drives it low at boot. Left
+# floating high, the sensor still answers I2C but never starts its MIPI output, and
+# majestic sees only "Timeout from venc".
+gpio clear 50
+#
+# microSD slot power, then re-mux the card-detect pad so a card that was already in
+# the slot at power-up is detected (what the stock init.sh does).
+gpio clear 38
+devmem 0x100c005c 32 0x0
+devmem 0x100c005c 32 0x1
+#
+# The two pads the stock firmware takes from JTAG to GPIO when the board has an
+# audio output.
+devmem 0x120c0010 32 0x2
+devmem 0x120c0014 32 0x2
+#
+# IR lamps: both are majestic's (nightMode.irNearPwmChannel / irFarPwmChannel).
+# Hold them dark until it muxes their pads to PWM.
+gpio clear 56
+gpio clear 55
+#
+# Pan/tilt: two 4-wire steppers on GPIO. majestic drives them through majestic-af's
+# gpiostep actuator; the head's travel is in /etc/gpiostep.conf.
+insmod /lib/modules/$(uname -r)/extra/gpiostep.ko pan_gpios=3,4,72,73 tilt_gpios=69,59,58,57

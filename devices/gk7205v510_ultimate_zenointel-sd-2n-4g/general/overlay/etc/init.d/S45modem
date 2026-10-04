@@ -1,0 +1,108 @@
+#!/bin/sh
+#
+# Quectel EC200A-EU (2c7c:6005) on the Zenointel SD-2N-4G, brought up as a second
+# link next to Ethernet: RNDIS usb0 with its default route at metric 100, so eth0
+# keeps the traffic while it has a route and the modem carries it when it has not.
+#
+# fw_setenv modem_apn <apn>   APN for the data call (optional: without it the
+#                             modem dials with whatever its SIM provides)
+# fw_setenv modem off         leave the modem powered down
+
+AT_IFACE=1-1:1.3	# the AT port; 1.2 and 1.4 are the modem's debug ports
+PIDFILE=/var/run/udhcpc.usb0.pid
+WORKER=/var/run/modem.worker.pid	# the background bring-up, then the DNS monitor
+SCRIPT=/usr/share/openipc/modem.udhcpc
+
+power_on() {
+	# The stock firmware's sequence for this modem (cfgshow wireless type 18):
+	# supply 22, PWRKEY 29, USB VBUS 20 on; then PWRKEY and RESET 30 low; then
+	# PWRKEY released.
+	gpio set 22
+	gpio set 29
+	gpio set 20
+	usleep 500000
+	gpio clear 29
+	gpio clear 30
+	usleep 500000
+	gpio set 29
+}
+
+at_port() {
+	for t in /sys/bus/usb/devices/$AT_IFACE/ttyUSB*; do
+		[ -e "$t" ] && echo /dev/${t##*/} && return 0
+	done
+	return 1
+}
+
+at() {
+	port=$(at_port) || return 1
+	stty -F "$port" 115200 raw -echo 2>/dev/null
+	printf '%s\r\n' "$1" > "$port"
+	sleep 1
+}
+
+start() {
+	[ "$(fw_printenv -n modem 2>/dev/null)" = "off" ] && return 0
+	echo "Starting 4G modem..."
+	# rndis_host first: loaded after it, the generic serial driver would claim the
+	# RNDIS data interface too, and usb0 would never appear.
+	modprobe rndis_host
+	modprobe usbserial vendor=0x2c7c product=0x6005
+	power_on
+	(
+		n=0
+		while [ $n -lt 40 ] && ! ip link show usb0 >/dev/null 2>&1; do
+			sleep 1
+			n=$((n + 1))
+		done
+		if ! ip link show usb0 >/dev/null 2>&1; then
+			logger -t modem "EC200A did not enumerate"
+			exit 1
+		fi
+		apn=$(fw_printenv -n modem_apn 2>/dev/null)
+		if [ -n "$apn" ]; then
+			sleep 3
+			at "AT+QICSGP=1,1,\"$apn\",\"\",\"\",1"
+			at "AT+QNETDEVCTL=1,1,1"
+		fi
+		# A cable that comes out should not leave a dead eth0 default route
+		# winning over the modem's.
+		echo 1 > /proc/sys/net/ipv4/conf/eth0/ignore_routes_with_linkdown 2>/dev/null
+		ip link set usb0 up
+		udhcpc -i usb0 -b -S -p $PIDFILE -s $SCRIPT
+		# Which link's DNS is in force follows eth0, and eth0's link coming
+		# and going raises nothing a lease script would see.
+		while :; do
+			sleep 10
+			$SCRIPT sync
+		done
+	) &
+	echo $! > $WORKER
+}
+
+stop() {
+	# The worker first: stopped during the enumeration wait, it would
+	# otherwise go on to start DHCP after this has finished.
+	[ -f $WORKER ] && kill "$(cat $WORKER)" 2>/dev/null
+	rm -f $WORKER
+	[ -f $PIDFILE ] && kill "$(cat $PIDFILE)" 2>/dev/null
+	rm -f $PIDFILE
+	while ip route del default dev usb0 2>/dev/null; do :; done
+	ip link set usb0 down 2>/dev/null
+	rm -f /var/run/modem.dns
+	$SCRIPT sync
+}
+
+case "$1" in
+	start|stop)
+		$1
+		;;
+	restart)
+		stop
+		start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+		;;
+esac
