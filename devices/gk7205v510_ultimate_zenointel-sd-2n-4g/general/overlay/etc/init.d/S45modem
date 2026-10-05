@@ -78,8 +78,18 @@ heal() {
 	logger -t modem "usb0 lost its data session; reconnecting"
 	connect || return 0
 	[ -f $PIDFILE ] || return 0
-	kill -USR2 "$(cat $PIDFILE)" 2>/dev/null	# release
-	kill -USR1 "$(cat $PIDFILE)" 2>/dev/null	# and ask again
+	pid=$(cat $PIDFILE)
+	# Release, and wait for the lease script's deconfig to take the old
+	# address off before asking again. Sent together the two signals are
+	# not ordered: pending at once, USR1 is delivered before USR2, and the
+	# renew would be undone by the release that follows it.
+	kill -USR2 "$pid" 2>/dev/null || return 0
+	n=0
+	while [ $n -lt 10 ] && ip -4 addr show dev usb0 2>/dev/null | grep -q inet; do
+		usleep 500000
+		n=$((n + 1))
+	done
+	kill -USR1 "$pid" 2>/dev/null
 }
 
 start() {

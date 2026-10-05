@@ -58,6 +58,13 @@ case "$1" in
 		}
 		ip link set "$interface" up
 		drop_route
+		# A lease with a different gateway leaves the old one's host route
+		# behind unless it is taken off here.
+		r1=${router%% *}
+		ip route show dev "$interface" scope link 2>/dev/null |
+			while read -r dst _; do
+				[ "$dst" = "$r1" ] || ip route del "$dst" dev "$interface" 2>/dev/null
+			done
 		for r in $router; do
 			ip route replace "$r" dev "$interface" scope link
 			ip route add default via "$r" dev "$interface" metric $METRIC
