@@ -9,6 +9,15 @@
 #                             most SIMs need)
 # fw_setenv modem off         leave the modem powered down
 #
+# fw_setenv uplink_probe "<ip> ..."
+#                             addresses that prove eth0 reaches the internet
+#                             (default: three public resolvers)
+#
+# eth0 having a link is not eth0 having the internet: the router behind it can
+# be up while its ISP is not, and the kernel would keep routing everything into
+# that. So the worker also probes the internet through eth0 itself, and while
+# nothing answers, moves eth0's default route behind the modem's.
+#
 # Registering is not enough for usb0 to carry anything: the EC200A attaches
 # and holds a bearer on its own, but its DHCP server on usb0 stays silent until
 # AT+QNETDEVCTL ties that bearer to the RNDIS interface. So the connect is sent
@@ -19,6 +28,12 @@ AT_LOCK=/var/lock/modem-at	# held around every exchange; majestic reads the port
 PIDFILE=/var/run/udhcpc.usb0.pid
 WORKER=/var/run/modem.worker.pid	# the background bring-up, then the DNS monitor
 SCRIPT=/usr/share/openipc/modem.udhcpc
+# eth0's default route while its upstream is down: behind usb0's (100), and
+# kept rather than deleted, so a probe bound to eth0 still has a way out to
+# find out when the upstream is back. modem.udhcpc reads the same number.
+DEMOTED=200
+UPLINK_DOWN=3	# passes with no answer before eth0 is moved behind (~30 s)
+UPLINK_UP=6	# passes with answers before it is put back (~1 min)
 
 power_on() {
 	# The stock firmware's sequence for this modem (cfgshow wireless type 18):
@@ -92,6 +107,91 @@ heal() {
 	kill -USR1 "$pid" 2>/dev/null
 }
 
+# A device's default routes. Not `ip route show default dev X`: busybox drops
+# the "default" selector and lists every route on the device, the subnet's
+# included, which made any test on its output true.
+defaults() {
+	ip route show dev "$1" 2>/dev/null | grep '^default'
+}
+
+eth_gw() {
+	defaults eth0 | sed -n 's/.*via \([0-9.]*\).*/\1/p' | head -n 1
+}
+
+eth_demoted() {
+	defaults eth0 | grep -q " metric $DEMOTED"
+}
+
+# eth0 holds a default route that is not the demoted one: busybox prints no
+# metric for 0, which is what udhcpc installs.
+eth_preferred() {
+	defaults eth0 | grep -qv " metric $DEMOTED"
+}
+
+usb_routed() {
+	defaults usb0 | grep -q .
+}
+
+# Bound to eth0, so it asks eth0's upstream whatever the routing table says;
+# any one answer is enough. Addresses, not names: DNS is one of the things
+# that dies with the upstream.
+eth_reaches() {
+	for t in $probes; do
+		ping -c 1 -W 1 -I eth0 "$t" >/dev/null 2>&1 && return 0
+	done
+	return 1
+}
+
+# Delete exactly once each: "metric 0" in a delete means any metric to the
+# kernel, so a loop would go on to take the other route too.
+demote() {
+	gw=$(eth_gw)
+	[ -n "$gw" ] || return 0
+	ip route add default via "$gw" dev eth0 metric $DEMOTED 2>/dev/null
+	ip route del default via "$gw" dev eth0 metric 0 2>/dev/null
+}
+
+restore() {
+	gw=$(eth_gw)
+	[ -n "$gw" ] || return 0
+	ip route add default via "$gw" dev eth0 2>/dev/null
+	ip route del default via "$gw" dev eth0 metric $DEMOTED 2>/dev/null
+}
+
+# One pass of the uplink check. up_fail and up_ok are the worker's own
+# counters, so the judgement lives in the routing table and nowhere else.
+uplink() {
+	if [ "$(cat /sys/class/net/eth0/carrier 2>/dev/null)" != 1 ] || [ -z "$(eth_gw)" ]; then
+		# No link, or no route to judge: the kernel already routes around
+		# a dead link, and there is nothing to probe through.
+		up_fail=0
+		up_ok=0
+		return 0
+	fi
+	if eth_reaches; then
+		up_ok=$((up_ok + 1))
+		up_fail=0
+	else
+		up_fail=$((up_fail + 1))
+		up_ok=0
+	fi
+	# Checked every pass rather than once: a DHCP renewal on eth0 puts its
+	# route back at metric 0, and it is moved behind again here.
+	if [ $up_fail -ge $UPLINK_DOWN ] && eth_preferred && usb_routed; then
+		demote
+		logger -t modem "eth0 has a link but reaches nothing beyond it; internet via usb0"
+		$SCRIPT sync
+	elif eth_demoted && { [ $up_ok -ge $UPLINK_UP ] || ! usb_routed; }; then
+		restore
+		if usb_routed; then
+			logger -t modem "eth0 reaches the internet again; internet via eth0"
+		else
+			logger -t modem "usb0 has no route either; eth0 back as the default"
+		fi
+		$SCRIPT sync
+	fi
+}
+
 start() {
 	[ "$(fw_printenv -n modem 2>/dev/null)" = "off" ] && return 0
 	echo "Starting 4G modem..."
@@ -124,12 +224,18 @@ start() {
 		echo 1 > /proc/sys/net/ipv4/conf/eth0/ignore_routes_with_linkdown 2>/dev/null
 		ip link set usb0 up
 		udhcpc -i usb0 -b -S -p $PIDFILE -s $SCRIPT
-		# Which link's DNS is in force follows eth0, and eth0's link coming
-		# and going raises nothing a lease script would see. Every third
-		# pass also checks that usb0 still has its data session.
+		# Every pass checks eth0's upstream and lets the DNS follow whichever
+		# link won -- eth0's link coming and going raises nothing a lease
+		# script would see. Every third pass also checks that usb0 still has
+		# its data session.
+		probes=$(fw_printenv -n uplink_probe 2>/dev/null)
+		probes=${probes:-1.1.1.1 8.8.8.8 77.88.8.8}
+		up_fail=0
+		up_ok=0
 		i=0
 		while :; do
 			sleep 10
+			uplink
 			$SCRIPT sync
 			i=$((i + 1))
 			[ $((i % 3)) -eq 0 ] && heal
@@ -145,6 +251,8 @@ stop() {
 	rm -f $WORKER
 	[ -f $PIDFILE ] && kill "$(cat $PIDFILE)" 2>/dev/null
 	rm -f $PIDFILE
+	# Without the worker nothing would ever put eth0 back.
+	eth_demoted && restore
 	# Address and routes too: the modem stays powered across a restart, so
 	# usb0 outlives it, and a lease left on it reads as a link that is up.
 	ip route flush dev usb0 2>/dev/null

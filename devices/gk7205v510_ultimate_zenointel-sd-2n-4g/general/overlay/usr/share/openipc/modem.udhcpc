@@ -7,7 +7,8 @@
 #
 # `modem.udhcpc sync` (S45modem's monitor runs it every few seconds, and every
 # lease event below ends with it) puts the modem's DNS in place while eth0 has no
-# carrier or no default route of its own, and gives eth0's back once it has both.
+# carrier or no preferred default route of its own, and gives eth0's back once
+# it has both.
 # A route listed on a link that is down is not a usable one, so the carrier is
 # what decides, not the route table alone.
 
@@ -16,9 +17,16 @@ ETH=${MODEM_ETH:-eth0}
 DNS_FILE=/var/run/modem.dns         # the modem's servers, one per line
 SAVED=/var/run/modem.eth-resolv     # eth0's resolv.conf while the modem's is in place
 
+# eth0 carries the traffic: it has a link and a default route of its own that
+# S45modem has not moved behind usb0's for an upstream that answers nothing
+# (metric 200, S45modem's DEMOTED).
+#
+# Read through `ip route show dev`, filtered: busybox drops the "default"
+# selector of `ip route show default dev X` and lists the subnet's route too,
+# which kept this true for as long as eth0 had an address.
 eth_usable() {
 	[ "$(cat /sys/class/net/$ETH/carrier 2>/dev/null)" = 1 ] &&
-		ip route show default dev "$ETH" 2>/dev/null | grep -q .
+		ip route show dev "$ETH" 2>/dev/null | grep '^default' | grep -qv " metric 200"
 }
 
 sync_dns() {
