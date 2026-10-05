@@ -5,10 +5,17 @@
 # keeps the traffic while it has a route and the modem carries it when it has not.
 #
 # fw_setenv modem_apn <apn>   APN for the data call (optional: without it the
-#                             modem dials with whatever its SIM provides)
+#                             network's default bearer is used, which is what
+#                             most SIMs need)
 # fw_setenv modem off         leave the modem powered down
+#
+# Registering is not enough for usb0 to carry anything: the EC200A attaches
+# and holds a bearer on its own, but its DHCP server on usb0 stays silent until
+# AT+QNETDEVCTL ties that bearer to the RNDIS interface. So the connect is sent
+# whether or not an APN is set.
 
 AT_IFACE=1-1:1.3	# the AT port; 1.2 and 1.4 are the modem's debug ports
+AT_LOCK=/var/lock/modem-at	# held around every exchange; majestic reads the port too
 PIDFILE=/var/run/udhcpc.usb0.pid
 WORKER=/var/run/modem.worker.pid	# the background bring-up, then the DNS monitor
 SCRIPT=/usr/share/openipc/modem.udhcpc
@@ -34,11 +41,55 @@ at_port() {
 	return 1
 }
 
+# at <command> [seconds]: send one command and print the reply. The port is
+# opened read-write once, so the reply cannot arrive before anything is
+# listening for it.
 at() {
 	port=$(at_port) || return 1
-	stty -F "$port" 115200 raw -echo 2>/dev/null
-	printf '%s\r\n' "$1" > "$port"
-	sleep 1
+	(
+		flock 9
+		stty -F "$port" 115200 raw -echo 2>/dev/null
+		{
+			printf '%s\r\n' "$1" >&3
+			# timeout ends the read; its "Terminated" is not news.
+			timeout "${2:-1}" cat <&3 2>/dev/null
+		} 3<>"$port" | tr -d '\r'
+	) 9>$AT_LOCK
+}
+
+registered() {
+	at "AT+CEREG?" | grep -q '^+CEREG: [0-9],[15]'
+}
+
+connect() {
+	at "AT+QNETDEVCTL=1,1,1" 3 | grep -q '^OK'
+}
+
+# The tie between the bearer and usb0 does not survive the cell: after a
+# re-registration the modem holds a new bearer, with a new address, and leaves
+# it unconnected, while udhcpc sits on the old lease for the rest of its day.
+# Measured on the SD-2N-4G across an AT+CFUN=4/1 cycle. So the worker checks,
+# and when the modem is registered but not connected, connects it again and
+# has udhcpc drop the dead lease and ask for the new one.
+heal() {
+	st=$(at "AT+QNETDEVCTL?" | sed -n 's/^+QNETDEVCTL: [0-9]*,[0-9]*,[0-9]*,\([0-9]*\).*/\1/p')
+	[ "$st" = 0 ] || return 0	# connected, or the modem did not answer
+	registered || return 0
+	logger -t modem "usb0 lost its data session; reconnecting"
+	connect || return 0
+	[ -f $PIDFILE ] || return 0
+	pid=$(cat $PIDFILE)
+	# Release, and wait for the lease script's deconfig to take the old
+	# address off before asking again. Sent together the two signals are
+	# not ordered: pending at once, USR1 is delivered before USR2, and the
+	# renew would be undone by the release that follows it.
+	kill -USR2 "$pid" 2>/dev/null || return 0
+	n=0
+	while [ $n -lt 10 ] && ip -4 addr show dev usb0 2>/dev/null | grep -q inet; do
+		usleep 500000
+		n=$((n + 1))
+	done
+	kill -USR1 "$pid" 2>/dev/null
 }
 
 start() {
@@ -60,21 +111,28 @@ start() {
 			exit 1
 		fi
 		apn=$(fw_printenv -n modem_apn 2>/dev/null)
-		if [ -n "$apn" ]; then
-			sleep 3
-			at "AT+QICSGP=1,1,\"$apn\",\"\",\"\",1"
-			at "AT+QNETDEVCTL=1,1,1"
-		fi
+		[ -n "$apn" ] && at "AT+QICSGP=1,1,\"$apn\",\"\",\"\",1" >/dev/null
+		n=0
+		while [ $n -lt 60 ] && ! registered; do
+			sleep 2
+			n=$((n + 2))
+		done
+		registered || logger -t modem "not registered after 60 s, connecting anyway"
+		connect || logger -t modem "the modem refused to connect usb0"
 		# A cable that comes out should not leave a dead eth0 default route
 		# winning over the modem's.
 		echo 1 > /proc/sys/net/ipv4/conf/eth0/ignore_routes_with_linkdown 2>/dev/null
 		ip link set usb0 up
 		udhcpc -i usb0 -b -S -p $PIDFILE -s $SCRIPT
 		# Which link's DNS is in force follows eth0, and eth0's link coming
-		# and going raises nothing a lease script would see.
+		# and going raises nothing a lease script would see. Every third
+		# pass also checks that usb0 still has its data session.
+		i=0
 		while :; do
 			sleep 10
 			$SCRIPT sync
+			i=$((i + 1))
+			[ $((i % 3)) -eq 0 ] && heal
 		done
 	) &
 	echo $! > $WORKER
@@ -87,7 +145,10 @@ stop() {
 	rm -f $WORKER
 	[ -f $PIDFILE ] && kill "$(cat $PIDFILE)" 2>/dev/null
 	rm -f $PIDFILE
-	while ip route del default dev usb0 2>/dev/null; do :; done
+	# Address and routes too: the modem stays powered across a restart, so
+	# usb0 outlives it, and a lease left on it reads as a link that is up.
+	ip route flush dev usb0 2>/dev/null
+	ip -4 addr flush dev usb0 2>/dev/null
 	ip link set usb0 down 2>/dev/null
 	rm -f /var/run/modem.dns
 	$SCRIPT sync

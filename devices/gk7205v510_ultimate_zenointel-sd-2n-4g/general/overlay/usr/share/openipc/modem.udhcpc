@@ -41,15 +41,32 @@ drop_route() {
 case "$1" in
 	deconfig)
 		drop_route
+		ip route flush dev "$interface" 2>/dev/null
 		ip -4 addr flush dev "$interface"
 		ip link set "$interface" up
 		rm -f $DNS_FILE
 		sync_dns
 		;;
 	bound|renew)
-		ifconfig "$interface" "$ip" netmask "${subnet:-255.255.255.0}" up
+		# The address goes on as a /32 whatever mask the lease carries: the
+		# EC200A hands out a /8 (10.54.165.165/255.0.0.0), and its connected
+		# route would pull every other 10.x network off eth0's gateway and
+		# onto the modem. The gateway is reached by a host route instead.
+		ip -4 addr show dev "$interface" | grep -q "inet $ip/32" || {
+			ip -4 addr flush dev "$interface"
+			ip addr add "$ip/32" dev "$interface"
+		}
+		ip link set "$interface" up
 		drop_route
+		# A lease with a different gateway leaves the old one's host route
+		# behind unless it is taken off here.
+		r1=${router%% *}
+		ip route show dev "$interface" scope link 2>/dev/null |
+			while read -r dst _; do
+				[ "$dst" = "$r1" ] || ip route del "$dst" dev "$interface" 2>/dev/null
+			done
 		for r in $router; do
+			ip route replace "$r" dev "$interface" scope link
 			ip route add default via "$r" dev "$interface" metric $METRIC
 			break
 		done
