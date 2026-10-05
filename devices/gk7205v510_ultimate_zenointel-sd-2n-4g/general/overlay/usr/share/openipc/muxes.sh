@@ -20,7 +20,7 @@ devmem 0x100c005c 32 0x1
 devmem 0x120c0010 32 0x2
 devmem 0x120c0014 32 0x2
 #
-# IR lamps: both are majestic's (nightMode.irNearPwmChannel / irFarPwmChannel).
+# Lamps: both are majestic's (nightMode.irLightPwmChannel / whiteLightPwmChannel).
 # Hold them dark until it muxes their pads to PWM.
 gpio clear 56
 gpio clear 55
