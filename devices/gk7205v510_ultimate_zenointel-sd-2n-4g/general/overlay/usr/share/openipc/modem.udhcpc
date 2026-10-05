@@ -38,8 +38,14 @@ sync_dns() {
 		fi
 		return
 	fi
-	[ -f $SAVED ] || cp /etc/resolv.conf $SAVED 2>/dev/null || : > $SAVED
-	sed 's/^/nameserver /' $DNS_FILE > /etc/resolv.conf
+	# A resolv.conf that is not the modem's was written by someone else since
+	# -- eth0's DHCP renewing while its upstream is down -- and is the one to
+	# give back on failback, not the snapshot taken before it.
+	modem=$(sed 's/^/nameserver /' $DNS_FILE)
+	if [ ! -f $SAVED ] || [ "$(cat /etc/resolv.conf 2>/dev/null)" != "$modem" ]; then
+		cp /etc/resolv.conf $SAVED 2>/dev/null || : > $SAVED
+	fi
+	echo "$modem" > /etc/resolv.conf
 }
 
 drop_route() {

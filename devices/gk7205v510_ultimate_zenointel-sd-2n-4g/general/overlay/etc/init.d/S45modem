@@ -114,8 +114,19 @@ defaults() {
 	ip route show dev "$1" 2>/dev/null | grep '^default'
 }
 
+via() {
+	sed -n 's/.*via \([0-9.]*\).*/\1/p' | head -n 1
+}
+
+# The gateway of eth0's preferred default route, and of its demoted one.
+# Taken apart, not as "the first": a renewal that changes the gateway while
+# eth0 is demoted can leave one of each.
 eth_gw() {
-	defaults eth0 | sed -n 's/.*via \([0-9.]*\).*/\1/p' | head -n 1
+	defaults eth0 | grep -v " metric $DEMOTED" | via
+}
+
+eth_gw_demoted() {
+	defaults eth0 | grep " metric $DEMOTED" | via
 }
 
 eth_demoted() {
@@ -143,16 +154,23 @@ eth_reaches() {
 }
 
 # Delete exactly once each: "metric 0" in a delete means any metric to the
-# kernel, so a loop would go on to take the other route too.
+# kernel, so a loop would go on to take the other route too. The preferred
+# route goes only once its demoted copy is in place -- otherwise a failed add
+# would leave eth0 with no route at all, and the probe bound to it nothing to
+# go out by. A demoted route left from an older gateway goes first.
 demote() {
 	gw=$(eth_gw)
 	[ -n "$gw" ] || return 0
+	old=$(eth_gw_demoted)
+	[ -n "$old" ] && [ "$old" != "$gw" ] &&
+		ip route del default via "$old" dev eth0 metric $DEMOTED 2>/dev/null
 	ip route add default via "$gw" dev eth0 metric $DEMOTED 2>/dev/null
+	[ "$(eth_gw_demoted)" = "$gw" ] || return 0
 	ip route del default via "$gw" dev eth0 metric 0 2>/dev/null
 }
 
 restore() {
-	gw=$(eth_gw)
+	gw=$(eth_gw_demoted)
 	[ -n "$gw" ] || return 0
 	ip route add default via "$gw" dev eth0 2>/dev/null
 	ip route del default via "$gw" dev eth0 metric $DEMOTED 2>/dev/null
@@ -161,7 +179,7 @@ restore() {
 # One pass of the uplink check. up_fail and up_ok are the worker's own
 # counters, so the judgement lives in the routing table and nowhere else.
 uplink() {
-	if [ "$(cat /sys/class/net/eth0/carrier 2>/dev/null)" != 1 ] || [ -z "$(eth_gw)" ]; then
+	if [ "$(cat /sys/class/net/eth0/carrier 2>/dev/null)" != 1 ] || [ -z "$(defaults eth0 | via)" ]; then
 		# No link, or no route to judge: the kernel already routes around
 		# a dead link, and there is nothing to probe through.
 		up_fail=0
