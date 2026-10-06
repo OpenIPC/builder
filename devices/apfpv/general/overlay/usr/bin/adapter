@@ -2,7 +2,6 @@
 
 set_config() {
 cat << EOF > /tmp/wpa_supplicant.conf
-ap_scan=2
 network={
 	mode=2
 	frequency=$(fw_printenv -n wlanfreq || echo 5180)
