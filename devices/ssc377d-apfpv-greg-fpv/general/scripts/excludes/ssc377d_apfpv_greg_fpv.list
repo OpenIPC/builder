@@ -1,8 +1,0 @@
-/etc/sensors/imx307.bin
-/etc/sensors/gc2053.bin
-/etc/sensors/gc4653.bin
-/etc/sensors/sc401ai.bin
-/etc/sensors/sc501ai.bin
-/etc/sensors/sc830ai.bin
-/etc/sensors/os04a10.bin
-/lib/modules/5.10.61/sigmastar/sensor_imx415_mipi.ko
