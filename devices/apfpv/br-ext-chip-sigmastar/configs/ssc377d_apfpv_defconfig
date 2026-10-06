@@ -57,9 +57,6 @@ BR2_PACKAGE_EXFAT_OPENIPC=y
 BR2_PACKAGE_IPCTOOL=y
 BR2_PACKAGE_LIBCURL_OPENIPC=y
 BR2_PACKAGE_LIBCURL_OPENIPC_CURL=y
-# Keep curl lean; extra protocols enable LDAP/LDAPS and require LDAP libraries
-# that are not part of the APFPV image.
-# BR2_PACKAGE_LIBCURL_OPENIPC_EXTRA_PROTOCOLS_FEATURES is not set
 BR2_PACKAGE_LIBEVENT_OPENIPC=y
 BR2_PACKAGE_LIBOGG_OPENIPC=y
 BR2_PACKAGE_MAJESTIC_FONTS=y
@@ -70,10 +67,11 @@ BR2_PACKAGE_MBEDTLS_OPENIPC=y
 BR2_PACKAGE_MSPOSD=y
 BR2_PACKAGE_OPUS_OPENIPC=y
 BR2_PACKAGE_OPUS_OPENIPC_FIXED_POINT=y
-# APFPV test: use RTL8812EU instead of the existing RTL8812AU package.
-# The adapter script already detects USB ID 0bda:a81a and loads 8812eu.
-BR2_PACKAGE_RTL88X2EU_OPENIPC=y
-# BR2_PACKAGE_RTL8812AU is not set
+# APFPV's adapter script loads the standard 8812au module by name.
+# Do not select rtl8812au-openipc together with rtl8812au: both packages
+# build a module named 8812au and the AP helper expects this implementation.
+BR2_PACKAGE_RTL8812AU=y
+BR2_PACKAGE_RTL8812EU=y
 BR2_PACKAGE_SIGMASTAR_OSDRV_INFINITY6C=y
 BR2_PACKAGE_VTUND_OPENIPC=y
 BR2_PACKAGE_YAML_CLI=y
