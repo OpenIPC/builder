@@ -44,3 +44,18 @@
 /lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek/mt7601u/mt7601u.ko
 /lib/modules/4.9.37/kernel/fs/f2fs/f2fs.ko
 
+#
+/usr/lib/sensors/libsns_ar0237.so
+/usr/lib/sensors/libsns_bt656.so
+/usr/lib/sensors/libsns_gc2053_forcar.so
+/usr/lib/sensors/libsns_gc4023.so
+/usr/lib/sensors/libsns_imx290.so
+/usr/lib/sensors/libsns_imx327_2l.so
+/usr/lib/sensors/libsns_imx327.so
+/usr/lib/sensors/libsns_imx335_2l.so
+/usr/lib/sensors/libsns_mis2008.so
+/usr/lib/sensors/libsns_os02g10.so
+/usr/lib/sensors/libsns_os05a.so
+/usr/lib/sensors/libsns_ov2718.so
+/usr/lib/sensors/libsns_sc223a.so
+/usr/lib/sensors/libsns_sc3336.so
