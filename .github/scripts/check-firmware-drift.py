@@ -624,13 +624,13 @@ def self_test():
     # Attribution follows builder.sh: a vendor tree reaches its own configs/,
     # anything else in the directory reaches every device there.
     with tempfile.TemporaryDirectory() as tmp:
-        for vendor, dev in (("br-ext-chip-goke", "gk_fpv"), ("br-ext-chip-goke", "gk_lte"), ("br-ext-chip-sigmastar", "ssc_fpv")):
+        for vendor, dev in (("br-ext-chip-goke", "gk_wfbng"), ("br-ext-chip-goke", "gk_lte"), ("br-ext-chip-sigmastar", "ssc_wfbng")):
             d = os.path.join(tmp, "devices", "common", vendor, "configs")
             os.makedirs(d, exist_ok=True)
             open(os.path.join(d, f"{dev}_defconfig"), "w").close()
-        want(devices_for(tmp, "devices/common/br-ext-chip-goke/board/x.config") == ["gk_fpv", "gk_lte"],
+        want(devices_for(tmp, "devices/common/br-ext-chip-goke/board/x.config") == ["gk_lte", "gk_wfbng"],
              "a vendor-tree file must reach only that vendor's devices")
-        want(devices_for(tmp, "devices/common/general/overlay/etc/x") == ["gk_fpv", "gk_lte", "ssc_fpv"],
+        want(devices_for(tmp, "devices/common/general/overlay/etc/x") == ["gk_lte", "gk_wfbng", "ssc_wfbng"],
              "a general/ file must reach every device in the directory")
 
     # The shipped config must describe this tree, the same way ci-matrix.py's

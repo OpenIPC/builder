@@ -26,28 +26,28 @@
       "firmware": "br-ext-chip-goke/board/gk7205v200/gk7205v200.generic.config",
       "blob": "f97dce84c0f85d1a08a45bb7a173448d4a060e75",
       "reconciled": "2026-08-25",
-      "note": "fpv/lte/venc variant of the generic config; backs 5 gk7205v200/v210 builds"
+      "note": "wfbng/lte/venc variant of the generic config; backs 5 gk7205v200/v210 builds"
     },
     {
       "builder": "devices/common/br-ext-chip-goke/board/gk7205v200/gk7205v300.generic-fpv.config",
       "firmware": "br-ext-chip-goke/board/gk7205v200/gk7205v300.generic.config",
       "blob": "1f36f13f42ed1b1616608e330c63719ae00a1e0a",
       "reconciled": "2026-08-25",
-      "note": "fpv/lte/venc variant; backs 3 gk7205v300 builds"
+      "note": "wfbng/lte/venc variant; backs 3 gk7205v300 builds"
     },
     {
       "builder": "devices/common/br-ext-chip-hisilicon/board/hi3516ev200/hi3516ev200.generic-fpv.config",
       "firmware": "br-ext-chip-hisilicon/board/hi3516ev200/hi3516ev200.generic.config",
       "blob": "bccb6da3b61ea9ee15a08c676b41b820ddfc96f4",
       "reconciled": "2026-08-25",
-      "note": "fpv/lte variant"
+      "note": "wfbng/lte variant"
     },
     {
       "builder": "devices/common/br-ext-chip-hisilicon/board/hi3516ev200/hi3516ev300.generic-fpv.config",
       "firmware": "br-ext-chip-hisilicon/board/hi3516ev200/hi3516ev300.generic.config",
       "blob": "dbf2a1630e2a81f30568a3a798cc777a5b7191f1",
       "reconciled": "2026-08-25",
-      "note": "fpv/lte variant"
+      "note": "wfbng/lte variant"
     },
     {
       "builder": "devices/gk7102ca_lite_umea-qc01x/br-ext-chip-goke/board/gk710x/gk7102c.generic.config",
@@ -561,21 +561,21 @@
       "note": "shared udhcpc handler"
     },
     {
-      "builder": "devices/ssc338q_fpv_openipc-mario-aio/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "builder": "devices/ssc338q_wfbng_openipc-mario-aio/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
       "firmware": "general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
       "blob": "d56e9aeb776345db4322d2ec378f6b0e701f885e",
       "reconciled": "2026-08-25",
       "note": "vendor driver loader; firmware#2307 updated its sensor list"
     },
     {
-      "builder": "devices/ssc338q_fpv_openipc-thinker-aio/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "builder": "devices/ssc338q_wfbng_openipc-thinker-aio/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
       "firmware": "general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
       "blob": "d56e9aeb776345db4322d2ec378f6b0e701f885e",
       "reconciled": "2026-08-25",
       "note": "vendor driver loader; firmware#2307 updated its sensor list"
     },
     {
-      "builder": "devices/ssc338q_fpv_openipc-urllc-aio/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
+      "builder": "devices/ssc338q_wfbng_openipc-urllc-aio/general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
       "firmware": "general/package/sigmastar-osdrv-infinity6e/files/script/load_sigmastar",
       "blob": "d56e9aeb776345db4322d2ec378f6b0e701f885e",
       "reconciled": "2026-08-25",
@@ -596,7 +596,7 @@
       "note": "vendor driver loader; firmware#2307 updated its sensor list"
     },
     {
-      "builder": "devices/ssc377qe_fpv_ccdcam-im50q01-tipoman/general/package/linux-patcher/linux-patcher.mk",
+      "builder": "devices/ssc377qe_wfbng_ccdcam-im50q01-tipoman/general/package/linux-patcher/linux-patcher.mk",
       "firmware": "general/package/linux-patcher/linux-patcher.mk",
       "blob": "fac2fcbf7b0b24092690892341d3890ea0738cc7",
       "reconciled": "2026-08-25",
