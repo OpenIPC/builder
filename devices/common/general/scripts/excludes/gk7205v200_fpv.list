@@ -66,3 +66,9 @@
 /usr/lib/sensors/libsns_sc223a_4l.so
 /usr/lib/sensors/libsns_gc5603.so
 /usr/lib/sensors/libsns_mis2008.so
+#
+/usr/bin/ziptool
+/usr/bin/zipcmp
+/usr/bin/zipmerge
+/usr/lib/sensors/libsns_imx335_2l.so
+/etc/sensors/iq/sc2239.ini

@@ -33,3 +33,9 @@
 /lib/modules/4.9.84/kernel/fs/nfs/nfsv3.ko
 /lib/modules/4.9.84/kernel/fs/nfs_common/grace.ko
 /lib/modules/4.9.84/kernel/net/sunrpc/sunrpc.ko
+#
+/usr/sbin/dump.exfat
+/usr/sbin/exfat2img
+/usr/sbin/exfatlabel
+/usr/sbin/tune.exfat
+/lib/modules/4.9.84/sigmastar/sensor_os03b10_mipi.ko
