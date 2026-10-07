@@ -106,11 +106,11 @@ SMOKE_TARGETS = [
     "hi3518ev200_lite_switcam-hs303",    # HiSilicon lite
     "hi3516ev300_ultimate_rvi-1ncmw2028",  # HiSilicon ultimate
     "ssc325_lite_imou-c22cp",            # SigmaStar lite, the musleabihf toolchain
-    "ssc338q_fpv_caddx-fly",             # SigmaStar fpv
+    "ssc338q_wfbng_caddx-fly",           # SigmaStar wfbng
     "t31_lite_wyze-v3b",                 # Ingenic, the only mips
     "t20_ultimate_azarton-c1",           # Ingenic ultimate
-    "hi3536dv100_fpv",                   # the only gnueabi toolchain in the tree
-    "gk7205v200_fpv",                    # devices/common, and the fpv flavour
+    "hi3536dv100_wfbng",                 # the only gnueabi toolchain in the tree
+    "gk7205v200_wfbng",                  # devices/common, and the wfbng flavour
     "hi3516cv300_mini",                  # devices/common, mini
     "gk7205v200_lte",                    # devices/common, lte
     "gk7205v200_venc",                   # devices/common, venc
@@ -400,7 +400,7 @@ def self_test():
         (["devices/apfpv/general/overlay/etc/udhcpd.conf"],
          apfpv, "same for devices/apfpv"),
         # ...but a defconfig inside a shared directory still names one target.
-        (["devices/common/br-ext-chip-goke/configs/gk7205v200_fpv_defconfig"],
+        (["devices/common/br-ext-chip-goke/configs/gk7205v200_wfbng_defconfig"],
          1, "a defconfig in a shared directory is still one device"),
         # A defconfig CI does not build contributes nothing.
         (["devices/t31_lite_xiaomi-mjsxj05hl/br-ext-chip-ingenic/configs/"
@@ -448,7 +448,7 @@ def self_test():
         ([".github/scripts/check-firmware-drift.py"], 0, "its script"),
         ([".github/firmware-drift.json"], 0, "and what it reconciles against"),
         (["package.sh"], 0, "developer tool, no workflow runs it"),
-        (["archive/gk7205v200_fpv/202607231714/openipc.tgz"], 0, "build output"),
+        (["archive/gk7205v200_wfbng/202607231714/openipc.tgz"], 0, "build output"),
         # Anchoring: the same names elsewhere are not them.
         (["devices/t31_lite_wyze-v3b/README.md"],
          1, "markdown inside a device is that device"),

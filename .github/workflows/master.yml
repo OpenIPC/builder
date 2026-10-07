@@ -684,6 +684,30 @@ jobs:
             ensure_release latest
             gh_retry gh api -X PATCH "repos/${GH_REPO}/git/refs/tags/latest" -f sha="$HEAD_SHA" -F force=true
             upload_paced latest "${IMAGES[@]}"
+
+            # --- latest: the wfbng images under their fpv names ---
+            # The variant was fpv until it was renamed wfbng, after the wfb-ng
+            # it carries. Cameras flashed before then still fetch the old
+            # names from latest: the generic ones by BUILD_OPTION, and the
+            # devices by the `upgrade` URL their customizer.sh wrote into the
+            # bootloader environment, which an upgrade keeps (S30customizer
+            # runs once). So latest keeps answering both, with no end date: a
+            # device camera would otherwise lose its updates silently.
+            ALIASES=()
+            mkdir -p dist-fpv
+            for f in "${IMAGES[@]}"; do
+              b=${f##*/}
+              case "$b" in
+                openipc.*-wfbng.tgz) a=${b%-wfbng.tgz}-fpv.tgz ;;
+                *_wfbng_*)           a=${b/_wfbng_/_fpv_} ;;
+                *)                   continue ;;
+              esac
+              cp -- "$f" "dist-fpv/$a"
+              ALIASES+=("dist-fpv/$a")
+            done
+            if [ "${#ALIASES[@]}" -gt 0 ]; then
+              upload_paced latest "${ALIASES[@]}"
+            fi
           fi
 
   # openipc.org learns about the build here, once: which device images were
