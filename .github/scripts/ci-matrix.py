@@ -115,6 +115,7 @@ SMOKE_TARGETS = [
     "gk7205v200_lte",                    # devices/common, lte
     "gk7205v200_venc",                   # devices/common, venc
     "ssc30kq_rubyfpv_generic",           # devices/common, rubyfpv
+    "ssc338q_waybeam_generic",           # waybeam, the one build without majestic
     "gk7205v200_otg_generic",            # otg
     "ssc338q_apfpv",                     # devices/apfpv
 ]
