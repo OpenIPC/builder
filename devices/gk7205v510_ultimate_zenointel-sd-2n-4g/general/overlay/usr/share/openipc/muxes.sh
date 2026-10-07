@@ -9,11 +9,11 @@
 # majestic sees only "Timeout from venc".
 gpio clear 50
 #
-# microSD slot power, then re-mux the card-detect pad so a card that was already in
-# the slot at power-up is detected (what the stock init.sh does).
+# microSD slot power. The stock init.sh also re-muxes pad 0x100c005c (0x0, then
+# 0x1) to get a card noticed, but the built-in SD host has already detected the card
+# by the time this runs: the toggle cuts it off, its first read times out, and the
+# write clobbers the pad's drive/pull bits (the driver leaves 0x531).
 gpio clear 38
-devmem 0x100c005c 32 0x0
-devmem 0x100c005c 32 0x1
 #
 # The two pads the stock firmware takes from JTAG to GPIO when the board has an
 # audio output.
