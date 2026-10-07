@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# waybeam hands its RTP to wfb_tx over an abstract unix datagram socket
+# (outgoing.server unix://rtp_local in /etc/waybeam.json). A unix datagram
+# sender blocks on the receiver's queue, whose depth the kernel takes from
+# net.unix.max_dgram_qlen when the receiving socket is created, and the
+# default of 10 is less than one 60 fps frame. So it is raised here, before
+# S95waybeam and before S98wifibroadcast starts wfb_tx; raising it later does
+# nothing for a socket that already exists.
+
+case "$1" in
+	start)
+		echo 256 > /proc/sys/net/unix/max_dgram_qlen
+		;;
+esac
