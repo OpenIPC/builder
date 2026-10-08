@@ -1,0 +1,4 @@
+# This device carries the AltoBeam ATBM6032 (USB) radio; prune the
+# wifi stacks it does not use to leave room for the atbm60xx module.
+/lib/modules/3.10.103+/xiongmai/xm711.ko
+/lib/modules/3.10.103+/xiongmai/compat.ko
