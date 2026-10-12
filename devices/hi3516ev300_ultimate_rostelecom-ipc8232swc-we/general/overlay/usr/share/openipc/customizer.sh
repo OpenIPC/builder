@@ -3,15 +3,15 @@
 # Perform basic settings on a known IP camera
 #
 #
-# Set osmem & sensor
+# No totalmem, osmem or sensor: load_hisilicon and set_allocator read the
+# DDR size from the device tree and default osmem to 32M, which gives the
+# 96M MMZ this board streams with, and the SP2305 is autodetected (it reads
+# as ov2735, which firmware aliases to the sp2305 profile).
 #
-fw_setenv totalmem 128M
-fw_setenv osmem 64M
-fw_setenv sensor sp2305
-#
-# Set custom upgrade url
-#
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3516ev300_ultimate_rostelecom-ipc8232swc-we-nor.tgz'
+# No `upgrade` URL: the -nor.tgz pinned here sent this NAND camera to the
+# NOR package, because sysupgrade reads `upgrade` ahead of its own default.
+# That default is <BUILD_PLATFORM>-<nor|nand>.tgz on builder, picked by the
+# flash the camera has.
 #
 # Set custom majestic settings
 #
@@ -32,9 +32,10 @@ cli -s .audio.speakerPin 28
 cli -s .audio.srate 48000
 #
 #
-# Set wlan device and credentials if need
-#
-fw_setenv wlandev rtl8188fu-generic
+# No wlandev: S40network skips DHCP on eth0 whenever it is set and gives
+# the wired port a static 192.168.2.10, so setting it here made a camera on
+# Ethernet unreachable on its first boot. To use the RTL8188FU instead:
+#fw_setenv wlandev rtl8188fu-generic
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 

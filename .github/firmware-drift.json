@@ -302,13 +302,6 @@
       "note": "device-local copy"
     },
     {
-      "builder": "devices/hi3516ev300_ultimate_rostelecom-ipc8232swc-we/general/package/hisilicon-osdrv-hi3516ev200/files/script/load_hisilicon",
-      "firmware": "general/package/hisilicon-osdrv-hi3516ev200/files/script/load_hisilicon",
-      "blob": "18f88b4f8fba3a3fdc317c0af293280b1ddf6754",
-      "reconciled": "2026-08-25",
-      "note": "vendor driver loader; carries the os_mem_size fix firmware regression-tests"
-    },
-    {
       "builder": "devices/hi3516ev300_ultimate_rvi-1ncmw2028/general/package/hisilicon-osdrv-hi3516ev200/files/script/load_hisilicon",
       "firmware": "general/package/hisilicon-osdrv-hi3516ev200/files/script/load_hisilicon",
       "blob": "18f88b4f8fba3a3fdc317c0af293280b1ddf6754",
