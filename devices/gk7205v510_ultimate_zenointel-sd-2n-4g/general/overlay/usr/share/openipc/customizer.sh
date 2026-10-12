@@ -29,6 +29,13 @@ cli -s .nightMode.irCutPin2 10
 cli -s .nightMode.backlightPin 56
 cli -s .nightMode.irLightPwmChannel pwm8
 cli -s .nightMode.whiteLightPwmChannel pwm9
+# The night this camera shows: the IR lamp and a grey picture with the filter
+# out until object detection sees a person, then the white lamp and colour
+# until whiteHoldSec after they have gone, and back to IR. By day the filter
+# is in and both lamps are dark.
+cli -s .nightMode.colorNight true
+cli -s .nightMode.whiteLight detect
+cli -s .nightMode.whiteHoldSec 10
 cli -s .audio.speakerPin 28
 # Pan/tilt through majestic-af's gpiostep actuator (/ptz, ONVIF, WebUI). The
 # WebUI draws its pad from these two: the method, and the axes the head has.
@@ -36,5 +43,7 @@ cli -s .isp.autofocus.enabled true
 cli -s .isp.autofocus.actuator gpiostep
 fw_setenv ptz_control gpiostep
 fw_setenv ptz_caps 'pan tilt'
+# And the head follows the person it sees, by day and by night.
+cli -s .ptz.track true
 
 exit 0
