@@ -32,10 +32,12 @@ cli -s .audio.speakerPin 28
 cli -s .audio.srate 48000
 #
 #
-# No wlandev: S40network skips DHCP on eth0 whenever it is set and gives
-# the wired port a static 192.168.2.10, so setting it here made a camera on
-# Ethernet unreachable on its first boot. To use the RTL8188FU instead:
-#fw_setenv wlandev rtl8188fu-generic
+# The RTL8188FU is the camera's own radio, so it is named here. It stays
+# beside the cable, not instead of it: with no wlanssid the wired port keeps
+# DHCP and QR onboarding listens, and once a network is saved S40network
+# keeps both up with the cable preferred (OpenIPC/firmware cable-primary
+# networking; `fw_setenv netmode wifi` for WiFi alone).
+fw_setenv wlandev rtl8188fu-generic
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 
