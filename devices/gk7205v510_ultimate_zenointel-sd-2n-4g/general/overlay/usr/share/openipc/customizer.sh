@@ -29,6 +29,12 @@ cli -s .nightMode.irCutPin2 10
 cli -s .nightMode.backlightPin 56
 cli -s .nightMode.irLightPwmChannel pwm8
 cli -s .nightMode.whiteLightPwmChannel pwm9
+# Dimmed at the default 400 Hz, the IR lamp put moving bars across the
+# picture: at its 10% floor it is lit 0.25 ms in every 2.5, and an exposure of
+# a few milliseconds catches one flash in some rows and two in others. At
+# 5 kHz an exposure spans many periods, the rows come out even, and the lamp
+# is no dimmer to the eye.
+cli -s .nightMode.backlightPwmFreq 5000
 # The night this camera shows: the IR lamp and a grey picture with the filter
 # out until object detection sees a person, then the white lamp and colour
 # until whiteHoldSec after they have gone, and back to IR. By day the filter
