@@ -1,6 +1,9 @@
 config BR2_PACKAGE_KC110_BOARD_SUPPORT
 	bool "kc110-board-support"
 	depends on BR2_arm
+	# Its own /usr/bin/gpio-motors shim drives the steppers, which the
+	# WebUI's PTZ option cannot see from the gpio-motors package.
+	select BR2_PACKAGE_MAJESTIC_WEBUI_PTZ if BR2_PACKAGE_MAJESTIC_WEBUI
 	help
 	  Board support for the TP-Link Kasa KC110 PTZ camera (HiSilicon
 	  Hi3518EV200 + OV2735 MIPI sensor + 24BYJ48 stepper motors via
