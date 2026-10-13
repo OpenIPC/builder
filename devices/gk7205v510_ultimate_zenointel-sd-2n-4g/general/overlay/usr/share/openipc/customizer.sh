@@ -45,8 +45,8 @@ cli -s .nightMode.whiteHoldSec 10
 cli -s .audio.speakerPin 28
 # Pan/tilt through majestic-af's gpiostep actuator (/ptz, ONVIF, WebUI). The
 # WebUI draws its pad from these two: the method, and the axes the head has.
-cli -s .isp.autofocus.enabled true
-cli -s .isp.autofocus.actuator gpiostep
+cli -s .ptz.enabled true
+cli -s .ptz.actuator gpiostep
 fw_setenv ptz_control gpiostep
 fw_setenv ptz_caps 'pan tilt'
 # And the head follows the person it sees, by day and by night.
