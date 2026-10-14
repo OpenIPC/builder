@@ -2,13 +2,18 @@
 #
 # Early-boot LED state. The stock firmware's own hardware map names GPIO10 the
 # red "power" LED and GPIO25 the blue "net" LED, both active high. Light the
-# power LED as soon as init runs and keep the net LED off; S99leds lights it
-# once the camera is up. rcK stops this before S99leds, so leave the state
+# power LED as soon as init runs and keep the net LED off; S99leds lights the
+# net LED once the camera is up. led_disabled=1 keeps both dark from the start,
+# not only once S99leds runs. rcK stops this before S99leds, so leave the state
 # there.
 
 case "$1" in
 	start | "")
-		gpio set 10; gpio clear 25
+		if [ "$(fw_printenv -n led_disabled 2>/dev/null)" = "1" ]; then
+			gpio clear 10; gpio clear 25
+		else
+			gpio set 10; gpio clear 25
+		fi
 		;;
 	stop)
 		;;
