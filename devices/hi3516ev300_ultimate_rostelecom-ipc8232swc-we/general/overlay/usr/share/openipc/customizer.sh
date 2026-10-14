@@ -31,6 +31,13 @@ cli -s .audio.outputVolume 80
 cli -s .audio.speakerPin 28
 cli -s .audio.srate 48000
 #
+# The lens is this board's, not the sensor's, so its distortion correction is
+# set here. 200 (crop view, centred) is what the stock firmware runs on this
+# camera, read from its /proc/umap/vi; it straightens the wide lens's barrel
+# and costs about a tenth of the width at the edges. It moves VPSS offline,
+# which isp.blkCnt 6 above was measured to carry at 25 fps.
+cli -s .isp.ldc 200
+#
 #
 # The RTL8188FU is the camera's own radio, so it is named here. It stays
 # beside the cable, not instead of it: with no wlanssid the wired port keeps
