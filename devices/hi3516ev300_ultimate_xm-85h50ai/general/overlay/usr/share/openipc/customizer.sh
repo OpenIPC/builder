@@ -13,7 +13,7 @@ fw_setenv sensor imx335
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3516ev300_lite_xm-85h50ai-nor.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3516ev300_ultimate_xm-85h50ai-nor.tgz'
 #
 #
 # PTZ: the XM zoom block on the console UART. ptz_caps narrows the WebUI
