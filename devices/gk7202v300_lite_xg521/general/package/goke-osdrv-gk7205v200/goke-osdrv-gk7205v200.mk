@@ -28,8 +28,11 @@ define GOKE_OSDRV_GK7205V200_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 755 -d $(TARGET_DIR)/etc/sensors
 	$(INSTALL) -m 644 -t $(TARGET_DIR)/etc/sensors $(GOKE_OSDRV_GK7205V200_PKGDIR)/files/sensor/config/*.ini
 
-	$(INSTALL) -m 755 -d $(TARGET_DIR)/etc/sensors/WDR
-	$(INSTALL) -m 644 -t $(TARGET_DIR)/etc/sensors/WDR $(GOKE_OSDRV_GK7205V200_PKGDIR)/files/sensor/config/WDR/*.ini
+	# The firmware no longer ships WDR/ copies of the sensor profiles: majestic
+	# switches the linear one to line WDR itself. Removed outright, as the
+	# firmware's own package does, so a rebuild over an earlier target does not
+	# keep the old directory.
+	rm -rf $(TARGET_DIR)/etc/sensors/WDR
 
 	$(INSTALL) -m 755 -d $(TARGET_DIR)/etc/sensors/high-fps
 	$(INSTALL) -m 644 -t $(TARGET_DIR)/etc/sensors/high-fps $(GOKE_OSDRV_GK7205V200_PKGDIR)/files/sensor/config/high-fps/*.ini
