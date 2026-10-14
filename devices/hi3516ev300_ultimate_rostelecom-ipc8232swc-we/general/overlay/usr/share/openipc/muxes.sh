@@ -1,8 +1,7 @@
 #!/bin/sh
 
-### set leds power off ###
-gpio set 10
-gpio set 25
+# Status LEDs (red power GPIO10, blue net GPIO25) are driven by S01leds and
+# S99leds now, not here.
 
 ### sd card power en ###
 devmem 0x100c0058 32 0

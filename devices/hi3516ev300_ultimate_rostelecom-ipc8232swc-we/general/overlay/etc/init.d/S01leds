@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# Early-boot LED state. The stock firmware's own hardware map names GPIO10 the
+# red "power" LED and GPIO25 the blue "net" LED, both active high. Light the
+# power LED as soon as init runs and keep the net LED off; S99leds lights it
+# once the camera is up. rcK stops this before S99leds, so leave the state
+# there.
+
+case "$1" in
+	start | "")
+		gpio set 10; gpio clear 25
+		;;
+	stop)
+		;;
+esac
+
+exit 0
