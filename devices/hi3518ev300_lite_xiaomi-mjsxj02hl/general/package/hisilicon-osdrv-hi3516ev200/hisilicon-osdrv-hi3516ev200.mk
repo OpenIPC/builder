@@ -13,8 +13,11 @@ define HISILICON_OSDRV_HI3516EV200_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 755 -d $(TARGET_DIR)/etc/sensors
 	$(INSTALL) -m 644 -t $(TARGET_DIR)/etc/sensors $(HISILICON_OSDRV_HI3516EV200_PKGDIR)/files/sensor/config/*.ini
 
-	$(INSTALL) -m 755 -d $(TARGET_DIR)/etc/sensors/WDR
-	$(INSTALL) -m 644 -t $(TARGET_DIR)/etc/sensors/WDR $(HISILICON_OSDRV_HI3516EV200_PKGDIR)/files/sensor/config/WDR/*.ini
+	# The firmware no longer ships WDR/ copies of the sensor profiles: majestic
+	# switches the linear one to line WDR itself. Removed outright, as the
+	# firmware's own package does, so a rebuild over an earlier target does not
+	# keep the old directory.
+	rm -rf $(TARGET_DIR)/etc/sensors/WDR
 
 	$(INSTALL) -m 755 -d $(TARGET_DIR)/etc/sensors/iq
 	$(INSTALL) -m 644 -t $(TARGET_DIR)/etc/sensors/iq $(HISILICON_OSDRV_HI3516EV200_PKGDIR)/files/sensor/iq/imx307.ini
