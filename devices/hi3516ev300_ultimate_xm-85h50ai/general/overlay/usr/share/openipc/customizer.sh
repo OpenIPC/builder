@@ -13,7 +13,12 @@ fw_setenv sensor imx335
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3516ev300_lite_xm-85h50ai-nor.tgz'
+# This runs once, on a camera with no settings yet. One moved here from the
+# lite profile with its settings kept never runs it again, so the move has to
+# set the address itself: `ipctool upgrade` does, from a bundle made with
+#   upgrade_bundle.py --layout nor16m -f <this image>.tgz -e upgrade=<the URL below>
+#
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3516ev300_ultimate_xm-85h50ai-nor.tgz'
 #
 #
 # PTZ: the XM zoom block on the console UART. ptz_caps narrows the WebUI
