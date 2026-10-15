@@ -1,0 +1,98 @@
+#!/bin/sh
+#
+# udhcpc script for the 4G modem's usb0, and the DNS switch between the two links.
+# Unlike /usr/share/udhcpc/default.script it installs the default route at metric
+# 100, behind eth0's, and leaves /etc/resolv.conf to eth0 while eth0 can carry
+# traffic.
+#
+# `modem.udhcpc sync` (S45modem's monitor runs it every few seconds, and every
+# lease event below ends with it) puts the modem's DNS in place while eth0 has no
+# carrier or no preferred default route of its own, and gives eth0's back once
+# it has both.
+# A route listed on a link that is down is not a usable one, so the carrier is
+# what decides, not the route table alone.
+
+METRIC=100
+ETH=${MODEM_ETH:-eth0}
+DNS_FILE=/var/run/modem.dns         # the modem's servers, one per line
+SAVED=/var/run/modem.eth-resolv     # eth0's resolv.conf while the modem's is in place
+
+# eth0 carries the traffic: it has a link and a default route of its own that
+# S45modem has not moved behind usb0's for an upstream that answers nothing
+# (metric 200, S45modem's DEMOTED).
+#
+# Read through `ip route show dev`, filtered: busybox drops the "default"
+# selector of `ip route show default dev X` and lists the subnet's route too,
+# which kept this true for as long as eth0 had an address.
+eth_usable() {
+	[ "$(cat /sys/class/net/$ETH/carrier 2>/dev/null)" = 1 ] &&
+		ip route show dev "$ETH" 2>/dev/null | grep '^default' | grep -qv " metric 200"
+}
+
+sync_dns() {
+	if eth_usable || [ ! -s $DNS_FILE ]; then
+		# eth0 carries traffic, or the modem has nothing to offer: eth0's DNS.
+		if [ -f $SAVED ]; then
+			cat $SAVED > /etc/resolv.conf
+			rm -f $SAVED
+		fi
+		return
+	fi
+	# A resolv.conf that is not the modem's was written by someone else since
+	# -- eth0's DHCP renewing while its upstream is down -- and is the one to
+	# give back on failback, not the snapshot taken before it.
+	modem=$(sed 's/^/nameserver /' $DNS_FILE)
+	if [ ! -f $SAVED ] || [ "$(cat /etc/resolv.conf 2>/dev/null)" != "$modem" ]; then
+		cp /etc/resolv.conf $SAVED 2>/dev/null || : > $SAVED
+	fi
+	echo "$modem" > /etc/resolv.conf
+}
+
+drop_route() {
+	while ip route del default dev "$interface" 2>/dev/null; do :; done
+}
+
+case "$1" in
+	deconfig)
+		drop_route
+		ip route flush dev "$interface" 2>/dev/null
+		ip -4 addr flush dev "$interface"
+		ip link set "$interface" up
+		rm -f $DNS_FILE
+		sync_dns
+		;;
+	bound|renew)
+		# The address goes on as a /32 whatever mask the lease carries: the
+		# EC200A hands out a /8 (10.54.165.165/255.0.0.0), and its connected
+		# route would pull every other 10.x network off eth0's gateway and
+		# onto the modem. The gateway is reached by a host route instead.
+		ip -4 addr show dev "$interface" | grep -q "inet $ip/32" || {
+			ip -4 addr flush dev "$interface"
+			ip addr add "$ip/32" dev "$interface"
+		}
+		ip link set "$interface" up
+		drop_route
+		# A lease with a different gateway leaves the old one's host route
+		# behind unless it is taken off here.
+		r1=${router%% *}
+		ip route show dev "$interface" scope link 2>/dev/null |
+			while read -r dst _; do
+				[ "$dst" = "$r1" ] || ip route del "$dst" dev "$interface" 2>/dev/null
+			done
+		for r in $router; do
+			ip route replace "$r" dev "$interface" scope link
+			ip route add default via "$r" dev "$interface" metric $METRIC
+			break
+		done
+		: > $DNS_FILE
+		for d in $dns; do
+			echo "$d" >> $DNS_FILE
+		done
+		sync_dns
+		logger -t modem "usb0 $1: $ip via ${router%% *}"
+		;;
+	sync)
+		sync_dns
+		;;
+esac
+exit 0

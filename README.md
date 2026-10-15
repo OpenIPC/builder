@@ -97,7 +97,7 @@ Vixand IVG-G6S-W         GK7205V300   IMX335    ATBM6032i_USB    NOR_16M   w/ext
 VStarcam C43S(B)         SSC333       JXF37     MT7601U_USB      NOR_16M   in progress
 VStarcam CS55            T31N         GC2053    RTL8188FU_USB    NOR_16M   in progress
 VStarcam C8622           T23N         SC2336P   AIC8800DL_?      NOR_8M    **INIT** - in progress
-XiongMai 85H50AI         HI3516EV300  IMX335    -                NOR_8M    testing, motorized zoom+focus (pelco-xm)
+XiongMai 85H50AI         HI3516EV300  IMX335    -                NOR_16M   testing, motorized zoom+focus (pelco-xm)
 XiongMai HI3516D_N81820  HI3516DV100  IMX291    -                NOR_16M   testing, motorized zoom+focus (ms41908 SPI)
 XiongMai XM72050200      GK7201V200   SC2336    RTL8733BU_USB    NOR_16M   done
 VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
@@ -112,11 +112,13 @@ Xiaomi MJSXJ03HL         T31N         JXQ03P    RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   preparation
 XVI ISI-2010C            T31N         GC2053    -                NOR_8M    done
 YuanCam DGK-423403       HI3518EV300  JXH62     RTL8188FU_USB    NOR_8M    research
+Zenointel SD-2N-4G       GK7205V510   MIS2009   EC200A_USB       NAND      done, pan/tilt (gpiostep), IR + white lamps
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 ZTE K543                 SSC337DE     SC401AI   MT7601U_USB      NOR_16M   done
 ZTE K545                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 4G Camera XG521 V1.2     GK7202V300   GC1054    EC800E-CN_USB    NOR_8M    done
 XM IPG-G3-WR             GK7202V300   JXH63     ATBM60321S_USB   NOR_8M    done
+XM IPC-RM1-BLK7202V3     GK7202V300   SC223A    SV6115C_USB      NOR_8M    video-yes, wifi-yes (ssv6x5x#1), pan/tilt+ir+audio untested
 ```
 
 

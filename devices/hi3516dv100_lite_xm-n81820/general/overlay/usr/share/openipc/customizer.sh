@@ -26,8 +26,8 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/h
 # pelco protocols), so it is selected directly in majestic's config. The backend
 # sets up the SPI1 pinmux itself; /dev/spidev1.0 is present out of the box.
 #
-cli -s .isp.autofocus.enabled true
-cli -s .isp.autofocus.actuator ms41908
+cli -s .ptz.enabled true
+cli -s .ptz.actuator ms41908
 #
 #
 # Reboot so the environment takes effect.

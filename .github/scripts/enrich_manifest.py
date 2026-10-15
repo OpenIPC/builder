@@ -9,7 +9,7 @@ Mirrors OpenIPC/firmware's enrich_manifest.py but accounts for builder's
     identifier. Platform key = the full `<soc>_<variant>_<vendor>-<model>`
     string. This is the common case (per-device builds).
 
-  - **Simple** form (single-underscore matrix entry like `ssc338q_fpv`):
+  - **Simple** form (single-underscore matrix entry like `ssc338q_wfbng`):
     `openipc.<soc>-<flash>-<variant>.tgz` — firmware-style. Platform key
     = `<soc>_<variant>`.
 

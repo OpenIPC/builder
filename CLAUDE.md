@@ -48,8 +48,8 @@ What `builder.sh <device>` does, in order:
 
 Device directory names encode `<soc>_<flavor>_<vendor>-<model>[-<version>]`:
 - **soc** — OpenIPC SoC name: `hi3518ev200`, `ssc337de`, `t31`, `gk7205v200`, …
-- **flavor** — firmware track: `lite` (default, the vast majority), `ultimate`, `fpv`,
-  `rubyfpv`, `apfpv`. Prefer `lite` for new devices unless flash size forces otherwise.
+- **flavor** — firmware track: `lite` (default, the vast majority), `ultimate`, `wfbng`
+  (the wfb-ng air unit; `fpv` until it was renamed to say what it carries), `rubyfpv`, `apfpv`. Prefer `lite` for new devices unless flash size forces otherwise.
 
 The minimal required files for a registered device (per README "Requirements"):
 ```
@@ -74,9 +74,9 @@ sensor `.ini`, a patched `load_hisilicon`), or a custom kernel config at
 `br-ext-chip-<vendor>/board/<family>/<soc>.generic.config`.
 
 ### `devices/common/`
-Generic, non-device-specific defconfigs (`*_fpv`, `*_venc`, `*_lte`, `*_mini`) plus their
+Generic, non-device-specific defconfigs (`*_wfbng`, `*_venc`, `*_lte`, `*_mini`) plus their
 shared kernel configs and exclude lists. These are the matrix entries with a single
-underscore (`hi3516ev200_fpv`, `hi3518ev200_mini`). The CI artifact-naming logic keys off
+underscore (`hi3516ev200_wfbng`, `hi3518ev200_mini`). The CI artifact-naming logic keys off
 this: `COMMON = (underscore count) - 1`; when `COMMON == 1` the firmware's canonically-named
 image is uploaded as-is, otherwise the compound `<soc>_<flavor>_<vendor>-<model>` image is
 renamed to `<device>-nor.tgz` / `-nand.tgz` to avoid release-asset collisions.

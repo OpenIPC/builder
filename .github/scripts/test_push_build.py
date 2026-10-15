@@ -175,10 +175,10 @@ class Platforms(unittest.TestCase):
     def test_builder_compound_devices_without_reports(self):
         plats = push_build.collect_platforms(None, self.assets(
             "gk7205v200_lite_hisilicon-ipc-a-nor.tgz",
-            "ssc338q_fpv_emax-wyvern-link-nand.tgz",
+            "ssc338q_wfbng_emax-wyvern-link-nand.tgz",
             "openipc.t31-nor-lite.tgz"))
         self.assertEqual([p["name"] for p in plats], [
-            "gk7205v200_lite_hisilicon-ipc-a", "ssc338q_fpv_emax-wyvern-link", "t31-lite"])
+            "gk7205v200_lite_hisilicon-ipc-a", "ssc338q_wfbng_emax-wyvern-link", "t31-lite"])
 
     def test_builder_compound_devices_with_reports(self):
         with tempfile.TemporaryDirectory() as t:
@@ -194,8 +194,8 @@ class Platforms(unittest.TestCase):
     def test_a_report_and_its_tarball_are_one_platform(self):
         with tempfile.TemporaryDirectory() as t:
             reports = Path(t)
-            (reports / "sizes.ssc338q_fpv_emax-wyvern-link.json").write_text("{}")
-            plats = push_build.collect_platforms(reports, self.assets("ssc338q_fpv_emax-wyvern-link-nor.tgz"))
+            (reports / "sizes.ssc338q_wfbng_emax-wyvern-link.json").write_text("{}")
+            plats = push_build.collect_platforms(reports, self.assets("ssc338q_wfbng_emax-wyvern-link-nor.tgz"))
         self.assertEqual(len(plats), 1)
 
 

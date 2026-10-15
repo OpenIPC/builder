@@ -72,3 +72,8 @@
 /lib/modules/3.10.14__isvp_swan_1.0__/kernel/drivers/net/wireless/*/*/*.ko
 /lib/modules/3.10.14__isvp_swan_1.0__/kernel/drivers/usb/serial*.ko
 /lib/modules/3.10.14__isvp_swan_1.0__/kernel/fs/f2fs/*.ko
+#
+/etc/mosquitto/mosquitto.conf
+/usr/bin/mosquitto_rr
+/usr/lib/libmosquittopp.so
+/usr/lib/libmosquittopp.so.1

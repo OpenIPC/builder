@@ -13,3 +13,13 @@
 /lib/modules/4.9.84/sigmastar/sensor_os04c10_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc501ai_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc8235_mipi.ko
+/usr/sbin/dump.exfat
+/usr/sbin/exfat2img
+/usr/sbin/exfatlabel
+/usr/sbin/tune.exfat
+/lib/libanl.so.1
+/lib/libatomic.so.1
+/lib/libatomic.so.1.2.0
+/lib/libnsl.so.1
+/usr/bin/ldd
+/usr/lib/libstdc++.so.6.0.32-gdb.py

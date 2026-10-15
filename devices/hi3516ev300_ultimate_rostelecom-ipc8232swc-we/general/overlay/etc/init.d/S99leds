@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# Late-boot LED state: the red power LED stays on and the blue net LED comes on
+# once boot has reached its end (after networking), so a lit blue LED means the
+# camera is up. Both go off when led_disabled=1, as on other OpenIPC cameras,
+# and on shutdown.
+
+case "$1" in
+	start | "")
+		if [ "$(fw_printenv -n led_disabled 2>/dev/null)" = "1" ]; then
+			gpio clear 10; gpio clear 25
+		else
+			gpio set 10; gpio set 25
+		fi
+		;;
+	stop)
+		gpio clear 10; gpio clear 25
+		;;
+esac
+
+exit 0

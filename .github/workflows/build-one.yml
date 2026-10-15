@@ -9,7 +9,13 @@ on:
         description: 'Builder commit SHA to build (optional; defaults to current branch HEAD). Use this from `git bisect run` or for one-off historic rebuilds.'
         required: false
       firmware_ref:
-        description: 'OpenIPC/firmware ref (SHA/tag/branch) to clone — for cross-repo bisect of size/regression issues. Defaults to firmware HEAD.'
+        description: 'Firmware ref (SHA/tag/branch) to clone — for cross-repo bisect of size/regression issues. Defaults to firmware HEAD.'
+        required: false
+      firmware_repo:
+        description: 'Firmware repo URL to clone (defaults to OpenIPC/firmware). Point at a fork to build unmerged changes together with firmware_ref.'
+        required: false
+      request_issue:
+        description: 'Issue number of a firmware explorer build request (optional). Its "Defconfig fragment" is appended to the device defconfig, and the result is posted back on the issue.'
         required: false
 
 jobs:
@@ -22,14 +28,33 @@ jobs:
       tag_name:  ${{ steps.r.outputs.tag_name }}
     steps:
       - id: r
+        env:
+          FW_REPO_IN: ${{ inputs.firmware_repo }}
+          FW_REF_IN:  ${{ inputs.firmware_ref }}
+          REQUEST:    ${{ inputs.request_issue }}
         run: |
           REF="${{ inputs.commit }}"
           [ -z "$REF" ] && REF="${{ github.sha }}"
           SHORT="$(printf '%s' "$REF" | cut -c1-7)"
+          # A custom firmware source changes the image built for the same
+          # builder commit; keep those releases distinct from the
+          # default-source tag (the suffix is stable per repo|ref, so a
+          # re-run of the same selection stays reproducible).
+          FW_SUFFIX=""
+          if [ -n "$FW_REPO_IN" ] || [ -n "$FW_REF_IN" ]; then
+            FW_SUFFIX="-fw$(printf '%s|%s' "$FW_REPO_IN" "$FW_REF_IN" | sha256sum | cut -c1-7)"
+          fi
+          # A build request is its own release: same commit, different image.
+          if [ -n "$REQUEST" ]; then
+            case "$REQUEST" in
+              *[!0-9]*) echo "::error::request_issue must be an issue number, got '$REQUEST'"; exit 1 ;;
+            esac
+            FW_SUFFIX="${FW_SUFFIX}-req${REQUEST}"
+          fi
           if [ -n "${{ inputs.commit }}" ]; then
-            TAG="nightly-bisect-${SHORT}"
+            TAG="nightly-bisect-${SHORT}${FW_SUFFIX}"
           else
-            TAG="nightly-bisect-${SHORT}-$(date -u +%Y%m%d%H%M%S)"
+            TAG="nightly-bisect-${SHORT}${FW_SUFFIX}-$(date -u +%Y%m%d%H%M%S)"
           fi
           echo "ref=$REF"               >> "$GITHUB_OUTPUT"
           echo "short_sha=$SHORT"       >> "$GITHUB_OUTPUT"
@@ -40,6 +65,12 @@ jobs:
     name: Firmware (${{inputs.platform}})
     needs: resolve
     runs-on: ubuntu-latest
+    # Stated rather than inherited from the repository default: the release
+    # upload writes contents, and a build request is read from and answered
+    # on its issue.
+    permissions:
+      contents: write
+      issues: write
 
     steps:
       - name: Checkout source
@@ -79,12 +110,47 @@ jobs:
             -regex '.*[-.](HEAD|master|main|dist)\.tar\.(gz|bz2|xz)' \
             -print -delete 2>/dev/null || true
 
+      # The parser is OpenIPC/firmware's, fetched rather than copied, so the
+      # two repositories apply a request the same way and its tests
+      # (firmware's test_build_request.sh) cover both.
+      - name: Fetch request tooling
+        if: inputs.request_issue != ''
+        run: |
+          mkdir -p .ci
+          curl -fsSL --retry 3 -o .ci/build_request.sh \
+            https://raw.githubusercontent.com/OpenIPC/firmware/master/.github/scripts/build_request.sh
+          # The firmware Makefile puts this after every defconfig; what it
+          # sets is build machinery a request does not get to switch off.
+          curl -fsSL --retry 3 -o .ci/openipc.fragment \
+            https://raw.githubusercontent.com/OpenIPC/firmware/master/general/openipc.fragment
+
+      # The issue body is untrusted text. build_request.sh accepts only
+      # `# BR2_<NAME> is not set` lines from it and refuses the request on
+      # anything else, so a request can switch symbols off and do nothing
+      # more. builder.sh copies the device directory over the firmware tree,
+      # so appending to the device's own defconfig is enough.
+      - name: Apply build request
+        if: inputs.request_issue != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUEST:  ${{ inputs.request_issue }}
+          PLATFORM: ${{ inputs.platform }}
+        run: |
+          gh issue view "$REQUEST" -R "$GITHUB_REPOSITORY" --json body --jq .body > /tmp/request.md
+          DEFCONFIG=$(find devices -name "${PLATFORM}_defconfig" | head -n1)
+          if [ -z "$DEFCONFIG" ]; then
+            echo "::error::no defconfig for platform '$PLATFORM'"
+            exit 1
+          fi
+          sh .ci/build_request.sh apply /tmp/request.md "$DEFCONFIG" /tmp/request.symbols .ci/openipc.fragment
+
       - name: Build firmware
         env:
           BUILD_ID:       ${{ needs.resolve.outputs.tag_name }}
           BUILD_SHA:      ${{ needs.resolve.outputs.ref }}
           BUILD_PLATFORM: ${{ inputs.platform }}
           OPENIPC_FW_REV: ${{ inputs.firmware_ref }}
+          OPENIPC_FW_REPO: ${{ inputs.firmware_repo }}
         run: |
           export GIT_HASH=$(git rev-parse --short ${GITHUB_SHA})
           export GIT_BRANCH=${GITHUB_REF_NAME}
@@ -103,7 +169,19 @@ jobs:
           backoffs="30 60 120 300 600 1200"
           attempt=1
           for sleep_for in $backoffs ""; do
-            bash builder.sh ${NAME} && break
+            # Actions runs this step under `bash -e`: a bare failing command
+            # would end the step here, before the retry or the rc=64 check.
+            rc=0
+            bash builder.sh ${NAME} || rc=$?
+            [ ${rc} -eq 0 ] && break
+            if [ ${rc} -eq 64 ]; then
+              # builder.sh reserves 64 for a firmware ref that does not
+              # exist in the selected repo: deterministic, so retrying the
+              # unchanged ref through the backoff budget would only burn
+              # ~38 minutes before failing.
+              echo "::error::firmware ref '${OPENIPC_FW_REV}' not found in '${OPENIPC_FW_REPO:-default firmware repo}' - not retrying"
+              exit 1
+            fi
             if [ -z "$sleep_for" ]; then
               echo "::error::build failed after ${attempt} attempts"
               exit 1
@@ -113,6 +191,15 @@ jobs:
             attempt=$((attempt + 1))
           done
           cd openipc
+
+          # Record the firmware source that actually produced the image so
+          # a fork/moving-ref build can be reconstructed from the release.
+          # Drop any user:token@ so credentials for a private fork never
+          # reach the public release body.
+          FW_SRC_URL=$(git remote get-url origin | sed -E 's#^([a-z+]+://)[^/@]*@#\1#')
+          FW_SRC_COMMIT=$(git rev-parse HEAD)
+          echo FW_SRC_URL=${FW_SRC_URL} >> ${GITHUB_ENV}
+          echo FW_SRC_COMMIT=${FW_SRC_COMMIT} >> ${GITHUB_ENV}
 
           TIME=$(date -d @${SECONDS} +%M:%S)
           echo TIME=${TIME} >> ${GITHUB_ENV}
@@ -142,6 +229,20 @@ jobs:
             exit 1
           fi
 
+      # A select elsewhere can switch a requested symbol straight back on;
+      # say so rather than let the requester assume it is gone.
+      - name: Check build request
+        if: inputs.request_issue != ''
+        run: |
+          # Into a file first: in a pipe, a verify that fails would be hidden
+          # behind tr's success and the release would go out unchecked.
+          sh .ci/build_request.sh verify /tmp/request.symbols openipc/output/.config > /tmp/request.kept
+          KEPT=$(tr '\n' ' ' < /tmp/request.kept)
+          echo "REQUEST_KEPT=${KEPT}" >> ${GITHUB_ENV}
+          if [ -n "$KEPT" ]; then
+            echo "::warning::still enabled after the request (selected by another package): ${KEPT}"
+          fi
+
       - name: Upload firmware
         if: env.NORFW || env.NANDFW
         uses: softprops/action-gh-release@v2
@@ -152,7 +253,36 @@ jobs:
             sha=${{ needs.resolve.outputs.ref }}
             short=${{ needs.resolve.outputs.short_sha }}
             platform=${{ inputs.platform }}
+            firmware_repo=${{env.FW_SRC_URL}}
+            firmware_commit=${{env.FW_SRC_COMMIT}}
+            firmware_ref=${{ inputs.firmware_ref || 'default branch' }}
             one_off=true
+            request_issue=${{ inputs.request_issue }}
+            request_not_honoured=${{ env.REQUEST_KEPT }}
           files: |
             ${{env.NORFW}}
             ${{env.NANDFW}}
+
+      - name: Reply on the build request
+        if: always() && inputs.request_issue != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUEST:  ${{ inputs.request_issue }}
+          PLATFORM: ${{ inputs.platform }}
+          TAG:      ${{ needs.resolve.outputs.tag_name }}
+          OUTCOME:  ${{ job.status }}
+          KEPT:     ${{ env.REQUEST_KEPT }}
+          RUN_URL:  ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            if [ "$OUTCOME" = success ]; then
+              echo "Built \`${PLATFORM}\` with this request applied: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${TAG}"
+              if [ -n "$KEPT" ]; then
+                echo ""
+                echo "Still enabled, because another package selects them: \`${KEPT% }\`"
+              fi
+            else
+              echo "The build of \`${PLATFORM}\` for this request did not complete: ${RUN_URL}"
+            fi
+          } > /tmp/reply.md
+          gh issue comment "$REQUEST" -R "$GITHUB_REPOSITORY" --body-file /tmp/reply.md
