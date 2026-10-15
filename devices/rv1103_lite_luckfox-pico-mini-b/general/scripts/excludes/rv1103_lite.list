@@ -1,0 +1,2 @@
+# USB host is selected by the Mini B DTS, without the old PHY override.
+/etc/init.d/S22usbhost
