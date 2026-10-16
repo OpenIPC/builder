@@ -71,3 +71,8 @@
 /usr/lib/sensors/libsns_sc500ai.so
 /usr/lib/sensors/libsns_sp2305.so
 /usr/lib/sensors/libsns_sp2308.so
+#
+# Neither Wi-Fi driver (ssv6x5x, 8188eu) uses mac80211; no VPN packages
+/lib/modules/4.9.37/kernel/drivers/net/wireless/mediatek/mt7601u/mt7601u.ko
+/lib/modules/4.9.37/kernel/net/mac80211/mac80211.ko
+/lib/modules/4.9.37/kernel/drivers/net/tun.ko

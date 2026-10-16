@@ -1,13 +1,27 @@
 #!/bin/sh
 
-set_gpio() {
-	[ "$2" -eq 1 ] && gpio set $1 || gpio clear $1
-	sleep 1
-}
+# XM IPC-RM1-BLK7202V3-M43A-WIFI ships with either an iComm SV6115C or a
+# Realtek RTL8188EUS USB module; pick the driver from the enumerated chip.
+if [ "$1" = "gk7202v300-xm-rm1" ]; then
+	for i in 1 2 3 4 5; do
+		ids=$(cat /sys/bus/usb/devices/*/idVendor 2>/dev/null)
+		case "$ids" in
+			*8065*) modprobe ssv6x5x; exit 0 ;;
+			*0bda*) modprobe 8188eu; exit 0 ;;
+		esac
+		sleep 1
+	done
+	exit 1
+fi
 
 if [ "$1" = "ssv6x5x-generic" ]; then
-        modprobe ssv6x5x
-        exit 0
+	modprobe ssv6x5x
+	exit 0
+fi
+
+if [ "$1" = "rtl8188eu-generic" ]; then
+	modprobe 8188eu
+	exit 0
 fi
 
 exit 1
