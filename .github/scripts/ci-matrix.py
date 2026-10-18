@@ -118,6 +118,7 @@ SMOKE_TARGETS = [
     "ssc338q_waybeam_generic",           # waybeam, the one build without majestic
     "gk7205v200_otg_generic",            # otg
     "ssc338q_apfpv",                     # devices/apfpv
+    "xm530_lite_anbiux-a8b-3mp",         # Xiongmai
 ]
 
 # LICENSE and README anchored to whole filenames; unanchored they would also

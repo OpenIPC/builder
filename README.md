@@ -15,6 +15,7 @@ _(based on Buildroot)_
 ### List of known and supported devices
 
 ```
+anbiux A8B-3MP           XM530AI      SC3335    ATBM603X_USB     NOR_8M    in progress
 Aoni EP01J05             T31L         ?         RTL8188FU_USB    NOR_16M   new
 Azarton C1               T20X         JXF23     RTL8189FS_SDIO   NOR_16M   done
 Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
