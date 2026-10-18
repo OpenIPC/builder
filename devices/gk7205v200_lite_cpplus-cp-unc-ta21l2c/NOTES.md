@@ -8,13 +8,13 @@ _Experimental system for building OpenIPC firmware for known devices_
 
 **CP Plus CP-UNC-TA21L2C** — Dahua-OEM 2 MP full-colour bullet/turret camera.
 
-| | |
-|---|---|
-| SoC | Goke **gk7205v200** (lite), ARM Cortex-A7 |
-| Sensor | SmartSens **SC223A** (chip-id `0xcb3e`), 2-lane MIPI, 1080p30 |
-| Flash | 16 MiB SPI-NOR (XM25QH128); built with the standard 8 MiB layout |
-| Wi-Fi | none (wired-only) |
-| Audio | present on the hardware; not wired up in this profile yet |
+|        |                                                                  |
+|--------|------------------------------------------------------------------|
+| SoC    | Goke **gk7205v200** (lite), ARM Cortex-A7                        |
+| Sensor | SmartSens **SC223A** (chip-id `0xcb3e`), 2-lane MIPI, 1080p30    |
+| Flash  | 16 MiB SPI-NOR (XM25QH128); built with the standard 8 MiB layout |
+| Wi-Fi  | none (wired-only)                                                |
+| Audio  | present on the hardware; not wired up in this profile yet        |
 
 #### Board specifics
 The SC223A on this board is on the SoC's **hardware I2C0**, routed to the
