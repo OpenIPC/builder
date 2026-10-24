@@ -18,3 +18,18 @@ devmem 0x200f0084 32 1
 dir=$(devmem 0x201d0400)
 devmem 0x201d0400 32 $((dir | 0x4))
 devmem 0x201d0010 32 0x4
+
+### settings an earlier version of this profile wrote ###
+# customizer.sh runs once, so a dome set up before majestic-af could drive the
+# lens and the base together kept ptz_caps 'pan tilt' and a majestic.yaml that
+# names neither the lens nor the head. That exact value is the tell: only that
+# version wrote it, and clearing it makes this run once. The lens and head are
+# set only where the owner has not named an actuator or a head of their own.
+if [ "$(fw_printenv -n ptz_caps 2>/dev/null)" = "pan tilt" ]; then
+	fw_setenv ptz_caps
+	act=$(cli -g .ptz.actuator 2>/dev/null)
+	if [ -z "$(cli -g .ptz.head 2>/dev/null)" ] && { [ -z "$act" ] || [ "$act" = "pelco-d" ]; }; then
+		cli -s .ptz.actuator ms41908
+		cli -s .ptz.head pelco-d
+	fi
+fi

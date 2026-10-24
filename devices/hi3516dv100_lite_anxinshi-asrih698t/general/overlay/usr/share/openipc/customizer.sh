@@ -9,8 +9,9 @@
 # UART1 on its pads and holds the transceiver in transmit on every boot.
 #
 # The zoom/focus lens is the board's MS41908M on SPI, as on the varifocal
-# hi3516dv100_lite_xm-n81820. majestic drives one motor actuator, and here it
-# is the pan/tilt head, so the lens is not driven by majestic on this image.
+# hi3516dv100_lite_xm-n81820. majestic-af drives both: the lens as
+# ptz.actuator and the base as ptz.head, pan/tilt to one, zoom/focus and
+# autofocus to the other.
 #
 #
 # Set sensor. IMX291 on this board is the DC/parallel variant, so pin its ini
@@ -24,14 +25,18 @@ cli -s .isp.sensorConfig /etc/sensors/imx291_i2c_dc_1080p.ini
 fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3516dv100_lite_anxinshi-asrih698t-nor.tgz'
 #
 #
-# PTZ: Pelco-D pan/tilt on UART1. ptz_caps narrows the WebUI pad to what the
-# base does; a Pelco-D zoom frame reaches it and is ignored.
+# PTZ. The environment names the base, so a majestic config reset still
+# leaves pan/tilt on UART1. majestic.yaml then puts the lens in front of it,
+# with the base as the head. ptz_caps, which narrowed the pad to pan and tilt
+# while the lens had no driver, goes: the pad has all four axes again.
 #
 fw_setenv ptz_control pelco-d
 fw_setenv ptz_port /dev/ttyAMA1
 fw_setenv ptz_speed 9600
-fw_setenv ptz_caps 'pan tilt'
+fw_setenv ptz_caps
 cli -s .ptz.enabled true
+cli -s .ptz.actuator ms41908
+cli -s .ptz.head pelco-d
 #
 #
 # Reboot so the environment takes effect.
