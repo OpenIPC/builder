@@ -16,6 +16,8 @@ Prerequisites before building against upstream repositories:
 
 - OpenIPC/linux #68: Mini B USB host DTS.
 - OpenIPC/realtek-wlan #10: Linux 5.10 compatibility on `rtl8812au_fpv`.
+- OpenIPC/firmware #2685: the `telemetry_enabled` opt-out in the `wifibroadcast` init script.
+
 This profile is NAND-only: the SD-card persistent overlay from firmware #2411 is not used here.
 
 For local testing, layer this directory over the local firmware tree and set a
@@ -24,10 +26,14 @@ Buildroot override file containing `LINUX_OVERRIDE_SRCDIR` and
 Pass its absolute path as `BR2_PACKAGE_OVERRIDE_FILE` when running
 `make BOARD=rv1103_lite_luckfox-pico-mini-b`.
 
-`general/overlay/etc/wfb.yaml` has no `telemetry:` section, so telemetry (`mavfwd`) is not
-configured on this profile; `mavfwd` runs out of memory on this board. Video and
-tunnel startup remain enabled. If UART3 telemetry is wanted later, add the section
-(`router: mavfwd`, `serial: ttyS3`) and enable UART3 in the Mini B DTS.
+`general/overlay/etc/wfb.yaml` sets `telemetry.telemetry_enabled: false`, so
+`wifibroadcast` does not start telemetry on this profile: no `mavfwd`/`msposd`
+and no extra `wfb_rx`/`wfb_tx` pair on 14550/14551. `mavfwd` runs out of memory
+on this board. Video and tunnel startup remain enabled. This relies on the
+`telemetry_enabled` switch in the `wifibroadcast` init script (see the
+prerequisites); a firmware without it ignores the key and still starts
+telemetry. If UART3 telemetry is wanted later, set it to `true`, add
+`router: mavfwd` and `serial: ttyS3`, and enable UART3 in the Mini B DTS.
 
 Validate the booted model, USB host role, `88XXau` module loading, camera/video,
 adapter unplug/replug, and persistence across reboot. Record results before
