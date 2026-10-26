@@ -1,5 +1,5 @@
 # OpenIPC builder build index
-# generated_at=2026-10-26T16:13:37Z
+# generated_at=2026-10-26T16:52:42Z
 # columns: build_id platform flash size url
 nightly-20261026-9287c54 gk7205v300_lite_vixand-ivg-g6s nor 6943572 https://github.com/OpenIPC/builder/releases/download/nightly-20261026-9287c54/gk7205v300_lite_vixand-ivg-g6s-nor.tgz
 nightly-20261026-9287c54 gk7205v300_lite_vixand-ivg-g6s-w nor 7020216 https://github.com/OpenIPC/builder/releases/download/nightly-20261026-9287c54/gk7205v300_lite_vixand-ivg-g6s-w-nor.tgz
