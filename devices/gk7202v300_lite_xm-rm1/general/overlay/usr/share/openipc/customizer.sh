@@ -3,7 +3,7 @@
 # Perform basic settings on a known IP camera
 #
 #
-# XM board IPC-RM1-BLK7202V3-M43A-WIFI (GK7202V300 + SC223A, Wi-Fi SV6115C on USB),
+# XM board IPC-RM1-BLK7202V3-M43A-WIFI (GK7202V300 + SC223A, Wi-Fi SV6115C or RTL8188EUS on USB),
 # pan/tilt dome. GPIOs taken from the stock firmware (loadpublic gpio_pin=, LIBXMVIDEO.json).
 #
 # Set custom upgrade url
@@ -13,14 +13,15 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/g
 #
 # Set wlan device and credentials if need
 #
-fw_setenv wlandev ssv6x5x-generic
+fw_setenv wlandev gk7202v300-xm-rm1
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 #
-# Pan/tilt: two unipolar steppers driven straight from GPIO (gpio-motors)
+# Pan/tilt: two unipolar steppers driven straight from GPIO (gpio-motors).
+# Pan coils first, then tilt; phase order checked on hardware for direction.
 #
 fw_setenv ptz_control gpio
-fw_setenv ptz_gpio '13 15 14 12 55 54 53 52'
+fw_setenv ptz_gpio '52 53 54 55 12 14 15 13'
 fw_setenv ptz_caps 'pan tilt'
 #
 # Set majestic settings

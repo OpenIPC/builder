@@ -118,7 +118,7 @@ ZTE K543                 SSC337DE     SC401AI   MT7601U_USB      NOR_16M   done
 ZTE K545                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 4G Camera XG521 V1.2     GK7202V300   GC1054    EC800E-CN_USB    NOR_8M    done
 XM IPG-G3-WR             GK7202V300   JXH63     ATBM60321S_USB   NOR_8M    done
-XM IPC-RM1-BLK7202V3     GK7202V300   SC223A    SV6115C_USB      NOR_8M    video-yes, wifi-yes (ssv6x5x#1), pan/tilt+ir+audio untested
+XM IPC-RM1-BLK7202V3     GK7202V300   SC223A    SV6115C/8188EUS  NOR_8M    video-yes, wifi-yes (ssv6x5x#1), pan/tilt-yes, ir+audio untested
 ```
 
 
