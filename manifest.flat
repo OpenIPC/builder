@@ -1,6 +1,11 @@
 # OpenIPC builder build index
-# generated_at=2026-10-26T13:11:35Z
+# generated_at=2026-10-26T16:13:37Z
 # columns: build_id platform flash size url
+nightly-20261026-9287c54 gk7205v300_lite_vixand-ivg-g6s nor 6943572 https://github.com/OpenIPC/builder/releases/download/nightly-20261026-9287c54/gk7205v300_lite_vixand-ivg-g6s-nor.tgz
+nightly-20261026-9287c54 gk7205v300_lite_vixand-ivg-g6s-w nor 7020216 https://github.com/OpenIPC/builder/releases/download/nightly-20261026-9287c54/gk7205v300_lite_vixand-ivg-g6s-w-nor.tgz
+nightly-20261026-9287c54 gk7205v300_lte nor 6899269 https://github.com/OpenIPC/builder/releases/download/nightly-20261026-9287c54/openipc.gk7205v300-nor-lte.tgz
+nightly-20261026-9287c54 gk7205v300_venc nor 6429720 https://github.com/OpenIPC/builder/releases/download/nightly-20261026-9287c54/openipc.gk7205v300-nor-venc.tgz
+nightly-20261026-9287c54 gk7205v300_wfbng nor 7179885 https://github.com/OpenIPC/builder/releases/download/nightly-20261026-9287c54/openipc.gk7205v300-nor-wfbng.tgz
 nightly-20261025-ce9538f gk7201v200_lite_xm-7205-rtl8733bu-16mb nor 7443367 https://github.com/OpenIPC/builder/releases/download/nightly-20261025-ce9538f/gk7201v200_lite_xm-7205-rtl8733bu-16mb-nor.tgz
 nightly-20261025-ce9538f gk7202v300_lite_cootli_camv0103 nor 6849767 https://github.com/OpenIPC/builder/releases/download/nightly-20261025-ce9538f/gk7202v300_lite_cootli_camv0103-nor.tgz
 nightly-20261025-ce9538f gk7202v300_lite_generic-w7 nor 7091635 https://github.com/OpenIPC/builder/releases/download/nightly-20261025-ce9538f/gk7202v300_lite_generic-w7-nor.tgz
@@ -9996,20 +10001,6 @@ nightly-20260629-9d85e99 t31_lite_zte-k540 nor 6719235 https://github.com/OpenIP
 nightly-20260629-9d85e99 t31_ultimate_azarton-c1-t31x nor 7855518 https://github.com/OpenIPC/builder/releases/download/nightly-20260629-9d85e99/t31_ultimate_azarton-c1-t31x-nor.tgz
 nightly-20260629-9d85e99 t31_ultimate_gcraftsman-gca50 nor 7132081 https://github.com/OpenIPC/builder/releases/download/nightly-20260629-9d85e99/t31_ultimate_gcraftsman-gca50-nor.tgz
 nightly-20260629-9d85e99 t40_lite_movols-mo-805p nor 5197410 https://github.com/OpenIPC/builder/releases/download/nightly-20260629-9d85e99/t40_lite_movols-mo-805p-nor.tgz
-nightly-20260628-9d85e99 t31_lite_aceline-aip-o4 nor 6825705 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_aceline-aip-o4-nor.tgz
-nightly-20260628-9d85e99 t31_lite_aoni-ep01j05 nor 6957342 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_aoni-ep01j05-nor.tgz
-nightly-20260628-9d85e99 t31_lite_chinamobile-hdc-51-a6-v11 nor 6822927 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_chinamobile-hdc-51-a6-v11-nor.tgz
-nightly-20260628-9d85e99 t31_lite_chinatelecom-y4h-50 nor 6868651 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_chinatelecom-y4h-50-nor.tgz
-nightly-20260628-9d85e99 t31_lite_cmcc-hdc-51-a6-v10 nor 6818060 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_cmcc-hdc-51-a6-v10-nor.tgz
-nightly-20260628-9d85e99 t31_lite_tuya-gv7630-t31-ptz nor 6822554 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_tuya-gv7630-t31-ptz-nor.tgz
-nightly-20260628-9d85e99 t31_lite_vstarcam-cs55 nor 6826893 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_vstarcam-cs55-nor.tgz
-nightly-20260628-9d85e99 t31_lite_wansview-q5-2k nor 6825489 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_wansview-q5-2k-nor.tgz
-nightly-20260628-9d85e99 t31_lite_wyze-v3b nor 7757909 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_wyze-v3b-nor.tgz
-nightly-20260628-9d85e99 t31_lite_xiaomi-mjsxj03hl nor 6800030 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_xiaomi-mjsxj03hl-nor.tgz
-nightly-20260628-9d85e99 t31_lite_xiaomi-mjsxj03hl-jxq03 nor 6792390 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_xiaomi-mjsxj03hl-jxq03-nor.tgz
-nightly-20260628-9d85e99 t31_lite_zte-k540 nor 6719872 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_lite_zte-k540-nor.tgz
-nightly-20260628-9d85e99 t31_ultimate_azarton-c1-t31x nor 7855113 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_ultimate_azarton-c1-t31x-nor.tgz
-nightly-20260628-9d85e99 t31_ultimate_gcraftsman-gca50 nor 7132338 https://github.com/OpenIPC/builder/releases/download/nightly-20260628-9d85e99/t31_ultimate_gcraftsman-gca50-nor.tgz
 # channels
-@channel nightly nightly-20261025-ce9538f
-@channel latest nightly-20261025-ce9538f
+@channel nightly nightly-20261026-9287c54
+@channel latest nightly-20261026-9287c54
