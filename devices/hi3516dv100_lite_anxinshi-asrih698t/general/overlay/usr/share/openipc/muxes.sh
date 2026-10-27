@@ -33,3 +33,31 @@ if [ "$(fw_printenv -n ptz_caps 2>/dev/null)" = "pan tilt" ]; then
 		cli -s .ptz.head pelco-d
 	fi
 fi
+
+### this dome's PTZ settings, wherever majestic.yaml has none ###
+# customizer.sh runs once, on a camera with no settings; an upgrade that keeps
+# them, or a reset of majestic.yaml alone, never runs it again, and leaves the
+# dome on the environment's base with no lens (OpenIPC/firmware#2385). So each
+# boot, before majestic starts, a setting this dome needs is written only where
+# the file has no value for it: whatever the owner has set stays.
+#
+# The lens, where no actuator is named -- the environment's default would make
+# the base the lens, and then refuse it as the head (the dome of #2385 came up
+# so). The head, where none is named and the lens is this one. An owner who
+# names pelco-d as the actuator, for the base alone, keeps it.
+act=$(cli -g .ptz.actuator 2>/dev/null)
+if [ -z "$act" ]; then
+	cli -s .ptz.actuator ms41908
+	act=ms41908
+fi
+if [ "$act" = ms41908 ] && [ -z "$(cli -g .ptz.head 2>/dev/null)" ]; then
+	cli -s .ptz.head pelco-d
+fi
+# The 20x lens, measured on the dome: zoom 3320 steps, 1-20x, the home stop at
+# tele; focus travel not measured exactly, 3000 covers it. No working
+# photo-interrupter, so it is homed into its end stops at start. The base is
+# mounted the other way from the sensor, so both directions are inverted.
+for kv in lensZoomSteps=3320 lensFocusSteps=3000 lensZoomMax=20 lensHome=true \
+	panInvert=true tiltInvert=true; do
+	[ -n "$(cli -g .ptz.${kv%%=*} 2>/dev/null)" ] || cli -s .ptz.${kv%%=*} ${kv#*=}
+done
