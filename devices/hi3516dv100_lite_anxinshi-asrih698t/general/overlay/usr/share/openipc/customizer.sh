@@ -38,6 +38,16 @@ cli -s .ptz.enabled true
 cli -s .ptz.actuator ms41908
 cli -s .ptz.head pelco-d
 #
+# The 20x lens and the base, as measured on the dome: see muxes.sh, which writes
+# the same values on every boot wherever majestic.yaml has none.
+#
+cli -s .ptz.lensZoomSteps 3320
+cli -s .ptz.lensFocusSteps 3000
+cli -s .ptz.lensZoomMax 20
+cli -s .ptz.lensHome true
+cli -s .ptz.panInvert true
+cli -s .ptz.tiltInvert true
+#
 #
 # Reboot so the environment takes effect.
 #
