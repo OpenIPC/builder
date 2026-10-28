@@ -1,4 +1,5 @@
 /etc/sensors/ar0130_i2c_720p.ini
+/etc/sensors/dvp_jxh65_960p.ini
 /etc/sensors/gc1034_i2c_720p.ini
 /etc/sensors/imx222_i2c_1080p.ini
 /etc/sensors/imx222_i2c_720p.ini
@@ -9,6 +10,7 @@
 /etc/sensors/jxf23_i2c_1080p.ini
 /etc/sensors/jxh62_i2c_720p.ini
 /etc/sensors/jxh65_i2c_960p.ini
+/etc/sensors/jxh65_i2c_dvp_960p.ini
 /etc/sensors/ov2735_i2c_1080p.ini
 /etc/sensors/ov9712_i2c_720p.ini
 /etc/sensors/ov9732_i2c_720p.ini
