@@ -230,11 +230,10 @@ main() {
 	PIN_T1=$5; PIN_T2=$6; PIN_T3=$7; PIN_T4=$8
 	PIN_LIST="$1 $2 $3 $4 $5 $6 $7 $8"
 
-	load_state
-
 	if [ "$want_pan" = "home" ]; then
 		export_pins || exit 1
 		acquire_lock || exit 0
+		load_state
 		DELAY_US=10000
 		home
 		release_pins
@@ -259,6 +258,7 @@ main() {
 
 	export_pins || exit 1
 	acquire_lock || exit 0
+	load_state
 	move "$want_pan" "$want_tilt"
 	release_pins
 }
