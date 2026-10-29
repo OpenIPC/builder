@@ -54,18 +54,21 @@ load_config() {
 
 load_state() {
 	if [ -f "$STATE" ]; then
-		read -r POS_X POS_Y PHASE < "$STATE"
+		read -r POS_X POS_Y PHASE_P PHASE_T < "$STATE"
 	fi
-	case "$POS_X$POS_Y$PHASE" in
-		*[!0-9\ -]*) POS_X=0; POS_Y=0; PHASE=0 ;;
+	case "$POS_X$POS_Y$PHASE_P$PHASE_T" in
+		*[!0-9\ -]*) POS_X=0; POS_Y=0; PHASE_P=0; PHASE_T=0 ;;
 	esac
 	[ -z "$POS_X" ] && POS_X=0
 	[ -z "$POS_Y" ] && POS_Y=0
-	[ -z "$PHASE" ] && PHASE=0
+	[ -z "$PHASE_P" ] && PHASE_P=0
+	# A state file from before the split carries one shared phase; start both
+	# axes from it rather than dropping the rotor position.
+	[ -z "$PHASE_T" ] && PHASE_T=$PHASE_P
 }
 
 save_state() {
-	echo "$POS_X $POS_Y $PHASE" > "$STATE"
+	echo "$POS_X $POS_Y $PHASE_P $PHASE_T" > "$STATE"
 }
 
 export_pins() {
@@ -84,23 +87,22 @@ release_pins() {
 	done
 }
 
-# One microstep of one axis. Both axes share a single phase counter, which is
-# what keeps them aligned: the rotor remembers where it stopped, not which pin
-# was last driven, so a half-step is meaningless per axis.
+# One microstep of one axis. Each axis keeps its own half-step phase: they are
+# separate motors, so a shared counter would advance one axis' sequence when
+# the other steps, and skip half-steps when both move together.
 # $1 = axis letter (P or T), $2 = +1 forward or -1 back, $3 = delay in us
 step_one() {
-	if [ "$2" -gt 0 ]; then
-		PHASE=$(( (PHASE + 1) % 8 ))
-	else
-		PHASE=$(( (PHASE + 7) % 8 ))
-	fi
-
-	code=$(echo $SEQ | cut -d' ' -f$((PHASE + 1)))
 	if [ "$1" = "P" ]; then
+		PHASE_P=$(( (PHASE_P + $2 + 8) % 8 ))
+		phase=$PHASE_P
 		a=$PIN_P1; b=$PIN_P2; c=$PIN_P3; d=$PIN_P4
 	else
+		PHASE_T=$(( (PHASE_T + $2 + 8) % 8 ))
+		phase=$PHASE_T
 		a=$PIN_T1; b=$PIN_T2; c=$PIN_T3; d=$PIN_T4
 	fi
+
+	code=$(echo $SEQ | cut -d' ' -f$((phase + 1)))
 	echo $(( code / 8 % 2 )) > "$GPIOS/gpio$a/value"
 	echo $(( code / 4 % 2 )) > "$GPIOS/gpio$b/value"
 	echo $(( code / 2 % 2 )) > "$GPIOS/gpio$c/value"
@@ -173,7 +175,8 @@ home() {
 	# instead of being trusted to stop on its own.
 	sweep=$((PAN_MAX + PAN_MAX / 4))
 	log "homing pan into its end stop from $POS_X"
-	PHASE=0
+	PHASE_P=0
+	PHASE_T=0
 	POS_X=$((-sweep))
 	POS_Y=0
 	step_both "$((-sweep))" 0 "$DELAY_US"
