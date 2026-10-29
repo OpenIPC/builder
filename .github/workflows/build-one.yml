@@ -106,8 +106,10 @@ jobs:
           # Covers both the dash form (<pkg>-<ref>.tar.gz, e.g. majestic-webui-dist) and
           # the dot form (<pkg>.<ref>.tar.bz2, e.g. majestic.t31.lite.master from S3 —
           # a moving build with no .hash, NOT a content-addressed pin).
+          # Branch-pinned downloads are listed by name: rtl8812au_fpv (rtl8812au-openipc)
+          # and the rockchip-rv1106 kernel tarball.
           find /tmp/builder-dl -type f -regextype posix-extended \
-            -regex '.*[-.](HEAD|master|main|dist)\.tar\.(gz|bz2|xz)' \
+            -regex '.*([-.](HEAD|master|main|dist|rtl8812au_fpv)|/linux/rockchip-rv1106)\.tar\.(gz|bz2|xz)' \
             -print -delete 2>/dev/null || true
 
       # The parser is OpenIPC/firmware's, fetched rather than copied, so the

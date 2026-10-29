@@ -301,8 +301,12 @@ jobs:
           # majestic against the current webui — "No settings groups in schema".) Drop
           # both forms so buildroot re-fetches the current ref. Only genuinely
           # content-addressed tarballs (semver / SHA in the name) keep their cache.
+          # Branch-pinned downloads are listed by name, since a branch name is not
+          # recognisable as a ref: rtl8812au-openipc follows the rtl8812au_fpv branch,
+          # and the rockchip-rv1106 kernel tarball is a branch snapshot. Other kernel
+          # tarballs are left cached; add one here when a device needs a fresh branch.
           find /tmp/builder-dl -type f -regextype posix-extended \
-            -regex '.*[-.](HEAD|master|main|dist)\.tar\.(gz|bz2|xz)' \
+            -regex '.*([-.](HEAD|master|main|dist|rtl8812au_fpv)|/linux/rockchip-rv1106)\.tar\.(gz|bz2|xz)' \
             -print -delete 2>/dev/null || true
 
       - name: Build firmware
