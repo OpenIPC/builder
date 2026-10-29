@@ -17,6 +17,8 @@
 # Travel comes from ptz_pan_max / ptz_tilt_max and the rest position from
 # ptz_home_x / ptz_home_y, all seeded by customizer.sh.
 # `gpio-motors home` drives the pan axis into its end stop and back to rest.
+# Tilt is homed only when ptz_tilt_home=1, swept towards ptz_tilt_dir (+1/-1);
+# otherwise its moves stay relative and are not clamped.
 #
 # The coil order is the one the factory firmware uses, which puts each axis'
 # first pin in the most significant bit of the phase byte.
@@ -49,15 +51,17 @@ load_config() {
 	TILT_MAX=$(env_or ptz_tilt_max 796)
 	REST_X=$(env_or ptz_home_x 1991)
 	REST_Y=$(env_or ptz_home_y 398)
+	TILT_HOME=$(env_or ptz_tilt_home 0)
+	TILT_DIR=$(env_or ptz_tilt_dir -1)
 	PINS=$(env_or ptz_gpio "")
 }
 
 load_state() {
 	if [ -f "$STATE" ]; then
-		read -r POS_X POS_Y PHASE_P PHASE_T < "$STATE"
+		read -r POS_X POS_Y PHASE_P PHASE_T Y_REF < "$STATE"
 	fi
-	case "$POS_X$POS_Y$PHASE_P$PHASE_T" in
-		*[!0-9\ -]*) POS_X=0; POS_Y=0; PHASE_P=0; PHASE_T=0 ;;
+	case "$POS_X$POS_Y$PHASE_P$PHASE_T$Y_REF" in
+		*[!0-9\ -]*) POS_X=0; POS_Y=0; PHASE_P=0; PHASE_T=0; Y_REF=0 ;;
 	esac
 	[ -z "$POS_X" ] && POS_X=0
 	[ -z "$POS_Y" ] && POS_Y=0
@@ -65,10 +69,14 @@ load_state() {
 	# A state file from before the split carries one shared phase; start both
 	# axes from it rather than dropping the rotor position.
 	[ -z "$PHASE_T" ] && PHASE_T=$PHASE_P
+	case "$Y_REF" in
+		0|1) ;;
+		*) Y_REF=0 ;;
+	esac
 }
 
 save_state() {
-	echo "$POS_X $POS_Y $PHASE_P $PHASE_T" > "$STATE"
+	echo "$POS_X $POS_Y $PHASE_P $PHASE_T $Y_REF" > "$STATE"
 }
 
 export_pins() {
@@ -193,13 +201,21 @@ home() {
 	log "homing pan into its end stop from $POS_X"
 	PHASE_P=0
 	PHASE_T=0
-	POS_X=$((-sweep))
-	POS_Y=0
-	step_both "$((-sweep))" 0 "$DELAY_US"
-	# The end stop is position zero; go from there to the rest position.
-	step_both "$REST_X" "$REST_Y" "$DELAY_US"
-	POS_X=$REST_X
-	POS_Y=$REST_Y
+	if [ "$TILT_HOME" = 1 ]; then
+		sweep_t=$((TILT_MAX + TILT_MAX / 4))
+		step_both "$((-sweep))" "$((TILT_DIR * sweep_t))" "$DELAY_US"
+		step_both "$REST_X" "$REST_Y" "$DELAY_US"
+		POS_X=$REST_X
+		POS_Y=$REST_Y
+		Y_REF=1
+	else
+		step_both "$((-sweep))" 0 "$DELAY_US"
+		# The end stop is position zero; go from there to the rest position.
+		step_both "$REST_X" 0 "$DELAY_US"
+		POS_X=$REST_X
+		Y_REF=0
+		log "tilt is not referenced; set ptz_tilt_home=1 to home it"
+	fi
 	save_state
 	log "homed to $POS_X $POS_Y"
 }
@@ -211,10 +227,17 @@ move() {
 	want_pan=$1
 	want_tilt=$2
 	pan=$(clamp "$want_pan" "$POS_X" $((POS_X + want_pan)) "$PAN_MAX")
-	tilt=$(clamp "$want_tilt" "$POS_Y" $((POS_Y + want_tilt)) "$TILT_MAX")
+	if [ "$Y_REF" = 1 ]; then
+		tilt=$(clamp "$want_tilt" "$POS_Y" $((POS_Y + want_tilt)) "$TILT_MAX")
+	else
+		tilt=$want_tilt
+	fi
 
-	if [ "$pan" -ne "$want_pan" ] || [ "$tilt" -ne "$want_tilt" ]; then
-		log "clamped $want_pan $want_tilt to $pan $tilt, travel is 0..$PAN_MAX 0..$TILT_MAX"
+	if [ "$pan" -ne "$want_pan" ]; then
+		log "clamped pan $want_pan to $pan, travel is 0..$PAN_MAX"
+	fi
+	if [ "$tilt" -ne "$want_tilt" ]; then
+		log "clamped tilt $want_tilt to $tilt, travel is 0..$TILT_MAX"
 	fi
 
 	step_both "$pan" "$tilt" "$DELAY_US"

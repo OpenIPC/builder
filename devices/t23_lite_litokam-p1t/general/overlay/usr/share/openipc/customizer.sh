@@ -47,6 +47,10 @@ fw_setenv ptz_pan_max 3982
 fw_setenv ptz_tilt_max 796
 fw_setenv ptz_home_x 1991
 fw_setenv ptz_home_y 398
+# Tilt is not homed by default, so its moves stay relative. Set ptz_tilt_home
+# to 1 (and ptz_tilt_dir to the sweep sign, +1 or -1) if the axis can be driven
+# into a stop.
+fw_setenv ptz_tilt_home 0
 #
 #
 # Set mmc
