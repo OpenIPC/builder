@@ -87,6 +87,21 @@ release_pins() {
 	done
 }
 
+PINS_HELD=
+
+cleanup() {
+	if [ -n "$PINS_HELD" ]; then
+		release_pins
+		PINS_HELD=
+	fi
+	rmdir "$LOCK" 2>/dev/null
+}
+
+on_signal() {
+	cleanup
+	exit 1
+}
+
 # One microstep of one axis. Each axis keeps its own half-step phase: they are
 # separate motors, so a shared counter would advance one axis' sequence when
 # the other steps, and skip half-steps when both move together.
@@ -166,7 +181,8 @@ acquire_lock() {
 		fi
 		usleep 50000
 	done
-	trap 'rmdir "$LOCK" 2>/dev/null' EXIT INT TERM
+	trap cleanup EXIT
+	trap on_signal INT TERM
 }
 
 home() {
@@ -231,13 +247,13 @@ main() {
 	PIN_LIST="$1 $2 $3 $4 $5 $6 $7 $8"
 
 	if [ "$want_pan" = "home" ]; then
-		export_pins || exit 1
 		acquire_lock || exit 0
+		PINS_HELD=1
+		export_pins || exit 1
 		load_state
 		DELAY_US=10000
 		home
-		release_pins
-		exit $?
+		exit 0
 	fi
 
 	if [ -z "$want_pan" ] || [ -z "$want_tilt" ]; then
@@ -263,11 +279,11 @@ main() {
 	# wants microseconds, and a stepper needs more than 1 ms to be smooth.
 	DELAY_US=$((delay_ms * 1000))
 
-	export_pins || exit 1
 	acquire_lock || exit 0
+	PINS_HELD=1
+	export_pins || exit 1
 	load_state
 	move "$want_pan" "$want_tilt"
-	release_pins
 }
 
 main "$@"
