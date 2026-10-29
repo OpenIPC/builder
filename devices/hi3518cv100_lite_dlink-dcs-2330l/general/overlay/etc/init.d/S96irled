@@ -1,13 +1,22 @@
 #!/bin/sh
 #
-# The IR LEDs hang off PWM2, not a GPIO: lit at IRLED_DUTY percent while
-# majestic holds the IR-cut (GPIO0) in night position, dark otherwise.
-# PWM1 drives the heater and is never touched here.
+# The IR LEDs hang off PWM2, not a GPIO: lit at irled_duty percent (fw_env,
+# default 35) while majestic holds the IR-cut (GPIO0) in night position, dark
+# otherwise. PWM1 drives the heater and is never touched here.
 
 DAEMON=/etc/init.d/S96irled
 PIDFILE=/var/run/irled.pid
-IRLED_DUTY=$(fw_printenv -n irled_duty 2>/dev/null)
-IRLED_DUTY=${IRLED_DUTY:-35}
+
+# Read on every switch to night, so fw_setenv irled_duty applies from the next
+# one (or at once with a restart) without polling the flash every second.
+duty() {
+	d=$(fw_printenv -n irled_duty 2>/dev/null)
+	case "$d" in
+		'' | *[!0-9]*) d=35 ;;
+	esac
+	[ "$d" -gt 100 ] && d=35
+	echo "$d"
+}
 
 pwm2() {
 	# 0x40 period, 0x44 duty, 0x48 count, 0x4c control; 150 at 3 MHz = 20 kHz.
@@ -28,9 +37,11 @@ run() {
 	trap 'pwm2 0; exit 0' TERM INT
 	last=
 	while :; do
+		# Unreadable (majestic not up yet) counts as day: never leave them lit
 		night=$(cat /sys/class/gpio/gpio0/value 2>/dev/null)
+		[ "$night" = 1 ] || night=0
 		if [ "$night" != "$last" ]; then
-			[ "$night" = 1 ] && pwm2 "$IRLED_DUTY" || pwm2 0
+			[ "$night" = 1 ] && pwm2 "$(duty)" || pwm2 0
 			last=$night
 		fi
 		sleep 1
@@ -45,15 +56,30 @@ case "$1" in
 		;;
 	stop)
 		printf "Stopping IR LED control: "
+		pid=$(cat $PIDFILE 2>/dev/null)
 		start-stop-daemon -K -q -p $PIDFILE
-		[ $? = 0 ] && echo "OK" || echo "FAIL"
+		# Its trap turns PWM2 off after the current sleep; let it finish so
+		# a restart cannot have the old one darken what the new one lit.
+		n=0
+		while [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null && [ $n -lt 5 ]; do
+			sleep 1
+			n=$((n + 1))
+		done
+		if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+			echo "FAIL"
+			exit 1
+		fi
 		rm -f $PIDFILE
+		echo "OK"
+		;;
+	restart)
+		$0 stop && $0 start
 		;;
 	run)
 		run
 		;;
 	*)
-		echo "Usage: $0 {start|stop}"
+		echo "Usage: $0 {start|stop|restart}"
 		exit 1
 		;;
 esac
