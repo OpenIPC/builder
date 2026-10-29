@@ -1,0 +1,46 @@
+From: Godmar Back <godmar@gmail.com>
+Subject: [PATCH] jzmmc_v12: add a JZMMC_V12_MMC0_1BIT option
+
+The MSC0 host controller powers up capable of 4-bit data transfers, and the
+T23 board data advertises MMC_CAP_4_BIT_DATA unconditionally, so the card is
+negotiated in 4-bit mode. Some T23N boards -- the Galayou G2, sold as the
+Litokam P1t -- only wire a single data line, so enumeration never completes
+and the SD card is unusable.
+
+Add a Kconfig option that drops MMC_CAP_4_BIT_DATA from the mmc0 platform
+data, and select it from the board's defconfig.
+
+---
+diff --git a/arch/mips/xburst/soc-t23/chip-t23/isvp/common/mmc.c b/arch/mips/xburst/soc-t23/chip-t23/isvp/common/mmc.c
+--- a/arch/mips/xburst/soc-t23/chip-t23/isvp/common/mmc.c
++++ b/arch/mips/xburst/soc-t23/chip-t23/isvp/common/mmc.c
+@@ -23,7 +23,11 @@ struct jzmmc_platform_data tf_pdata = {
+ 	.removal  			= REMOVABLE,
+ 	.sdio_clk			= 1,
+ 	.ocr_avail			= MMC_VDD_32_33 | MMC_VDD_33_34,
++#ifdef CONFIG_JZMMC_V12_MMC0_1BIT
++	.capacity  			= MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED,
++#else
+ 	.capacity  			= MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED | MMC_CAP_4_BIT_DATA,
++#endif
+ 	.pm_flags			= 0,
+ 	.recovery_info			= NULL,
+ 	.gpio				= &tf_gpio,
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -35,6 +35,14 @@ config JZMMC_V12_MMC0_PB_4BIT
+ 	bool "GPIO B, data with 4 bit"
+ endchoice
+ 
++config JZMMC_V12_MMC0_1BIT
++	bool "Restrict host controller to 1 bit bus width"
++	default n
++	help
++	  Some T23N boards (Galayou G2 / Litokam P1t) do not support 4-bit
++	  data transfers. Enabling this restricts MSC0 to 1-bit transfers.
++	  If unsure, say N.
++
+ config MMC0_MAX_FREQ
+ 	int "msc0 max frequency"
+ 	depends on JZMMC_V12_MMC0

@@ -20,6 +20,8 @@ BR2_LINUX_KERNEL_CUSTOM_TARBALL=y
 BR2_LINUX_KERNEL_CUSTOM_TARBALL_LOCATION="https://github.com/openipc/linux/archive/ingenic-t23.tar.gz"
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
 BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(EXTERNAL_VENDOR)/board/$(OPENIPC_SOC_FAMILY)/t23.generic.config"
+# This board's SD slot is 1-bit only -- see the fragment and the mmc0 patch.
+BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(EXTERNAL_VENDOR)/board/$(OPENIPC_SOC_FAMILY)/t23_litokam-mmc.fragment"
 BR2_LINUX_KERNEL_LZMA=y
 
 # Filesystem
