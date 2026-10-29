@@ -9,12 +9,16 @@ PIDFILE=/var/run/irled.pid
 
 # Read on every switch to night, so fw_setenv irled_duty applies from the next
 # one (or at once with a restart) without polling the flash every second.
+# expr strips leading zeros: ash reads 08 in $(( )) as bad octal, 035 as 29.
 duty() {
 	d=$(fw_printenv -n irled_duty 2>/dev/null)
 	case "$d" in
-		'' | *[!0-9]*) d=35 ;;
+		[0-9] | [0-9][0-9] | [0-9][0-9][0-9])
+			d=$(expr "$d" + 0)
+			[ "$d" -le 100 ] || d=35
+			;;
+		*) d=35 ;;
 	esac
-	[ "$d" -gt 100 ] && d=35
 	echo "$d"
 }
 
