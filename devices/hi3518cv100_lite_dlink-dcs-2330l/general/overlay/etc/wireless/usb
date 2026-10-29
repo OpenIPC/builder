@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ "$1" = "rtl8188eu-dlink-dcs-2330l" ]; then
+	modprobe 8188eu rtw_power_mgnt=0 rtw_ips_mode=0 rtw_enusbss=0
+	exit 0
+fi
+
+exit 1
