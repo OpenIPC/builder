@@ -250,11 +250,18 @@ main() {
 			exit 1
 			;;
 	esac
+	case "$delay_ms" in
+		''|*[!0-9]*)
+			usage
+			exit 1
+			;;
+	esac
+	[ "$delay_ms" -lt 1 ] && delay_ms=1
+	[ "$delay_ms" -gt 50 ] && delay_ms=50
 
 	# The web UI passes a per-micro-step delay in whole milliseconds; usleep
 	# wants microseconds, and a stepper needs more than 1 ms to be smooth.
 	DELAY_US=$((delay_ms * 1000))
-	[ "$DELAY_US" -lt 1000 ] && DELAY_US=1000
 
 	export_pins || exit 1
 	acquire_lock || exit 0
