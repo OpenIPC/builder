@@ -1,0 +1,31 @@
+#!/bin/sh
+# Divinus streamer on the Imou LOOC 2 (SigmaStar infinity3).
+DAEMON=/usr/bin/divinus
+PIDFILE=/var/run/divinus.pid
+
+start() {
+	echo -n "Starting divinus: "
+	cd /etc
+	start-stop-daemon -S -b -m -q -p "$PIDFILE" -x "$DAEMON" && echo OK || echo FAIL
+}
+
+stop() {
+	echo -n "Stopping divinus: "
+	start-stop-daemon -K -q -p "$PIDFILE" && echo OK || echo FAIL
+	rm -f "$PIDFILE"
+	# The streamer needs a few seconds to release the sensor and its ports;
+	# a start before that leaves the new one without them.
+	n=0
+	while pidof divinus > /dev/null; do
+		n=$((n + 1))
+		[ $n -eq 10 ] && killall -q -9 divinus
+		[ $n -gt 12 ] && break
+		sleep 1
+	done
+}
+
+case "$1" in
+	start|stop) $1 ;;
+	restart|reload) stop; sleep 2; start ;;
+	*) echo "Usage: $0 {start|stop|restart}"; exit 1 ;;
+esac

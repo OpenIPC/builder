@@ -1,0 +1,84 @@
+#!/bin/sh
+# SD card handling for the Imou LOOC 2.
+#   sdcard mount [ro|rw]   mount the card at /mnt/sdcard (default: ro)
+#   sdcard umount          unmount it
+#   sdcard status          show what is there
+# The card is mounted read-only, with the block device write-protected, and
+# only becomes writable while the streamer records to it. Nothing on the card
+# is ever executed.
+MP=/mnt/sdcard
+LOCK=/var/run/sdcard.lock
+OPTS=noatime,nodev,nosuid,noexec
+
+card_dev() {
+	[ -n "$SDCARD_DEV" ] && { echo "$SDCARD_DEV"; return; }
+	for d in /dev/mmcblk0p1 /dev/mmcblk0; do
+		[ -b "$d" ] && { echo "$d"; return; }
+	done
+}
+
+# ro | rw | "" (not mounted)
+card_mode() {
+	awk -v m="$MP" '$2 == m { split($4, o, ","); r = o[1] } END { print r }' /proc/mounts
+}
+
+protect() {
+	[ -n "$SDCARD_DEV" ] && return 0
+	for f in /sys/block/mmcblk*/force_ro; do
+		[ -f "$f" ] && echo "$1" > "$f" 2>/dev/null
+	done
+}
+
+do_umount() {
+	[ -z "$(card_mode)" ] && return 0
+	umount "$MP" 2>/dev/null || umount -l "$MP" 2>/dev/null
+}
+
+do_mount() {
+	want=${1:-ro}
+	dev=$(card_dev)
+	[ -n "$dev" ] || { do_umount; echo "no card"; return 1; }
+	have=$(card_mode)
+	[ "$have" = "$want" ] && return 0
+	[ -n "$have" ] && { sync; do_umount || return 1; }
+	[ "$want" = rw ] && protect 0 || protect 1
+	mkdir -p "$MP" 2>/dev/null
+	mount -t vfat -o "$want,$OPTS" "$dev" "$MP" 2>/dev/null && return 0
+	grep -q '^exfat ' /proc/modules || modprobe exfat 2>/dev/null ||
+		insmod /lib/modules/$(uname -r)/extra/exfat.ko 2>/dev/null
+	mount -t exfat -o "$want,$OPTS" "$dev" "$MP" 2>/dev/null && return 0
+	protect 1
+	echo "cannot mount $dev (only FAT32 and exFAT cards are supported)"
+	return 1
+}
+
+# One caller at a time: the watcher and the streamer both use this.
+n=0
+while ! mkdir "$LOCK" 2>/dev/null; do
+	n=$((n + 1))
+	[ $n -gt 100 ] && rmdir "$LOCK" 2>/dev/null
+	usleep 100000
+done
+trap 'rmdir "$LOCK" 2>/dev/null' EXIT
+
+case "$1" in
+	mount)
+		do_mount "$2"
+		;;
+	umount)
+		sync
+		do_umount
+		protect 1
+		;;
+	status)
+		dev=$(card_dev)
+		[ -n "$dev" ] || { echo "no card"; exit 1; }
+		mode=$(card_mode)
+		[ -n "$mode" ] || { echo "$dev present, not mounted"; exit 0; }
+		echo "$dev mounted $mode: $(df -h "$MP" | awk 'NR == 2 { print $2 " total, " $4 " free" }')"
+		;;
+	*)
+		echo "Usage: $0 {mount [ro|rw]|umount|status}"
+		exit 1
+		;;
+esac

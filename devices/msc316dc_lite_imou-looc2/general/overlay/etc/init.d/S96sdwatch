@@ -1,0 +1,58 @@
+#!/bin/sh
+# SD card hot-plug for the Imou LOOC 2: the slot has no working card-detect
+# line, so the driver only finds a card when it loads. While no card is
+# present, re-probe the slot every 15 seconds; a card that shows up is
+# mounted read-only at /mnt/sdcard (see /usr/sbin/sdcard).
+PIDFILE=/var/run/sdwatch.pid
+
+card_gone() {
+	# A pulled card is not reported; a read from a spot that is unlikely
+	# to be cached shows whether it is still there.
+	read -r sectors < /sys/block/mmcblk0/size 2>/dev/null || return 0
+	[ "$sectors" -gt 4096 ] 2>/dev/null || return 0
+	skip=$(( ($(date +%s) * 7919) % (sectors / 8 - 1) ))
+	! dd if=/dev/mmcblk0 of=/dev/null bs=4096 skip=$skip count=1 2>/dev/null
+}
+
+watch() {
+	while :; do
+		if [ -z "$(ls /sys/bus/mmc/devices 2>/dev/null)" ]; then
+			grep -q " /mnt/sdcard " /proc/mounts && /usr/sbin/sdcard umount
+			if grep -q '^kdrv_sdmmc ' /proc/modules; then
+				rmmod kdrv_sdmmc 2>/dev/null && modprobe kdrv_sdmmc 2>/dev/null
+				sleep 2
+			fi
+		elif card_gone; then
+			/usr/sbin/sdcard umount
+			rmmod kdrv_sdmmc 2>/dev/null && modprobe kdrv_sdmmc 2>/dev/null
+			sleep 2
+		fi
+		if [ -n "$(ls /sys/bus/mmc/devices 2>/dev/null)" ] && ! grep -q " /mnt/sdcard " /proc/mounts; then
+			/usr/sbin/sdcard mount ro
+		fi
+		sleep 15
+	done
+}
+
+case "$1" in
+	start)
+		echo -n "Starting SD card watcher: "
+		watch > /dev/null 2>&1 &
+		echo $! > "$PIDFILE"
+		echo OK
+		;;
+	stop)
+		echo -n "Stopping SD card watcher: "
+		[ -f "$PIDFILE" ] && kill "$(cat "$PIDFILE")" 2>/dev/null
+		rm -f "$PIDFILE"
+		echo OK
+		;;
+	restart)
+		"$0" stop
+		"$0" start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+		;;
+esac
