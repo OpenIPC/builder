@@ -31,6 +31,7 @@ CMCC HDC-51 A6-V10       T31L         JXF37     RTL8188FU_USB    NOR_16M   done
 CMCC HDC-51 A6-V11       T31L         SC2332    RTL8188FU_USB    NOR_16M   done
 Cootli CAMV0103          GK7202V300   SC223A    SSV6355_USB      NOR_8M    in progress
 CP Plus CP-UNC-TA21L2C   GK7205V200   SC223A    -                NOR_16M   video-ok, ir-cut-no, audio-no
+D-Link DCS-2330L A       HI3518CV100  OV9712    RTL8188EU_USB    NOR_32M   testing, image-not-flashed-yet
 Emax Wyvern Link         SSC338Q      IMX415                     NOR_16M   done
 Foscam X5                SSC337DE     GC4653    RTL8188FU_USB    NOR_16M   done
 GARUS GSL-5030X-30AP-NM  HI3516EV200  SC2315E?  -                NOR_8M    done

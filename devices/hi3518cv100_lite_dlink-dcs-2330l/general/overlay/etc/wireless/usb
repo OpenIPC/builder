@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ "$1" = "rtl8188eu-dlink-dcs-2330l" ]; then
+	# The status matters: S40network gives the cable DHCP when WiFi fails
+	modprobe 8188eu rtw_power_mgnt=0 rtw_ips_mode=0 rtw_enusbss=0
+	exit $?
+fi
+
+exit 1

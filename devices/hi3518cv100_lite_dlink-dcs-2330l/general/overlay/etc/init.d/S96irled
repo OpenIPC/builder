@@ -1,0 +1,89 @@
+#!/bin/sh
+#
+# The IR LEDs hang off PWM2, not a GPIO: lit at irled_duty percent (fw_env,
+# default 35) while majestic holds the IR-cut (GPIO0) in night position, dark
+# otherwise. PWM1 drives the heater and is never touched here.
+
+DAEMON=/etc/init.d/S96irled
+PIDFILE=/var/run/irled.pid
+
+# Read on every switch to night, so fw_setenv irled_duty applies from the next
+# one (or at once with a restart) without polling the flash every second.
+# expr strips leading zeros: ash reads 08 in $(( )) as bad octal, 035 as 29.
+duty() {
+	d=$(fw_printenv -n irled_duty 2>/dev/null)
+	case "$d" in
+		[0-9] | [0-9][0-9] | [0-9][0-9][0-9])
+			d=$(expr "$d" + 0)
+			[ "$d" -le 100 ] || d=35
+			;;
+		*) d=35 ;;
+	esac
+	echo "$d"
+}
+
+pwm2() {
+	# 0x40 period, 0x44 duty, 0x48 count, 0x4c control; 150 at 3 MHz = 20 kHz.
+	# A new duty only latches across a disable/enable.
+	devmem 0x2013004c 32 0
+	[ "$1" -eq 0 ] && return
+	devmem 0x20130040 32 150
+	devmem 0x20130044 32 $(((150 * $1 + 50) / 100))
+	devmem 0x20130048 32 10
+	devmem 0x2013004c 32 5
+}
+
+run() {
+	# The pad mux the stock kernel sets and this bootloader leaves at 1:
+	# GPIO0_5/SVB_PWM and GPIO0_6.
+	devmem 0x200f0134 32 0
+	devmem 0x200f0138 32 0
+	trap 'pwm2 0; exit 0' TERM INT
+	last=
+	while :; do
+		# Unreadable (majestic not up yet) counts as day: never leave them lit
+		night=$(cat /sys/class/gpio/gpio0/value 2>/dev/null)
+		[ "$night" = 1 ] || night=0
+		if [ "$night" != "$last" ]; then
+			[ "$night" = 1 ] && pwm2 "$(duty)" || pwm2 0
+			last=$night
+		fi
+		sleep 1
+	done
+}
+
+case "$1" in
+	start)
+		printf "Starting IR LED control: "
+		start-stop-daemon -b -m -S -q -p $PIDFILE -x /bin/sh -- $DAEMON run
+		[ $? = 0 ] && echo "OK" || echo "FAIL"
+		;;
+	stop)
+		printf "Stopping IR LED control: "
+		pid=$(cat $PIDFILE 2>/dev/null)
+		start-stop-daemon -K -q -p $PIDFILE
+		# Its trap turns PWM2 off after the current sleep; let it finish so
+		# a restart cannot have the old one darken what the new one lit.
+		n=0
+		while [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null && [ $n -lt 5 ]; do
+			sleep 1
+			n=$((n + 1))
+		done
+		if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+			echo "FAIL"
+			exit 1
+		fi
+		rm -f $PIDFILE
+		echo "OK"
+		;;
+	restart)
+		$0 stop && $0 start
+		;;
+	run)
+		run
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+		;;
+esac
