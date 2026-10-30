@@ -5,6 +5,9 @@ PIDFILE=/var/run/divinus.pid
 
 start() {
 	echo -n "Starting divinus: "
+	# load_mstar pins the splitter buffers at 640x480 and then turns
+	# reallocation off; the 1280x720 snapshot channel needs them to grow.
+	echo 1 > /sys/class/mstar/msys/dmem_realloc 2>/dev/null
 	cd /etc
 	start-stop-daemon -S -b -m -q -p "$PIDFILE" -x "$DAEMON" && echo OK || echo FAIL
 }
