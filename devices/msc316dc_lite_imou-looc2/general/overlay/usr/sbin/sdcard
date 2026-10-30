@@ -40,7 +40,16 @@ do_mount() {
 	[ -n "$dev" ] || { do_umount; echo "no card"; return 1; }
 	have=$(card_mode)
 	[ "$have" = "$want" ] && return 0
-	[ -n "$have" ] && { sync; do_umount || return 1; }
+	if [ -n "$have" ]; then
+		sync
+		# A remount keeps working while files on the card are open
+		[ "$want" = rw ] && protect 0
+		if mount -o "remount,$want" "$MP" 2>/dev/null; then
+			[ "$want" = ro ] && protect 1
+			return 0
+		fi
+		do_umount || return 1
+	fi
 	[ "$want" = rw ] && protect 0 || protect 1
 	mkdir -p "$MP" 2>/dev/null
 	mount -t vfat -o "$want,$OPTS" "$dev" "$MP" 2>/dev/null && return 0
