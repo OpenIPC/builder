@@ -62,13 +62,23 @@ do_mount() {
 }
 
 # One caller at a time: the watcher and the streamer both use this.
+# The lock holds its owner's PID; it is only taken over once that process is
+# gone (killed mid-mount), never from a caller that is still working.
 n=0
 while ! mkdir "$LOCK" 2>/dev/null; do
+	owner=
+	read -r owner < "$LOCK/pid" 2>/dev/null
+	if [ -n "$owner" ] && ! kill -0 "$owner" 2>/dev/null; then
+		rm -rf "$LOCK"
+		continue
+	fi
 	n=$((n + 1))
-	[ $n -gt 100 ] && rmdir "$LOCK" 2>/dev/null
+	# No PID after a minute: left by a caller killed between mkdir and write
+	[ -z "$owner" ] && [ $n -gt 600 ] && rm -rf "$LOCK"
 	usleep 100000
 done
-trap 'rmdir "$LOCK" 2>/dev/null' EXIT
+echo $$ > "$LOCK/pid"
+trap 'rm -rf "$LOCK"' EXIT
 
 case "$1" in
 	mount)

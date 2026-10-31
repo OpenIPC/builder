@@ -3,13 +3,13 @@ system:
   web_port: 80
   web_enable_auth: true
   web_auth_user: root
-  web_auth_pass: @system
+  web_auth_pass: "@system"
   web_auth_skiplocal: true
   web_enable_static: false
   isp_thread_stack_size: 16384
   venc_stream_thread_stack_size: 16384
   web_server_thread_stack_size: 65536
-  time_format: %Y.%m.%d %H:%M:%S
+  time_format: "%Y.%m.%d %H:%M:%S"
   watchdog: 0
 night_mode:
   enable: true
@@ -41,7 +41,7 @@ rtsp:
   audio_codec: mp3
   enable_auth: true
   auth_user: root
-  auth_pass: @system
+  auth_pass: "@system"
 record:
   enable: false
   continuous: false
@@ -78,16 +78,16 @@ sub:
   rtsp_port: 555
 osd:
   enable: true
-    reg0_text: $t
-    reg0_font: UbuntuMono-Regular
-    reg0_opal: 64
-    reg0_anchor: top-right
-    reg0_posx: 16
-    reg0_posy: 16
-    reg0_size: 32.0
-    reg0_color: 0xffff
-    reg0_outl: 0x8000
-    reg0_thick: 0.0
+  reg0_text: $t
+  reg0_font: UbuntuMono-Regular
+  reg0_opal: 64
+  reg0_anchor: top-right
+  reg0_posx: 16
+  reg0_posy: 16
+  reg0_size: 32.0
+  reg0_color: 0xffff
+  reg0_outl: 0x8000
+  reg0_thick: 0.0
 jpeg:
   enable: true
   width: 1280
