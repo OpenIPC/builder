@@ -1,0 +1,4 @@
+vfat
+mmc_core
+mmc_block
+kdrv_sdmmc
