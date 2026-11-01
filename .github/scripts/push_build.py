@@ -48,11 +48,12 @@ FIRST_DELAY = 5  # seconds, doubling
 
 # openipc.<board>-<storage>-<edition>.tgz: the platform is <board>-<edition>,
 # the same name size_report.py and kconfig_graph.py give their files.
-FIRMWARE_ASSET_RE = re.compile(r"^openipc\.([^.]+?)-(nor|nand|emmc|sd)-([a-z0-9]+)\.tgz$")
+FIRMWARE_ASSET_RE = re.compile(r"^openipc\.([^.]+?)-(nor|nand|emmc|sd)-([a-z0-9]+)(?:-split)?\.tgz$")
 # OpenIPC/builder's compound devices publish <matrix platform>-<storage>.tgz,
 # and their size report is sizes.<matrix platform>.json, so the platform is
-# the name before the storage suffix.
-DEVICE_ASSET_RE = re.compile(r"^(?!openipc\.)([A-Za-z0-9._-]+?)-(nor|nand|emmc|sd)\.tgz$")
+# the name before the storage suffix. A board on the split NOR layout also
+# publishes -split.tgz, beside these or alone: the same platform either way.
+DEVICE_ASSET_RE = re.compile(r"^(?!openipc\.)([A-Za-z0-9._-]+?)-(nor|nand|emmc|sd)(?:-split)?\.tgz$")
 SIDECAR_RE = re.compile(r"^(sizes|kconfig-graph|kconfig-help)\.(.+)\.json$")
 
 

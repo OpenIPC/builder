@@ -180,6 +180,22 @@ class Platforms(unittest.TestCase):
         self.assertEqual([p["name"] for p in plats], [
             "gk7205v200_lite_hisilicon-ipc-a", "ssc338q_wfbng_emax-wyvern-link", "t31-lite"])
 
+    def test_a_split_package_alone_names_its_platform(self):
+        plats = push_build.collect_platforms(None, self.assets(
+            "hi3516ev200_lite_imou-cue2-c22en-nor-split.tgz",
+            "openipc.hi3516cv610-nor-lite-split.tgz"))
+        self.assertEqual([p["name"] for p in plats], [
+            "hi3516cv610-lite", "hi3516ev200_lite_imou-cue2-c22en"])
+
+    def test_a_split_package_beside_the_plain_one_is_one_platform(self):
+        plats = push_build.collect_platforms(None, self.assets(
+            "hi3516ev200_lite_imou-cue2-c22en-nor.tgz",
+            "hi3516ev200_lite_imou-cue2-c22en-nor-split.tgz",
+            "openipc.hi3516ev200-nor-lite.tgz",
+            "openipc.hi3516ev200-nor-lite-split.tgz"))
+        self.assertEqual([p["name"] for p in plats], [
+            "hi3516ev200-lite", "hi3516ev200_lite_imou-cue2-c22en"])
+
     def test_builder_compound_devices_with_reports(self):
         with tempfile.TemporaryDirectory() as t:
             reports = Path(t)

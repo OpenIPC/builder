@@ -1,5 +1,8 @@
 # Imou Cue 2: keep the SC2235 DVP path (libsns_sc2235.so, sc2235_i2c_dc_1080p.ini, iq/sc2235.ini).
 # Keep iq/default.ini and its imx307.ini target.
+# iq/ov2735.ini and iq/sc2239.ini are for other sensors (the base image
+# gained them in October 2026), as is ov2735_i2c_1080p.ini, a link to the
+# already excluded sp2305 config.
 # WiFi is the vendor 8188fu driver (cfg80211 only): drop mac80211 and the
 # USB serial/net/gadget modules, the same set other 8 MB boards exclude.
 /etc/sensors/5M_imx335.ini
@@ -19,9 +22,12 @@
 /etc/sensors/imx335_i2c_4M.ini
 /etc/sensors/iq/f23.ini
 /etc/sensors/iq/imx335.ini
+/etc/sensors/iq/ov2735.ini
+/etc/sensors/iq/sc2239.ini
 /etc/sensors/jxf22_i2c_1080p.ini
 /etc/sensors/jxf23_i2c_1080p.ini
 /etc/sensors/jxf37_i2c_1080p.ini
+/etc/sensors/ov2735_i2c_1080p.ini
 /etc/sensors/sc2231_i2c_1080p.ini
 /etc/sensors/sc2232h_i2c_1080p.ini
 /etc/sensors/sc2239_i2c_1080p.ini

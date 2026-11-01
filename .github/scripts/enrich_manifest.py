@@ -37,9 +37,13 @@ REPO = os.environ.get("GITHUB_REPOSITORY", "OpenIPC/builder")
 RETENTION = 90
 TAG_RE = re.compile(r"^nightly-(\d{8})-([0-9a-f]{7})$")
 
-# Bimodal asset names — see module docstring.
-COMPOUND_RE = re.compile(r"^(?P<platform>[a-z0-9]+_[a-z0-9]+_[a-z0-9_.-]+)-(?P<flash>nor|nand)\.tgz$")
-SIMPLE_RE   = re.compile(r"^openipc\.(?P<soc>[^.]+)-(?P<flash>nor|nand)-(?P<variant>\w+)\.tgz$")
+# Bimodal asset names — see module docstring. A board on the split NOR layout
+# also publishes ...-nor-split.tgz (compound) or openipc.<soc>-nor-<variant>-split.tgz
+# (simple), beside the plain package or instead of it. As in firmware's index it
+# is listed under its own flash key, nor_split, which sysupgrade falls back to
+# when a build has no plain nor package for the camera.
+COMPOUND_RE = re.compile(r"^(?P<platform>[a-z0-9]+_[a-z0-9]+_[a-z0-9_.-]+)-(?P<flash>nor|nand)(?P<split>-split)?\.tgz$")
+SIMPLE_RE   = re.compile(r"^openipc\.(?P<soc>[^.]+)-(?P<flash>nor|nand)-(?P<variant>\w+)(?P<split>-split)?\.tgz$")
 
 # Retry budget for transient GitHub API failures (mirrors firmware/#2129).
 GH_RETRY_DELAYS = (0, 5, 15, 40)
@@ -100,11 +104,18 @@ def parse_asset(name: str) -> tuple[str, str] | None:
     """Returns (platform_key, flash) or None if filename doesn't match."""
     m = COMPOUND_RE.match(name)
     if m:
-        return m.group("platform"), m.group("flash")
-    m = SIMPLE_RE.match(name)
-    if m:
-        return f"{m.group('soc')}_{m.group('variant')}", m.group("flash")
-    return None
+        platform = m.group("platform")
+    else:
+        m = SIMPLE_RE.match(name)
+        if not m:
+            return None
+        platform = f"{m.group('soc')}_{m.group('variant')}"
+    flash = m.group("flash")
+    if m.group("split"):
+        if flash != "nor":
+            return None
+        flash = "nor_split"
+    return platform, flash
 
 
 def main() -> None:

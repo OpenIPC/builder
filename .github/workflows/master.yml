@@ -340,13 +340,26 @@ jobs:
           echo TIME=${TIME} >> ${GITHUB_ENV}
           COMMON=$(echo ${NAME} | awk -F_ '{print NF-1}')
 
-          NORFW=$(find output/images -name openipc*nor*)
-          if [ ! -z ${NORFW} ]; then
+          # A board on the split NOR layout makes two packages: the fixed-slot
+          # one while it still fits its slots, and openipc.*-nor-*-split.tgz.
+          # The split one keeps "-split" before ".tgz", where sysupgrade looks
+          # for it beside the plain one; the manifest lists the plain one.
+          NORFW=$(find output/images -name 'openipc*nor*.tgz' ! -name '*-split.tgz' | head -n 1)
+          NORSPLIT=$(find output/images -name 'openipc*nor*-split.tgz' | head -n 1)
+          if [ -n "${NORFW}" ]; then
             if [ ${COMMON} -eq 1 ]; then
               echo NORFW=openipc/${NORFW} >> ${GITHUB_ENV}
             else
               mv ${NORFW} ../${NAME}-nor.tgz
               echo NORFW=${NAME}-nor.tgz >> ${GITHUB_ENV}
+            fi
+          fi
+          if [ -n "${NORSPLIT}" ]; then
+            if [ ${COMMON} -eq 1 ]; then
+              echo NORSPLIT=openipc/${NORSPLIT} >> ${GITHUB_ENV}
+            else
+              mv ${NORSPLIT} ../${NAME}-nor-split.tgz
+              echo NORSPLIT=${NAME}-nor-split.tgz >> ${GITHUB_ENV}
             fi
           fi
 
@@ -360,12 +373,12 @@ jobs:
             fi
           fi
 
-          if [ -z ${NORFW} ] && [ -z ${NANDFW} ]; then
+          if [ -z "${NORFW}" ] && [ -z "${NORSPLIT}" ] && [ -z "${NANDFW}" ]; then
             exit 1
           fi
 
       - name: Build size report
-        if: env.NORFW || env.NANDFW
+        if: env.NORFW || env.NORSPLIT || env.NANDFW
         run: |
           cd openipc
           NAME=${{matrix.platform}}
@@ -396,7 +409,7 @@ jobs:
       # had the tab. Best-effort like the size report: an image never fails
       # for want of its graph.
       - name: Build kconfig graph
-        if: env.NORFW || env.NANDFW
+        if: env.NORFW || env.NORSPLIT || env.NANDFW
         run: |
           python3 -m pip install --user --break-system-packages kconfiglib || \
             { echo "::warning::kconfiglib install failed for ${{matrix.platform}}"; exit 0; }
@@ -435,7 +448,7 @@ jobs:
       # image and then discards it, so they cannot test their own device profile
       # without asking a maintainer to dispatch build-one for them.
       - name: Stage artifacts
-        if: env.NORFW || env.NANDFW
+        if: env.NORFW || env.NORSPLIT || env.NANDFW
         run: |
           mkdir -p dist reports
           # The size report goes to its own artifact below, not with the image.
@@ -447,7 +460,7 @@ jobs:
               cp -a "$f" reports/
             fi
           done
-          for f in "${NORFW:-}" "${NANDFW:-}"; do
+          for f in "${NORFW:-}" "${NORSPLIT:-}" "${NANDFW:-}"; do
             # An `if` rather than a `&&` chain: the step runs under `bash -e`,
             # where a trailing `&&` that tests false is only harmless because
             # something after it resets the status.
@@ -476,7 +489,7 @@ jobs:
       # builds a handful and has a person waiting on them, plausibly in another
       # timezone, so one day is too short a window there.
       - name: Upload build artifacts
-        if: env.NORFW || env.NANDFW
+        if: env.NORFW || env.NORSPLIT || env.NANDFW
         uses: actions/upload-artifact@v4
         with:
           name: fw-${{ matrix.platform }}
@@ -490,7 +503,7 @@ jobs:
       # consumes within the run -- so a push that could not reach openipc.org
       # can be re-run days later. Optional, so is this.
       - name: Upload report
-        if: github.event_name != 'pull_request' && (env.NORFW || env.NANDFW)
+        if: github.event_name != 'pull_request' && (env.NORFW || env.NORSPLIT || env.NANDFW)
         uses: actions/upload-artifact@v4
         continue-on-error: true
         with:

@@ -205,13 +205,26 @@ jobs:
           echo TIME=${TIME} >> ${GITHUB_ENV}
           COMMON=$(echo ${NAME} | awk -F_ '{print NF-1}')
 
-          NORFW=$(find output/images -name openipc*nor*)
-          if [ ! -z ${NORFW} ]; then
+          # A board on the split NOR layout makes two packages: the fixed-slot
+          # one while it still fits its slots, and openipc.*-nor-*-split.tgz.
+          # The split one keeps "-split" before ".tgz", where sysupgrade looks
+          # for it beside the plain one; the manifest lists the plain one.
+          NORFW=$(find output/images -name 'openipc*nor*.tgz' ! -name '*-split.tgz' | head -n 1)
+          NORSPLIT=$(find output/images -name 'openipc*nor*-split.tgz' | head -n 1)
+          if [ -n "${NORFW}" ]; then
             if [ ${COMMON} -eq 1 ]; then
               echo NORFW=openipc/${NORFW} >> ${GITHUB_ENV}
             else
               mv ${NORFW} ../${NAME}-nor.tgz
               echo NORFW=${NAME}-nor.tgz >> ${GITHUB_ENV}
+            fi
+          fi
+          if [ -n "${NORSPLIT}" ]; then
+            if [ ${COMMON} -eq 1 ]; then
+              echo NORSPLIT=openipc/${NORSPLIT} >> ${GITHUB_ENV}
+            else
+              mv ${NORSPLIT} ../${NAME}-nor-split.tgz
+              echo NORSPLIT=${NAME}-nor-split.tgz >> ${GITHUB_ENV}
             fi
           fi
 
@@ -225,7 +238,7 @@ jobs:
             fi
           fi
 
-          if [ -z ${NORFW} ] && [ -z ${NANDFW} ]; then
+          if [ -z "${NORFW}" ] && [ -z "${NORSPLIT}" ] && [ -z "${NANDFW}" ]; then
             exit 1
           fi
 
@@ -244,7 +257,7 @@ jobs:
           fi
 
       - name: Upload firmware
-        if: env.NORFW || env.NANDFW
+        if: env.NORFW || env.NORSPLIT || env.NANDFW
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve.outputs.tag_name }}
@@ -261,6 +274,7 @@ jobs:
             request_not_honoured=${{ env.REQUEST_KEPT }}
           files: |
             ${{env.NORFW}}
+            ${{env.NORSPLIT}}
             ${{env.NANDFW}}
 
       - name: Reply on the build request
