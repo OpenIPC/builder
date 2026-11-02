@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Heimvision HM202: LB-Link BL-M8188FU3 (RTL8188FTV) on USB.
+if [ "$1" = "rtl8188fu-heimvision-hm202" ]; then
+	# GPIO 17 powers the module, active low. The SD driver also drives it as
+	# the card's power switch, hard-wired to that pad: off at probe when no
+	# card is in. The EHCI here does not see a device that turns up after its
+	# probe, so power the module and probe the controller again if it is not
+	# there.
+	gpio clear 17 > /dev/null
+	if [ ! -e /sys/bus/usb/devices/1-1 ]; then
+		sleep 3
+		echo soc:Sstar-ehci-1 > /sys/bus/platform/drivers/Sstar-ehci-1/unbind
+		sleep 1
+		echo soc:Sstar-ehci-1 > /sys/bus/platform/drivers/Sstar-ehci-1/bind
+		sleep 4
+	fi
+	# The driver's own power saving holds every packet for up to a beacon
+	# interval: 50-350 ms pings and a stalling stream. iwconfig shows it off.
+	modprobe 8188fu rtw_power_mgnt=0 rtw_ips_mode=0
+	exit 0
+fi
+
+exit 1
