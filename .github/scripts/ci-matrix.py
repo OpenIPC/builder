@@ -71,6 +71,9 @@ NOT_BUILT = {
     "gk7102ca_lite_umea-qc01x", "gk7102ca_lite_vstarcam-g8896wip",
     "gk7205v200_rubyfpv_generic", "hi3518ev200_lite_lenovo-snowman-1080p",
     "t31_lite_xiaomi-mjsxj05hl",
+    # Needs OpenIPC/linux#68 (the Mini B USB-host image) and
+    # OpenIPC/realtek-wlan#10 (rtl8812au_fpv on 5.10) to land first.
+    "rv1103_lite_luckfox-pico-mini-b",
 }
 
 # Workflows and scripts that cannot change what a build produces. Matched on the
