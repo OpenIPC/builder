@@ -17,13 +17,15 @@ case "$1" in
 	stop) cmd=0 pan=0 tilt=0 ;;
 	right | left | up | down)
 		speed=${2:-32}
+		# By shape, not by -gt: ash reads a leading zero as octal, and 08 would
+		# then fail in the checksum with the transceiver already in send.
 		case "$speed" in
-			'' | *[!0-9]*) speed=64 ;;
+			[0-9] | [1-5][0-9] | 6[0-3]) ;;
+			*)
+				echo "pelco: speed is 0 to 63" >&2
+				exit 1
+				;;
 		esac
-		if [ "$speed" -gt 63 ]; then
-			echo "pelco: speed is 0 to 63" >&2
-			exit 1
-		fi
 		case "$1" in
 			right) cmd=2 pan=$speed tilt=0 ;;
 			left) cmd=4 pan=$speed tilt=0 ;;
@@ -36,6 +38,8 @@ case "$1" in
 		exit 1
 		;;
 esac
+
+set -e
 
 devmem 0x200f00c0 32 3 # GPIO6_0 -> UART1_RXD
 devmem 0x200f00c8 32 3 # GPIO6_2 -> UART1_TXD
@@ -51,13 +55,21 @@ devmem $((UART + 0x28)) 32 $((div % 64))
 devmem $((UART + 0x2c)) 32 0x70  # 8N1, FIFO on
 devmem $((UART + 0x30)) 32 0x301 # UART, TX and RX on
 
+sum=$(((1 + cmd + pan + tilt) % 256))
+
+# Whatever happens next, the transceiver goes back to listening: left in send it
+# holds the bus against everything else.
+trap 'gpio clear 47 >/dev/null' EXIT
 gpio set 47 >/dev/null
-for b in 255 1 0 "$cmd" "$pan" "$tilt" $(((1 + cmd + pan + tilt) % 256)); do
+for b in 255 1 0 "$cmd" "$pan" "$tilt" "$sum"; do
 	devmem "$UART" 32 "$b"
 done
-# Bounded: a transceiver left in send holds the bus against everything else.
+# Seven bytes take 7 ms at 9600, far fewer polls than this: devmem forks.
 n=0
-while [ $(($(devmem $((UART + 0x18))) & 8)) -ne 0 ] && [ "$n" -lt 100 ]; do
+while [ $(($(devmem $((UART + 0x18))) & 8)) -ne 0 ]; do
 	n=$((n + 1))
+	if [ "$n" -ge 100 ]; then
+		echo "pelco: UART1 still busy, the command may not have gone out" >&2
+		exit 1
+	fi
 done
-gpio clear 47 >/dev/null
