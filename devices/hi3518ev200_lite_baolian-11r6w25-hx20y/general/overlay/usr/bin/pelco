@@ -1,0 +1,63 @@
+#!/bin/sh
+#
+# Pan and tilt the mount on the RS-485 header (pins 4 and 5): Pelco-D, 9600 8N1,
+# address 1. A move carries on until `pelco stop`.
+#
+#   pelco left|right|up|down [speed 0-63]
+#   pelco stop
+#
+# The 4.9 kernel here leaves UART1 disabled, and its pl011 driver could not turn
+# the RS-485 transceiver round anyway, so this drives the UART's registers. It
+# is the sequence that moved the mount on the camera in #2675. gpio 47 is the
+# transceiver's direction: high to send, low to leave the bus alone.
+
+UART=0x20090000
+
+case "$1" in
+	stop) cmd=0 pan=0 tilt=0 ;;
+	right | left | up | down)
+		speed=${2:-32}
+		case "$speed" in
+			'' | *[!0-9]*) speed=64 ;;
+		esac
+		if [ "$speed" -gt 63 ]; then
+			echo "pelco: speed is 0 to 63" >&2
+			exit 1
+		fi
+		case "$1" in
+			right) cmd=2 pan=$speed tilt=0 ;;
+			left) cmd=4 pan=$speed tilt=0 ;;
+			up) cmd=8 pan=0 tilt=$speed ;;
+			down) cmd=16 pan=0 tilt=$speed ;;
+		esac
+		;;
+	*)
+		echo "usage: pelco left|right|up|down [speed 0-63] | pelco stop" >&2
+		exit 1
+		;;
+esac
+
+devmem 0x200f00c0 32 3 # GPIO6_0 -> UART1_RXD
+devmem 0x200f00c8 32 3 # GPIO6_2 -> UART1_TXD
+devmem 0x200f00bc 32 0 # GPIO5_7 as a GPIO
+devmem 0x200300e4 32 $(($(devmem 0x200300e4) | 1 << 16))
+
+# UART1 shares the console's clock and the console runs at 115200, so 9600 is
+# twelve times its divisor, whichever clock the bootloader chose.
+div=$((($(devmem 0x20080024) * 64 + $(devmem 0x20080028)) * 12))
+devmem $((UART + 0x30)) 32 0
+devmem $((UART + 0x24)) 32 $((div / 64))
+devmem $((UART + 0x28)) 32 $((div % 64))
+devmem $((UART + 0x2c)) 32 0x70  # 8N1, FIFO on
+devmem $((UART + 0x30)) 32 0x301 # UART, TX and RX on
+
+gpio set 47 >/dev/null
+for b in 255 1 0 "$cmd" "$pan" "$tilt" $(((1 + cmd + pan + tilt) % 256)); do
+	devmem "$UART" 32 "$b"
+done
+# Bounded: a transceiver left in send holds the bus against everything else.
+n=0
+while [ $(($(devmem $((UART + 0x18))) & 8)) -ne 0 ] && [ "$n" -lt 100 ]; do
+	n=$((n + 1))
+done
+gpio clear 47 >/dev/null

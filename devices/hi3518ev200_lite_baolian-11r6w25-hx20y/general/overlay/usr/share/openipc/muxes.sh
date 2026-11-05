@@ -3,6 +3,14 @@
 ### focus coil on GPIO0_6, a pad that boots as FLASH_TRIG ###
 devmem 0x200f0008 32 0
 
+### night lamps: IR, not white ###
+# GPIO7_7 boots as SAR_ADC_CH1. It only picks which lamps may light, high for
+# IR and low for white; the camera's own light sensor switches them on and off
+# (#2675). White lights that sensor up and flashes every few seconds, so IR is
+# the default. `gpio clear 63` selects white until the next boot.
+devmem 0x200f00fc 32 1
+gpio set 63 >/dev/null
+
 ### home the lens, then park it at wide, focused at a few metres ###
 # A stepper has no idea where it is after a power cut, so this runs on every
 # boot: zoom to its tele stop, focus to its near stop, then out by the counts
