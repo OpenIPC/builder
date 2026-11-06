@@ -1,7 +1,13 @@
 /etc/sensors/cv2003_i2c_1080p.ini
+/etc/sensors/gc4023_i2c_4M.ini
 /etc/sensors/gc4653_i2c_4M.ini
 /etc/sensors/imx335_i2c_5M.ini
+/etc/sensors/iq/cv2003.ini
+/etc/sensors/iq/gc4023.ini
+/etc/sensors/iq/gc4653.ini
+/etc/sensors/iq/mis20s1.ini
 /etc/sensors/iq/sc4336p.ini
+/etc/sensors/iq/vs4388.ini
 /etc/sensors/mis20s1_i2c_1080p.ini
 /etc/sensors/modes/imx335_1520p.ini
 /etc/sensors/modes/imx335_flex.ini
