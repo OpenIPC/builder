@@ -52,6 +52,7 @@ Jooan A6M-U vB           T23N         SC1A4T    ATBM6012B_USB    NOR_8M    **INI
 Jooan Q3R-U              T23N         SC1346    ATBM6012B_USB    NOR_8M    **INIT** - in progress
 JVS INGT10 GQS60EP       T10A         OV9750    -                NOR_8M    done
 Lenovo Snowman 1080P     HI3518EV200  SC2035    RTL8188EUS_USB   NOR_16M   in progress, LightSensor-no
+Litokam P1t              T23N         SC2336    ATBM6012B_USB    NOR_8M    in progress
 LSC 3215672              T23N         SC2331    ATBM6012B_USB    NOR_8M    **INIT** - progress
 Meari Speed 6S           SSC333       JXF37     RTL8188FU_USB    NOR_16M   video-yes, wifi-yes, motors-no
 OpenIPC AIO Mario        SSC338Q      IMX335    RTL8812AU_USB    NOR_16M   done
@@ -132,6 +133,7 @@ Model names                            Our firmware
 
 Dahua IPC-HFW1230SP-V3          =>     Dahua IPC-HFW1230SP-V2
 Dahua IPC-C22C-LC               =>     Imou IPC-С22CP
+Galayou G2                      =>     Litokam P1t
 Imou IPC-С22EP-A                =>     Imou IPC-С22CP
 Imou IPC-F22AP                  =>     Imou IPC-С22CP
 Switcam HS303 v3                =>     Qtech QVC-IPC-136W
