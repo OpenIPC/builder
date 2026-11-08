@@ -1,0 +1,17 @@
+/lib/modules/3.10.104/ambarella/ar0230.ko
+/lib/modules/3.10.104/ambarella/ar0237.ko
+/lib/modules/3.10.104/ambarella/imx172.ko
+/lib/modules/3.10.104/ambarella/imx178.ko
+/lib/modules/3.10.104/ambarella/imx226.ko
+/lib/modules/3.10.104/ambarella/imx274_mipi.ko
+/lib/modules/3.10.104/ambarella/imx290.ko
+/lib/modules/3.10.104/ambarella/imx290_mipi.ko
+/lib/modules/3.10.104/ambarella/imx326.ko
+/lib/modules/3.10.104/ambarella/imx326_mipi.ko
+/lib/modules/3.10.104/ambarella/ov2718_mipi.ko
+#
+/lib/modules/3.10.104/ambarella/adv7441a.ko
+/lib/modules/3.10.104/ambarella/ambdbus.ko
+/lib/modules/3.10.104/ambarella/ambhdmi.ko
+/lib/modules/3.10.104/ambarella/ambtve.ko
+/lib/modules/3.10.104/ambarella/it66121.ko
