@@ -1,0 +1,9 @@
+#!/bin/sh
+case "$1" in
+  start)
+    iwconfig wlan0 power off 2>/dev/null || true
+    echo 0 > /sys/module/ssw101b_wifi_usb/parameters/Sstar_printk_mask 2>/dev/null || true
+    dmesg -n 3 2>/dev/null || true
+    ;;
+esac
+exit 0
