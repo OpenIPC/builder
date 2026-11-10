@@ -666,7 +666,7 @@
       "note": "shared wireless adapter table"
     },
     {
-      "builder": "devices/t31_lite_aoni-ep01j05/general/overlay/etc/init.d/S70vendor",
+      "builder": "devices/t31_ultimate_aoni-ep01j05/general/overlay/etc/init.d/S70vendor",
       "firmware": "general/overlay/etc/init.d/S70vendor",
       "blob": "d0a1dc58dae0a2c46b104274438cea2cae1106f1",
       "reconciled": "2026-08-25",

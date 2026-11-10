@@ -5,7 +5,7 @@
 #
 # Set custom upgrade url
 #
-fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t31_lite_aoni-ep01j05-nor.tgz'
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t31_ultimate_aoni-ep01j05-nor.tgz'
 #
 #
 # Set custom majestic settings
