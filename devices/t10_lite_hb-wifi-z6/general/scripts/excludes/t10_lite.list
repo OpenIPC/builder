@@ -1,0 +1,5 @@
+/lib/modules/3.10.14/kernel/drivers/net/wireless/mt7601u/mt7601sta.ko
+/lib/modules/3.10.14/kernel/drivers/net/wireless/rtlwifi/rtl8192cu/rtl8192cu.ko
+/lib/modules/3.10.14/kernel/drivers/net/wireless/rtlwifi/rtl8192c/rtl8192c-common.ko
+/lib/modules/3.10.14/kernel/drivers/net/wireless/rtlwifi/rtlwifi.ko
+/lib/modules/3.10.14/kernel/net/mac80211/mac80211.ko

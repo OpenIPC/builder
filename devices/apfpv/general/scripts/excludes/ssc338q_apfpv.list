@@ -23,3 +23,5 @@
 /lib/libnsl.so.1
 /usr/bin/ldd
 /usr/lib/libstdc++.so.6.0.32-gdb.py
+/usr/lib/libstdc++.so.6.0.32
+/usr/lib/libstdc++.so.6
