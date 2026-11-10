@@ -456,7 +456,7 @@
       "note": "shared wireless adapter table"
     },
     {
-      "builder": "devices/ssc333_lite_vstarcam-c43s_b/general/overlay/etc/wireless/usb",
+      "builder": "devices/ssc333_ultimate_vstarcam-c43s_b/general/overlay/etc/wireless/usb",
       "firmware": "general/overlay/etc/wireless/usb",
       "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
       "reconciled": "2026-08-25",
