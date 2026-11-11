@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# Perform basic settings on a known IP camera
+#
+# XiongMai JZC-N51813L: hi3518cv100 (HiSilicon Hi3518C V100), 128M RAM, 16M NOR,
+# an 18x zoom block whose own MCU sits on UART0 (9600 8N1) and both runs the
+# lens (Sony VISCA, camera address 1) and configures the Aptina AR0130 sensor.
+# The SoC sees nothing on I2C, so the sensor is named, and no frame reaches VI
+# until /etc/init.d/S90lens-mcu has sent the MCU its "init camera" frame.
+#
+#
+# Set sensor. Linux needs mem=64M on this board: at 32M majestic starves.
+#
+fw_setenv sensor ar0130
+fw_setenv osmem 64M
+#
+# Set custom upgrade url
+#
+fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/hi3518cv100_lite_xm-n51813l-nor.tgz'
+#
+#
+# Zoom and focus: majestic-af's `visca` actuator on the MCU's UART. Focus is
+# the MCU's own (it refocuses after every zoom), so the plugin books no pass
+# of its own.
+#
+cli -s .ptz.enabled true
+cli -s .ptz.actuator visca
+cli -s .ptz.port /dev/ttyAMA0
+cli -s .ptz.baud 9600
+#
+#
+# The MCU leaves two junk lines at the top of the AR0130 frame; cut them off.
+#
+cli -s .video0.crop 0x2x1280x958
+#
+#
+# The MCU owns the console UART, so getty must not sit on it reading the
+# MCU's bytes. The edit lands in the overlay; an upgrade that wipes the
+# overlay also wipes /etc/custom.ok, so this script runs again and the
+# camera heals itself.
+#
+sed -i '/getty/d' /etc/inittab
+#
+#
+# Reboot so the environment and the inittab edit take effect.
+#
+(sleep 3 ; reboot -f) &
+#
+
+exit 0

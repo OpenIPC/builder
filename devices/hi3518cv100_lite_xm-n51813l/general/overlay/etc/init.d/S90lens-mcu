@@ -1,0 +1,73 @@
+#!/bin/sh
+#
+# Xiongmai N51813L (Hi3518CV100 18x zoom block): the AR0130 is configured by
+# the zoom block's own MCU on UART0, not by the SoC, so no frame reaches VI
+# until the MCU is told to start the sensor. Stock Sofia sends the same
+# "init camera" frame: BB 01 00 28 00 <mode> FF, acknowledged BB 81 00 28.
+# Mode 02 = 25 fps (PAL, what stock ran), 03 = 30 fps. UART0 is also the
+# kernel console, so printk is quietened and the console getty is off
+# (/etc/inittab); the MCU talks 9600 8N1.
+#
+# Two GPIOs, set as stock /usr/etc/loadmod did: GPIO4_2 high (camera block
+# enable; OpenIPC leaves its pad on MII_RXD2 and the MCU goes deaf) and
+# GPIO5_2 low (the MCU reset, which Sofia pulses high for 600 ms).
+#
+
+PORT=/dev/ttyAMA0
+MODE=$(fw_printenv -n lens_mode 2>/dev/null)
+MODE=${MODE:-02}
+
+# gpio_out <pad mux reg> <GPIO bank base> <bit mask> <0|1>
+gpio_out() {
+	devmem "$1" 32 0
+	d=$(devmem $(($2 + 0x400)))
+	devmem $(($2 + 0x400)) 32 $((d | $3))
+	devmem $(($2 + ($3 << 2))) 32 $(($4 * $3))
+}
+
+mcu_reset() {
+	gpio_out 0x200f00bc 0x20190000 4 1
+	usleep 600000
+	gpio_out 0x200f00bc 0x20190000 4 0
+	sleep 2
+}
+
+send() {
+	s=""
+	for b in "$@"; do s="$s\\$(printf '%03o' "0x$b")"; done
+	printf "$s" > "$PORT"
+}
+
+start() {
+	printf "Starting lens MCU: "
+	dmesg -n 1
+	gpio_out 0x200f003c 0x20180000 4 1   # GPIO4_2: camera block enable
+	gpio_out 0x200f00bc 0x20190000 4 0   # GPIO5_2: MCU reset released
+	stty -F "$PORT" 9600 raw cs8 -cstopb -parenb -echo -echoe -echok -ixon
+	for try in 1 2 3 4 5; do
+		cat "$PORT" > /tmp/lens-mcu.rx &
+		pid=$!
+		send bb 01 00 28 00 "$MODE" ff
+		sleep 1
+		kill "$pid" 2>/dev/null
+		if hexdump -v -e '1/1 "%02x"' /tmp/lens-mcu.rx | grep -q bb810028; then
+			echo "OK (mode $MODE, try $try)"
+			return 0
+		fi
+		[ "$try" = 2 ] && mcu_reset
+	done
+	echo "FAIL (no acknowledgement)"
+	return 1
+}
+
+case "$1" in
+	start|restart|reload)
+		start
+		;;
+	stop)
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+		;;
+esac
