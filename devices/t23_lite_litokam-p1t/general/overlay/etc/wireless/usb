@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set_gpio() {
+	[ "$2" -eq 1 ] && gpio set $1 || gpio clear $1
+	sleep 1
+}
+
+# T23 LITOKAM P1T
+if [ "$1" = "atbm601x-t23-litokam-p1t" ]; then
+	modprobe atbm6012b_wifi_usb
+	exit 0
+fi
+
+exit 1
