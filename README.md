@@ -16,6 +16,7 @@ _(based on Buildroot)_
 
 ```
 Amcrest IP4M-1026E       S3L          OV4689    -                NOR_32M   testing, video-ok, ircut-ok, day/night-ok
+Anjoy MC-L12D2           SSC377D      IMX335    -                NOR_16M   testing, ptz zoom/focus (pelco-xm ttyS2)
 Anxinshi ASRIH698T       HI3516DV100  IMX291    -                NOR_8M    video-ok, pan/tilt-ok (pelco-d UART1), zoom/focus-no
 Aoni EP01J05             T31L         ?         RTL8188FU_USB    NOR_16M   new
 Azarton C1               T20X         JXF23     RTL8189FS_SDIO   NOR_16M   done
