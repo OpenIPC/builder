@@ -1,5 +1,5 @@
 # OpenIPC builder build index
-# generated_at=2026-11-11T21:27:25Z
+# generated_at=2026-11-12T04:28:47Z
 # columns: build_id platform flash size url
 nightly-20261111-03ff937 gk7201v200_lite_xm-7205-rtl8733bu-16mb nor 7482081 https://github.com/OpenIPC/builder/releases/download/nightly-20261111-03ff937/gk7201v200_lite_xm-7205-rtl8733bu-16mb-nor.tgz
 nightly-20261111-03ff937 gk7201v200_lite_xm-7205-rtl8733bu-16mb nor_split 7482112 https://github.com/OpenIPC/builder/releases/download/nightly-20261111-03ff937/gk7201v200_lite_xm-7205-rtl8733bu-16mb-nor-split.tgz
