@@ -34,6 +34,15 @@ cli -s .ptz.baud 9600
 cli -s .video0.crop 0x2x1280x958
 #
 #
+# Encoder as the stock firmware runs it on this block: VBR, 2560 kbps, a
+# keyframe every 2 s (GOP 50), max QP 45. majestic's default for 1280x958
+# was CBR at half that rate with a GOP of 1 s.
+#
+cli -s .video0.rcMode vbr
+cli -s .video0.bitrate 2560
+cli -s .video0.gopSize 2
+#
+#
 # The MCU owns the console UART, so getty must not sit on it reading the
 # MCU's bytes. The edit lands in the overlay; an upgrade that wipes the
 # overlay also wipes /etc/custom.ok, so this script runs again and the
