@@ -29,6 +29,16 @@ cli -s .ptz.port /dev/ttyAMA0
 cli -s .ptz.baud 9600
 #
 #
+# The MCU runs the sensor's exposure and gain; the ISP's analog and digital
+# gain would only be numbers it cannot apply, so they stay at 1x and its own
+# digital gain is all auto-exposure moves. The image tuning that goes with it
+# (black level, AWB, colour matrices, NR by the MCU's reported gain) is the
+# board's /etc/sensors/iq/ar0130.ini.
+#
+cli -s .isp.aGain 1
+cli -s .isp.dGain 1
+#
+#
 # Orientation as the stock firmware shows it: Sofia captures with VI mirror
 # and flip on, so the block reads the other way up from the raw sensor.
 # That puts the two junk lines the MCU leaves on the AR0130 frame at the
