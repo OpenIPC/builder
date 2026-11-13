@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+
+(while true; do sleep 1; netblink 14 traffic eth0 >/dev/null 2>&1; done) &
+#
+(while true; do sleep 30; checker=$(pidof majestic); if [[ -z $checker ]]; then /etc/init.d/S95majestic start; fi; done) &
+#
+devmem 0x1F2079B8 16 0x1000
+
+
+exit 0
