@@ -1,0 +1,2 @@
+# MT7601U driver from the generic EV300 kernel config; this board has an RTL8188FU.
+/lib/modules/4.4.302/kernel/drivers/net/wireless/mediatek/mt7601u/mt7601u.ko
