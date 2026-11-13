@@ -1,5 +1,5 @@
 # OpenIPC builder build index
-# generated_at=2026-11-13T13:55:16Z
+# generated_at=2026-11-13T18:11:44Z
 # columns: build_id platform flash size url
 nightly-20261113-e8c688b ssc377d_lite_anjoy-mc-l12d2 nor 6761217 https://github.com/OpenIPC/builder/releases/download/nightly-20261113-e8c688b/ssc377d_lite_anjoy-mc-l12d2-nor.tgz
 nightly-20261112-9f3f685 gk7201v200_lite_xm-7205-rtl8733bu-16mb nor 7480984 https://github.com/OpenIPC/builder/releases/download/nightly-20261112-9f3f685/gk7201v200_lite_xm-7205-rtl8733bu-16mb-nor.tgz
