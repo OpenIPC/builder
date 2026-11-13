@@ -29,6 +29,12 @@ cli -s .ptz.port /dev/ttyAMA0
 cli -s .ptz.baud 9600
 #
 #
+# The WebUI's PTZ pad: majestic drives the lens, the WebUI asks /ptz. A
+# pan/tilt head goes in ptz.head / ptz.headPort (its own tty, or
+# tcp://<ip>:<port> for a serial gateway), since the lens holds ptz.port.
+fw_setenv ptz_control visca
+#
+#
 # The MCU runs the sensor's exposure and gain; the ISP's analog and digital
 # gain would only be numbers it cannot apply, so they stay at 1x and its own
 # digital gain is all auto-exposure moves. The image tuning that goes with it
