@@ -119,6 +119,7 @@ SMOKE_TARGETS = [
     "gk7205v200_otg_generic",            # otg
     "ssc338q_apfpv",                     # devices/apfpv
     "s3l_ultimate_amcrest-ip4m1026e",    # Ambarella
+    "ak3918ev300_lite_heimvision-pe3020w",  # Anyka
 ]
 
 # LICENSE and README anchored to whole filenames; unanchored they would also

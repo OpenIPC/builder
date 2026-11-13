@@ -40,6 +40,7 @@ G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
 EC37-T11                 T20L         SC2232    RTL8188FU_USB    MOR_16M   in progress
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
 HB-WIFI-Z6 v1.2          T10          JXH62     RTL8188EU_USB    NOR_8M    in progress
+HeimVision PE3020-W      AK3918EV300  JXF37     RTL8188FU_USB    NOR_8M    testing, RAM-boot only (OpenIPC kernel): ISP capture-ok, ircut-ok (GPIO 42/41), no streamer
 iFlytek XFP301-M         T31ZX        JXQ03     RTL8188FU_USB    NOR_16    research
 Imilab EC3 CMSXJ25A      SSC325       GC2053    MT7603UN_?       NOR_16M   in progress
 Dahua IPC-HFW1230SP-V2   SSC335DE     GC2053                     NOR_16M   done
