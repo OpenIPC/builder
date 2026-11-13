@@ -29,9 +29,33 @@ cli -s .ptz.port /dev/ttyAMA0
 cli -s .ptz.baud 9600
 #
 #
-# The MCU leaves two junk lines at the top of the AR0130 frame; cut them off.
+# The MCU runs the sensor's exposure and gain; the ISP's analog and digital
+# gain would only be numbers it cannot apply, so they stay at 1x and its own
+# digital gain is all auto-exposure moves. The image tuning that goes with it
+# (black level, AWB, colour matrices, NR by the MCU's reported gain) is the
+# board's /etc/sensors/iq/ar0130.ini.
 #
-cli -s .video0.crop 0x2x1280x958
+cli -s .isp.aGain 1
+cli -s .isp.dGain 1
+#
+#
+# Orientation as the stock firmware shows it: Sofia captures with VI mirror
+# and flip on, so the block reads the other way up from the raw sensor.
+# That puts the two junk lines the MCU leaves on the AR0130 frame at the
+# bottom (rows 958-959); the crop cuts them off.
+#
+cli -s .image.mirror true
+cli -s .image.flip true
+cli -s .video0.crop 0x0x1280x958
+#
+#
+# Encoder as the stock firmware runs it on this block: VBR, 2560 kbps, a
+# keyframe every 2 s (GOP 50), max QP 45. majestic's default for 1280x958
+# was CBR at half that rate with a GOP of 1 s.
+#
+cli -s .video0.rcMode vbr
+cli -s .video0.bitrate 2560
+cli -s .video0.gopSize 2
 #
 #
 # The MCU owns the console UART, so getty must not sit on it reading the
