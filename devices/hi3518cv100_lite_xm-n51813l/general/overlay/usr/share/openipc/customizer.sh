@@ -32,6 +32,9 @@ cli -s .ptz.baud 9600
 # The WebUI's PTZ pad: majestic drives the lens, the WebUI asks /ptz. A
 # pan/tilt head goes in ptz.head / ptz.headPort (its own tty, or
 # tcp://<ip>:<port> for a serial gateway), since the lens holds ptz.port.
+# ptz_caps stays unset on purpose: unlike 'zoom focus' on the zoom-only
+# blocks, it lets the pad take its axes from majestic's verbs= -- zoom and
+# focus for the block alone, pan and tilt too once a head is configured.
 fw_setenv ptz_control visca
 #
 #
