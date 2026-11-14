@@ -7,21 +7,18 @@ fw_setenv upgrade 'https://github.com/OpenIPC/builder/releases/download/latest/t
 # Set custom majestic settings
 #
 cli -s .isp.blkCnt 3
-cli -s .image.size 2560x1440
-cli -s .image.fps 20
-cli -s .image.sharpness 20
 #
 cli -s .video0.codec h265
 cli -s .video0.size 2560x1440
 cli -s .video0.fps 20
 cli -s .video0.rcMode avbr
-cli -s .video1.profile high
 cli -s .video0.bitrate 768
 cli -s .video0.gopSize 6
 cli -s .video0.gopMode smart
 #
 cli -s .video1.enabled true
 cli -s .video1.codec h264
+cli -s .video1.profile high
 cli -s .video1.size 640x360
 cli -s .video1.fps 8
 cli -s .video1.rcMode avbr
