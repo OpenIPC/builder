@@ -120,6 +120,7 @@ SMOKE_TARGETS = [
     "ssc338q_apfpv",                     # devices/apfpv
     "s3l_ultimate_amcrest-ip4m1026e",    # Ambarella
     "ak3918ev300_lite_heimvision-pe3020w",  # Anyka
+    "xm530_lite_anbiux-a8b-3mp",         # Xiongmai
 ]
 
 # LICENSE and README anchored to whole filenames; unanchored they would also
