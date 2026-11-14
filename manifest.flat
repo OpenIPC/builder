@@ -1,5 +1,5 @@
 # OpenIPC builder build index
-# generated_at=2026-11-14T05:43:05Z
+# generated_at=2026-11-14T06:13:27Z
 # columns: build_id platform flash size url
 nightly-20261113-a5995e5 ak3918ev300_lite_heimvision-pe3020w nor 6053499 https://github.com/OpenIPC/builder/releases/download/nightly-20261113-a5995e5/ak3918ev300_lite_heimvision-pe3020w-nor.tgz
 nightly-20261113-a5995e5 gk7201v200_lite_xm-7205-rtl8733bu-16mb nor 7485437 https://github.com/OpenIPC/builder/releases/download/nightly-20261113-a5995e5/gk7201v200_lite_xm-7205-rtl8733bu-16mb-nor.tgz
