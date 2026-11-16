@@ -1,0 +1,312 @@
+#!/bin/sh
+#
+# Pan/tilt stepper driver for the Litokam P1t / Galayou G2.
+#
+# This is a drop-in replacement for the upstream gpio-motors binary of the same
+# name, because that is the name the web UI invokes. motor.cgi builds the
+# command and hands it to run.cgi:
+#
+#	gpio-motors <pan steps> <tilt steps> <delay ms>
+#
+# so a device whose stage needs to behave has to own that name. Upstream
+# gpio-motors keeps no position, which is fine for a camera whose stage is
+# always left where it was and wrong for one that homes: every move would
+# start from an unknown rotor phase and the stage would jerk or drift. This
+# keeps the origin, the travel limits and the phase across calls.
+#
+# Travel comes from ptz_pan_max / ptz_tilt_max and the rest position from
+# ptz_home_x / ptz_home_y, all seeded by customizer.sh.
+# `gpio-motors home` drives the pan axis into its end stop and back to rest.
+# Tilt is homed only when ptz_tilt_home=1, swept towards ptz_tilt_dir (+1/-1);
+# otherwise its moves stay relative and are not clamped.
+#
+# The coil order is the one the factory firmware uses, which puts each axis'
+# first pin in the most significant bit of the phase byte.
+#
+# ash-compatible: no arrays, no declare, no ${var^^}, no ${!var}, no <<<.
+#
+
+STATE=/etc/ptz_state
+LOCK=/var/lock/ptz.lock
+GPIOS=/sys/class/gpio
+
+# Eight-phase half-step excitation, most significant bit = first pin.
+SEQ="8 12 4 6 2 3 1 9"
+
+log() {
+	echo "$1" | logger -t gpio-motors
+}
+
+env_or() {
+	v=$(fw_printenv -n "$1" 2>/dev/null | tr -d '\r')
+	if [ -n "$v" ] && [ "$v" != "$1" ]; then
+		echo "$v"
+	else
+		echo "$2"
+	fi
+}
+
+load_config() {
+	PAN_MAX=$(env_or ptz_pan_max 3982)
+	TILT_MAX=$(env_or ptz_tilt_max 796)
+	REST_X=$(env_or ptz_home_x 1991)
+	REST_Y=$(env_or ptz_home_y 398)
+	TILT_HOME=$(env_or ptz_tilt_home 0)
+	TILT_DIR=$(env_or ptz_tilt_dir -1)
+	PINS=$(env_or ptz_gpio "")
+}
+
+load_state() {
+	if [ -f "$STATE" ]; then
+		read -r POS_X POS_Y PHASE_P PHASE_T Y_REF < "$STATE"
+	fi
+	case "$POS_X$POS_Y$PHASE_P$PHASE_T$Y_REF" in
+		*[!0-9\ -]*) POS_X=0; POS_Y=0; PHASE_P=0; PHASE_T=0; Y_REF=0 ;;
+	esac
+	[ -z "$POS_X" ] && POS_X=0
+	[ -z "$POS_Y" ] && POS_Y=0
+	[ -z "$PHASE_P" ] && PHASE_P=0
+	# A state file from before the split carries one shared phase; start both
+	# axes from it rather than dropping the rotor position.
+	[ -z "$PHASE_T" ] && PHASE_T=$PHASE_P
+	case "$Y_REF" in
+		0|1) ;;
+		*) Y_REF=0 ;;
+	esac
+}
+
+save_state() {
+	echo "$POS_X $POS_Y $PHASE_P $PHASE_T $Y_REF" > "$STATE"
+}
+
+export_pins() {
+	for p in $PIN_LIST; do
+		if [ ! -d "$GPIOS/gpio$p" ]; then
+			echo "$p" > "$GPIOS/export" 2>/dev/null || return 1
+			echo out > "$GPIOS/gpio$p/direction"
+		fi
+	done
+}
+
+release_pins() {
+	for p in $PIN_LIST; do
+		echo 0 > "$GPIOS/gpio$p/value" 2>/dev/null
+		echo "$p" > "$GPIOS/unexport" 2>/dev/null
+	done
+}
+
+PINS_HELD=
+
+cleanup() {
+	if [ -n "$PINS_HELD" ]; then
+		release_pins
+		PINS_HELD=
+	fi
+	rmdir "$LOCK" 2>/dev/null
+}
+
+on_signal() {
+	cleanup
+	exit 1
+}
+
+# One microstep of one axis. Each axis keeps its own half-step phase: they are
+# separate motors, so a shared counter would advance one axis' sequence when
+# the other steps, and skip half-steps when both move together.
+# $1 = axis letter (P or T), $2 = +1 forward or -1 back, $3 = delay in us
+step_one() {
+	if [ "$1" = "P" ]; then
+		PHASE_P=$(( (PHASE_P + $2 + 8) % 8 ))
+		phase=$PHASE_P
+		a=$PIN_P1; b=$PIN_P2; c=$PIN_P3; d=$PIN_P4
+	else
+		PHASE_T=$(( (PHASE_T + $2 + 8) % 8 ))
+		phase=$PHASE_T
+		a=$PIN_T1; b=$PIN_T2; c=$PIN_T3; d=$PIN_T4
+	fi
+
+	code=$(echo $SEQ | cut -d' ' -f$((phase + 1)))
+	echo $(( code / 8 % 2 )) > "$GPIOS/gpio$a/value"
+	echo $(( code / 4 % 2 )) > "$GPIOS/gpio$b/value"
+	echo $(( code / 2 % 2 )) > "$GPIOS/gpio$c/value"
+	echo $(( code % 2 )) > "$GPIOS/gpio$d/value"
+	usleep "$3"
+}
+
+# Shorten a move to the travel that is left. $1 = requested steps, $2 = where
+# the axis currently sits, $3 = where the move would land, $4 = the axis limit.
+clamp() {
+	if [ "$1" -gt 0 ] && [ "$3" -gt "$4" ]; then
+		echo $(( $4 - $2 ))
+	elif [ "$1" -lt 0 ] && [ "$3" -lt 0 ]; then
+		echo $(( 0 - $2 ))
+	else
+		echo "$1"
+	fi
+}
+
+# Drive both axes by the requested relative steps in one pass, alternating the
+# two coils so they advance together. Stepping them in two passes instead
+# would leave the second axis half a cycle behind the first.
+step_both() {
+	# $1 = pan steps, $2 = tilt steps, $3 = delay in us
+	[ "$1" -eq 0 ] && [ "$2" -eq 0 ] && return 0
+	if [ "$1" -lt 0 ]; then
+		pdir=-1
+		pn=$((0 - $1))
+	else
+		pdir=1
+		pn=$1
+	fi
+	if [ "$2" -lt 0 ]; then
+		tdir=-1
+		tn=$((0 - $2))
+	else
+		tdir=1
+		tn=$2
+	fi
+	[ "$pn" -lt "$tn" ] && total=$tn || total=$pn
+
+	n=0
+	while [ "$n" -lt "$total" ]; do
+		[ "$n" -lt "$pn" ] && step_one P "$pdir" "$3"
+		[ "$n" -lt "$tn" ] && step_one T "$tdir" "$3"
+		n=$((n + 1))
+	done
+}
+
+# mkdir is atomic, so it makes a lock. run.cgi does not queue -- every click
+# is fired off without waiting -- so two moves can overlap, and two half-step
+# sequences on the same coils interleave into a stall. Wait for the other move
+# to finish, then give up rather than fight it for the pins.
+acquire_lock() {
+	tries=0
+	while ! mkdir "$LOCK" 2>/dev/null; do
+		tries=$((tries + 1))
+		if [ "$tries" -gt 40 ]; then
+			log "another move held the stage, dropping this one"
+			return 1
+		fi
+		usleep 50000
+	done
+	trap cleanup EXIT
+	trap on_signal INT TERM
+}
+
+home() {
+	# One full sweep plus a quarter again, so a stage whose end stop sits a
+	# little past the measured travel still settles somewhere repeatable
+	# instead of being trusted to stop on its own.
+	sweep=$((PAN_MAX + PAN_MAX / 4))
+	log "homing pan into its end stop from $POS_X"
+	PHASE_P=0
+	PHASE_T=0
+	if [ "$TILT_HOME" = 1 ]; then
+		sweep_t=$((TILT_MAX + TILT_MAX / 4))
+		step_both "$((-sweep))" "$((TILT_DIR * sweep_t))" "$DELAY_US"
+		step_both "$REST_X" "$REST_Y" "$DELAY_US"
+		POS_X=$REST_X
+		POS_Y=$REST_Y
+		Y_REF=1
+	else
+		step_both "$((-sweep))" 0 "$DELAY_US"
+		# The end stop is position zero; go from there to the rest position.
+		step_both "$REST_X" 0 "$DELAY_US"
+		POS_X=$REST_X
+		Y_REF=0
+		log "tilt is not referenced; set ptz_tilt_home=1 to home it"
+	fi
+	save_state
+	log "homed to $POS_X $POS_Y"
+}
+
+# Shorten a move to the travel that is left rather than refusing it. The web
+# UI is fire-and-forget, so a refused move is a button that does nothing; a
+# clamped one still drives until the stage is at its stop.
+move() {
+	want_pan=$1
+	want_tilt=$2
+	pan=$(clamp "$want_pan" "$POS_X" $((POS_X + want_pan)) "$PAN_MAX")
+	if [ "$Y_REF" = 1 ]; then
+		tilt=$(clamp "$want_tilt" "$POS_Y" $((POS_Y + want_tilt)) "$TILT_MAX")
+	else
+		tilt=$want_tilt
+	fi
+
+	if [ "$pan" -ne "$want_pan" ]; then
+		log "clamped pan $want_pan to $pan, travel is 0..$PAN_MAX"
+	fi
+	if [ "$tilt" -ne "$want_tilt" ]; then
+		log "clamped tilt $want_tilt to $tilt, travel is 0..$TILT_MAX"
+	fi
+
+	step_both "$pan" "$tilt" "$DELAY_US"
+	POS_X=$((POS_X + pan))
+	POS_Y=$((POS_Y + tilt))
+	save_state
+}
+
+usage() {
+	echo "usage: gpio-motors <pan> <tilt> [delay_ms] | gpio-motors home" >&2
+}
+
+main() {
+	load_config
+
+	# Save the caller's arguments before the pins are split out below, because
+	# that split uses set -- and would otherwise consume them.
+	want_pan=$1
+	want_tilt=$2
+	delay_ms=${3:-10}
+
+	set -- $PINS
+	if [ $# -ne 8 ]; then
+		log "ptz_gpio must name 8 coils, got $#"
+		usage
+		exit 1
+	fi
+	PIN_P1=$1; PIN_P2=$2; PIN_P3=$3; PIN_P4=$4
+	PIN_T1=$5; PIN_T2=$6; PIN_T3=$7; PIN_T4=$8
+	PIN_LIST="$1 $2 $3 $4 $5 $6 $7 $8"
+
+	if [ "$want_pan" = "home" ]; then
+		acquire_lock || exit 0
+		PINS_HELD=1
+		export_pins || exit 1
+		load_state
+		DELAY_US=10000
+		home
+		exit 0
+	fi
+
+	if [ -z "$want_pan" ] || [ -z "$want_tilt" ]; then
+		usage
+		exit 1
+	fi
+	case "$want_pan$want_tilt" in
+		*[!0-9\ -]*)
+			usage
+			exit 1
+			;;
+	esac
+	case "$delay_ms" in
+		''|*[!0-9]*)
+			usage
+			exit 1
+			;;
+	esac
+	[ "$delay_ms" -lt 1 ] && delay_ms=1
+	[ "$delay_ms" -gt 50 ] && delay_ms=50
+
+	# The web UI passes a per-micro-step delay in whole milliseconds; usleep
+	# wants microseconds, and a stepper needs more than 1 ms to be smooth.
+	DELAY_US=$((delay_ms * 1000))
+
+	acquire_lock || exit 0
+	PINS_HELD=1
+	export_pins || exit 1
+	load_state
+	move "$want_pan" "$want_tilt"
+}
+
+main "$@"

@@ -1,0 +1,5 @@
+# Galayou G2 / Litokam P1t (T23N): the SD slot is wired with a single data
+# line, but the MSC0 host powers up advertising 4-bit transfers, so the card
+# never enumerates. Restrict it to 1-bit (see
+# all-patches/linux/0001-jzmmc-v12-add-mmc0-1bit-option.patch).
+CONFIG_JZMMC_V12_MMC0_1BIT=y
