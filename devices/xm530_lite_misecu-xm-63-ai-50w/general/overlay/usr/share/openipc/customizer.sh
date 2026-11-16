@@ -14,12 +14,25 @@ fw_setenv wifipdn 96
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 #
-# Night mode, as reported in OpenIPC/firmware#2853: IR LEDs on gpio 39, white
-# LEDs on gpio 41, IR-cut coils on gpio 1 and 2. The board has no light
-# sensor, and which coil majestic should call irCutPin1 is not confirmed yet.
-#cli -s .nightMode.backlightPin 39
-#cli -s .nightMode.irCutPin1 1
-#cli -s .nightMode.irCutPin2 2
+# The XM550 has 128 MB, but the stock environment boots with the XM530's
+# mem=35M: 93 MB of media zone, of which the pipeline uses about 25. 64/64
+# leaves Linux room and still fits 2560x1440 H.265 (OpenIPC/firmware#2853).
+# set_allocator rewrites mem= in bootargs and osmem together; the reboot
+# below applies it.
+#
+set_allocator xm 64
+#
+# Night mode, confirmed on this camera in OpenIPC/firmware#2853. The board
+# has no light sensor (the stock Isp.json sets InfraredIO 255), so it
+# switches on exposure: night at isp_exposureismax, day under 6x gain, well
+# below the 15.5x it sits at with the IR LEDs on.
+#
+cli -s .nightMode.irCutPin1 1
+cli -s .nightMode.irCutPin2 2
+cli -s .nightMode.backlightPin 39
+cli -s .nightMode.whiteLightPin 41
+cli -s .nightMode.switchBy exposure
+cli -s .nightMode.autoDayGain 6
 #
 (sleep 3 ; reboot -f) &
 
