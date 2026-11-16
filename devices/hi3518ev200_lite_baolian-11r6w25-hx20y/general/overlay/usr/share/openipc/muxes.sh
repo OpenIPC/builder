@@ -8,6 +8,15 @@
 devmem 0x200f00fc 32 1
 gpio set 63 >/dev/null
 
+### pan/tilt: UART1 on its pads, the RS-485 transceiver listening ###
+# The mount's header is UART1 behind a half-duplex transceiver whose direction
+# is gpio 47, high to send (#2675). Low from boot, so the bus is quiet until
+# majestic-af opens /dev/ttyAMA1 and takes the pin over.
+devmem 0x200f00c0 32 3 # GPIO6_0 -> UART1_RXD
+devmem 0x200f00c8 32 3 # GPIO6_2 -> UART1_TXD
+devmem 0x200f00bc 32 0 # GPIO5_7 as a GPIO
+gpio clear 47 >/dev/null
+
 ### home the lens, then park it at wide, focused at a few metres ###
 # A stepper has no idea where it is after a power cut, so this runs on every
 # boot: zoom to its tele stop, focus to its near stop, then out by the counts

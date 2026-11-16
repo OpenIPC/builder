@@ -21,6 +21,21 @@ cli -s .isp.sensorConfig /etc/sensors/dvp_jxh65_960p.ini
 fw_setenv ptz_gpio '31 33 3 32 49 7 34 6'
 fw_setenv ptz_coil_active 0
 #
+# Pan/tilt: a Pelco-D mount on the RS-485 header (pins 4 and 5), UART1 at 9600,
+# address 1, the transceiver's direction on gpio 47 (#2675). majestic-af owns
+# that wire, and the WebUI's pad and ONVIF go through majestic. ptz_caps keeps
+# the pad to the mount's two axes: zoom and focus are the lens's, which is
+# gpio-motors' and not on the Pelco wire.
+#
+cli -s .ptz.enabled true
+cli -s .ptz.actuator pelco-d
+cli -s .ptz.port /dev/ttyAMA1
+cli -s .ptz.baud 9600
+cli -s .ptz.address 1
+cli -s .ptz.rs485Pin 47
+fw_setenv ptz_control pelco-d
+fw_setenv ptz_caps 'pan tilt'
+#
 # Set wlan device and credentials if need
 #
 fw_setenv wlandev mt7601u-generic
