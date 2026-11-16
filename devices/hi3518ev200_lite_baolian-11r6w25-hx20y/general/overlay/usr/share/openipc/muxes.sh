@@ -49,7 +49,12 @@ lens_home() {
 		echo "homing failed: lens position unknown"
 	fi
 }
-if grep -q ptz_coil_active /usr/bin/gpio-motors 2>/dev/null; then
+# `fw_setenv lens_home off` leaves the lens where it is, for an owner driving it
+# some other way (#2675). Its position is then unknown to anything that counts
+# steps, which is the price.
+if [ "$(fw_printenv -n lens_home 2>/dev/null)" = off ]; then
+	logger -t lens "homing off (lens_home=off), lens left where it is"
+elif grep -q ptz_coil_active /usr/bin/gpio-motors 2>/dev/null; then
 	lens_home 2>&1 | logger -t lens &
 else
 	logger -t lens "gpio-motors does not know ptz_coil_active; lens left alone"
