@@ -58,7 +58,7 @@ JVS INGT10 GQS60EP       T10A         OV9750    -                NOR_8M    done
 Lenovo Snowman 1080P     HI3518EV200  SC2035    RTL8188EUS_USB   NOR_16M   in progress, LightSensor-no
 LSC 3215672              T23N         SC2331    ATBM6012B_USB    NOR_8M    **INIT** - progress
 Meari Speed 6S           SSC333       JXF37     RTL8188FU_USB    NOR_16M   video-yes, wifi-yes, motors-no
-Misecu XM-63-AI-50W      XM550        SC5332    ATBM603X_USB     NOR_8M    in progress
+Misecu XM-63-AI-50W      XM550        SC5332    ATBM603X_USB     NOR_8M    testing, video-ok, wifi-ok, ircut-ok, irled-ok, day/night-ok (exposure)
 Night Owl WCM-PWNVR20W-BU HI3518EV200  SC2135    RTL8188EUS_USB   NOR_8M    testing, video-ok, wifi-ok, ircut-ok, irled-ok, audio-ok, lightsensor-ok
 OpenIPC AIO Mario        SSC338Q      IMX335    RTL8812AU_USB    NOR_16M   done
 OpenIPC AIO Thinker      SSC338Q      IMX335                     NOR_16M   done
