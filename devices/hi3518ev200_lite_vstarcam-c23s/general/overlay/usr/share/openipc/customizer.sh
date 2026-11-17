@@ -22,8 +22,11 @@ fw_setenv sensor ov2710_mipi
 #
 cli -s .nightMode.irCutPin1 65
 cli -s .nightMode.irCutPin2 64
-cli -s .video0.codec h264
 cli -s .video0.fps 30
+#
+# The H.264 channel wedges this board (OpenIPC/majestic#377), so the codec is
+# left at the image default and video is taken from /mjpeg. Nothing here forces
+# h264 on.
 #
 # Ralink MT7601U on the USB bus (148f:7601), same part as the C8892WIP
 #
@@ -31,11 +34,11 @@ fw_setenv wlandev mt7601u-generic
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 #
-# Motors: four pan phases on 31-34, coils off. The head's tilt phases are not
-# on these pads and its driver is not identified, so ptz_gpio gets the pan
-# phases twice and tilt steps must stay 0 until that is known.
+# Motors: the four pan phases are GPIO 31-34, and muxes.sh holds them off at
+# boot. ptz_gpio is deliberately not set here: gpio-motors wants two axes, and
+# writing the pan set twice, because there is nothing else to write, would make
+# a tilt request drive the pan coils. Set it once the tilt phases are known:
+#   fw_setenv ptz_gpio '31 32 33 34 <tilt1> <tilt2> <tilt3> <tilt4>'
+#   fw_setenv ptz_coil_active 1
 #
-fw_setenv ptz_gpio '31 32 33 34 31 32 33 34'
-fw_setenv ptz_coil_active 1
-
 exit 0

@@ -42,7 +42,7 @@ EC37-T11                 T20L         SC2232    RTL8188FU_USB    MOR_16M   in pr
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
 HB-WIFI-Z6 v1.2          T10          JXH62     RTL8188EU_USB    NOR_8M    in progress
 HeimVision HM202         SSC325       GC2063    RTL8188FU_USB    NOR_8M    video-ok, wifi-ok, ir-ok, pan/tilt-ok (74HC595)
-HeimVision PE3020-W      AK3918EV300  JXF37     RTL8188FU_USB    NOR_8M    testing, RAM-boot only (OpenIPC kernel): ISP capture-ok, ircut-ok (GPIO 42/41), no streamer
+HeimVision PE3020-W      AK3918EV300  JXF37     RTL8188FU_USB    NOR_8M    testing: flash boot ok, ISP capture-ok (OpenIPC kernel), ircut GPIO 41/42; majestic streaming not yet hardware-tested
 iFlytek XFP301-M         T31ZX        JXQ03     RTL8188FU_USB    NOR_16    research
 Imilab EC3 CMSXJ25A      SSC325       GC2053    MT7603UN_?       NOR_16M   in progress
 Dahua IPC-HFW1230SP-V2   SSC335DE     GC2053                     NOR_16M   done
@@ -111,6 +111,7 @@ XiongMai 85H50AI         HI3516EV300  IMX335    -                NOR_16M   testi
 XiongMai HI3516D_N81820  HI3516DV100  IMX291    -                NOR_16M   testing, motorized zoom+focus (ms41908 SPI)
 XiongMai JZC-N51813L     HI3518CV100  AR0130    -                NOR_16M   testing, 18x zoom+focus (visca lens MCU)
 XiongMai XM72050200      GK7201V200   SC2336    RTL8733BU_USB    NOR_16M   done
+VStarcam C23S            HI3518EV200  OV2710    MT7601U_USB      NOR_16M   testing, video-ok, pan-ok (openhisilicon#305), tilt-no, ircut-ok
 VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
 VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip
 Wansview Q5 1080p        T21Z         OV2735B   RTL8188FU_USB    NOR_16M   in progress
