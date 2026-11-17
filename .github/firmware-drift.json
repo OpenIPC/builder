@@ -435,6 +435,27 @@
       "note": "only the mt7601u-ssc325-chuangmi-ipc017 arm"
     },
     {
+      "builder": "devices/ssc325_lite_heimvision-hm202/general/overlay/etc/modules",
+      "firmware": "general/overlay/etc/modules",
+      "blob": "4841de402a40bbabbe0924b7403409f42a350504",
+      "reconciled": "2026-11-16",
+      "note": "firmware's list plus the gpiostep line with this board's 74HC595 pins"
+    },
+    {
+      "builder": "devices/ssc325_lite_heimvision-hm202/general/overlay/etc/network/interfaces.d/wlan0",
+      "firmware": "general/overlay/etc/network/interfaces.d/wlan0",
+      "blob": "69334cc976798cbbee04603e24c6ba0b7e351938",
+      "reconciled": "2026-11-16",
+      "note": "firmware's file plus a bgscan line: the RTL8188FU driver never roams on its own"
+    },
+    {
+      "builder": "devices/ssc325_lite_heimvision-hm202/general/overlay/etc/wireless/usb",
+      "firmware": "general/overlay/etc/wireless/usb",
+      "blob": "c5d376106967d813b3491f1444e9144f5533e2ef",
+      "reconciled": "2026-11-16",
+      "note": "shared wireless adapter table, replaced by this board's RTL8188FU entry as the other ssc325 profiles do"
+    },
+    {
       "builder": "devices/ssc325_lite_imou-c22cp/general/overlay/etc/wireless/usb",
       "firmware": "general/overlay/etc/wireless/usb",
       "blob": "f9df96bc190e8f8a11794f9410568eac10f50320",
@@ -759,6 +780,7 @@
     "BR2_PACKAGE_PHP": "upstream Buildroot; the PHP webui profiles",
     "BR2_PACKAGE_PHP_EXT_ZIP": "sub-option of PHP",
     "BR2_PACKAGE_RCJOYSTICK": "FPV RC input",
+    "BR2_PACKAGE_RESET_BUTTON": "OpenIPC/firmware#2754: no firmware board names a button in a gpio.conf (the package is in its NOT_BUILT), so only builder profiles that do enable it",
     "BR2_PACKAGE_RTL8192EU_OPENIPC": "wifi driver for specific retail models",
     "BR2_PACKAGE_RTL8811CU_OPENIPC": "wifi driver for specific retail models",
     "BR2_PACKAGE_RTL8812AU": "wifi driver for FPV adapters",
