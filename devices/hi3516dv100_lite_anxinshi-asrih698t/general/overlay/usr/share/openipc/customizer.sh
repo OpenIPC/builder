@@ -41,8 +41,8 @@ cli -s .ptz.head pelco-d
 # The 20x lens and the base, as measured on the dome: see muxes.sh, which writes
 # the same values on every boot wherever majestic.yaml has none.
 #
-cli -s .ptz.lensZoomSteps 3320
-cli -s .ptz.lensFocusSteps 3000
+cli -s .ptz.lensZoomSteps 2580
+cli -s .ptz.lensFocusSteps 1240
 cli -s .ptz.lensZoomMax 20
 cli -s .ptz.lensHome true
 cli -s .ptz.panInvert true
