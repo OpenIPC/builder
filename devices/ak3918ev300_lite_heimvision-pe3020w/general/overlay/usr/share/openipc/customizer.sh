@@ -14,7 +14,12 @@ fw_setenv wlandev rtl8188fu-generic
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 #
-# IR-cut: GPIO 42 night, GPIO 41 day, each a short pulse that is driven
-# back low. The image has no streamer to switch it yet.
+# IR-cut: GPIO 41 pulses the filter to day and GPIO 42 to night, each driven
+# back low (measured on the board, OpenIPC/builder#234). Which of Majestic's
+# two pins drives which way is not confirmed on this board yet; swap them if
+# the filter moves the wrong way.
+cli -s .nightMode.irCutPin1 41
+cli -s .nightMode.irCutPin2 42
+cli -s .video0.codec h264
 
 exit 0
