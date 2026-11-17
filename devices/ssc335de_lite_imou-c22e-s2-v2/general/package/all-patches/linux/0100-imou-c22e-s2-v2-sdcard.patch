@@ -1,0 +1,91 @@
+Imou IPC-C22E-S2-v2: make the microSD slot work.
+
+On this board the SD power switch on PAD_FUART_RTS is active-high (the
+SigmaStar reference design the driver follows is active-low), and the SD
+pads need their input buffers enabled the way the stock U-Boot does.
+Board-specific, so it is carried by this device rather than the shared
+infinity6b0 kernel. Reverse-engineered and tested on hardware by
+ABATAPA in OpenIPC/builder#39.
+
+diff --git a/arch/arm/boot/dts/infinity6b0.dtsi b/arch/arm/boot/dts/infinity6b0.dtsi
+index 946e1fc..d77514b 100755
+--- a/arch/arm/boot/dts/infinity6b0.dtsi
++++ b/arch/arm/boot/dts/infinity6b0.dtsi
+@@ -597,7 +597,7 @@
+ 
+             slot-ip-orders = <0>,<1>,<2>; // 0:IP_SD 1:IP_SDIO
+             slot-pad-orders = <0>,<1>,<2>; // 0:PAD_SD 1:PAD_SD1
+-            slot-max-clks = <48000000>,<48000000>,<48000000>;
++            slot-max-clks = <43200000>,<43200000>,<43200000>;
+             slot-intcdzs = <1>,<1>,<1>;
+             slot-fakecdzs = <0>,<0>,<0>;
+             slot-cdzs-gpios = <PAD_PM_SD_CDZ>,<PAD_SD1_IO6>,<0>;
+diff --git a/drivers/sstar/sdmmc/inc/infinity6b0/hal_card_platform_pri_config.h b/drivers/sstar/sdmmc/inc/infinity6b0/hal_card_platform_pri_config.h
+index d23560d..575e7d4 100755
+--- a/drivers/sstar/sdmmc/inc/infinity6b0/hal_card_platform_pri_config.h
++++ b/drivers/sstar/sdmmc/inc/infinity6b0/hal_card_platform_pri_config.h
+@@ -27,10 +27,10 @@
+ #define GPIO_SET_BY_REG     (1)
+ 
+ #if (D_OS == D_OS__LINUX)
+-#define PADMUX_SET          (PADMUX_SET_BY_FUNC)
+-#define GPIO_SET            (GPIO_SET_BY_FUNC)
++#define PADMUX_SET          (PADMUX_SET_BY_REG)
++#define GPIO_SET            (GPIO_SET_BY_REG)
+ 
+-#define FORCE_SWITCH_PAD    (FALSE)
++#define FORCE_SWITCH_PAD    (TRUE)
+ #else
+ #define PADMUX_SET          (PADMUX_SET_BY_REG)
+ #define GPIO_SET            (GPIO_SET_BY_REG)
+diff --git a/drivers/sstar/sdmmc/ms_sdmmc_lnx.c b/drivers/sstar/sdmmc/ms_sdmmc_lnx.c
+index b25da89..c23fcc6 100755
+--- a/drivers/sstar/sdmmc/ms_sdmmc_lnx.c
++++ b/drivers/sstar/sdmmc/ms_sdmmc_lnx.c
+@@ -1556,7 +1556,7 @@ static int ms_sdmmc_init_slot(unsigned int slotNo, struct ms_sdmmc_host *p_sdmmc
+ 
+     p_mmc_host->f_max = gu32_MaxClkSlot[eSlot];
+ 
+-    p_mmc_host->ocr_avail = MMC_VDD_32_33|MMC_VDD_31_32|MMC_VDD_30_31|MMC_VDD_29_30|MMC_VDD_28_29|MMC_VDD_27_28|MMC_VDD_165_195;
++    p_mmc_host->ocr_avail = MMC_VDD_32_33|MMC_VDD_31_32|MMC_VDD_30_31|MMC_VDD_29_30|MMC_VDD_28_29|MMC_VDD_27_28;
+     p_mmc_host->caps = MMC_CAP_4_BIT_DATA|MMC_CAP_MMC_HIGHSPEED|MMC_CAP_SD_HIGHSPEED;
+ 
+ 
+diff --git a/drivers/sstar/sdmmc/src/infinity6b0/hal_card_platform.c b/drivers/sstar/sdmmc/src/infinity6b0/hal_card_platform.c
+index e37db43..f6d8955 100755
+--- a/drivers/sstar/sdmmc/src/infinity6b0/hal_card_platform.c
++++ b/drivers/sstar/sdmmc/src/infinity6b0/hal_card_platform.c
+@@ -221,6 +221,15 @@ void Hal_CARD_ConfigSdPad(IpOrder eIP, PadOrder ePAD) //Hal_CARD_SetPADToPortPat
+             CARD_REG_CLRBIT(GET_CARD_REG_ADDR(A_CHIPTOP_BANK, 0x08), BIT02_T | BIT03_T);
+             CARD_REG_SETBIT(GET_CARD_REG_ADDR(A_CHIPTOP_BANK, 0x08), BIT02_T);
+ 
++            // Imou C22E-S2-v2: enable the SD pads' input buffers, as the stock U-Boot does
++            CARD_REG_SETBIT(GET_CARD_REG_ADDR(A_CHIPTOP_BANK, 0x32), 0x1f00);
++            CARD_REG_SETBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x50), BIT05_T);
++            CARD_REG_SETBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x51), BIT05_T);
++            CARD_REG_SETBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x52), BIT05_T);
++            CARD_REG_SETBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x53), BIT05_T);
++            CARD_REG_SETBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x54), BIT05_T);
++            CARD_REG_SETBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x55), BIT05_T);
++
+             // Make sure reg_spi1_mode != 3
+             if((GET_CARD_REG_ADDR(A_CHIPTOP_BANK, 0x0C) & (BIT06_T | BIT05_T | BIT04_T)) == (BIT05_T | BIT04_T))
+             {
+@@ -669,7 +678,7 @@ void Hal_CARD_PowerOn(IpOrder eIP, U16_T u16DelayMs)
+     {
+         case PAD_FUART_RTS:
+             CARD_REG_CLRBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x17), BIT05_T);   // output mode
+-            CARD_REG_CLRBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x17), BIT04_T);   // output:0
++            CARD_REG_SETBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x17), BIT04_T);   // output:1 (power is active-high on this board)
+             break;
+ 
+         case PAD_PM_GPIO9:
+@@ -718,7 +727,7 @@ void Hal_CARD_PowerOff(IpOrder eIP, U16_T u16DelayMs)
+     {
+         case PAD_FUART_RTS:
+             CARD_REG_CLRBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x17), BIT05_T);   // output mode
+-            CARD_REG_SETBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x17), BIT04_T);   // output:1
++            CARD_REG_CLRBIT(GET_CARD_REG_ADDR(A_PADTOP_BANK, 0x17), BIT04_T);   // output:0
+             break;
+ 
+         case PAD_PM_GPIO9:
