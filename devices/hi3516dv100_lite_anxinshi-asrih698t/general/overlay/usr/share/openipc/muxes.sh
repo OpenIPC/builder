@@ -34,6 +34,16 @@ if [ "$(fw_printenv -n ptz_caps 2>/dev/null)" = "pan tilt" ]; then
 	fi
 fi
 
+# The travel an earlier version of this profile wrote, 3320 zoom and 3000 focus,
+# was longer than the lens: every move to its far end drove a motor into the
+# stop. Those exact values are the tell, and only that version wrote the pair;
+# they become the measured travel. Anything else is the owner's and stays.
+if [ "$(cli -g .ptz.lensZoomSteps 2>/dev/null)" = 3320 ] &&
+	[ "$(cli -g .ptz.lensFocusSteps 2>/dev/null)" = 3000 ]; then
+	cli -s .ptz.lensZoomSteps 2580
+	cli -s .ptz.lensFocusSteps 1240
+fi
+
 ### this dome's PTZ settings, wherever majestic.yaml has none ###
 # customizer.sh runs once, on a camera with no settings; an upgrade that keeps
 # them, or a reset of majestic.yaml alone, never runs it again, and leaves the
@@ -53,11 +63,14 @@ fi
 if [ "$act" = ms41908 ] && [ -z "$(cli -g .ptz.head 2>/dev/null)" ]; then
 	cli -s .ptz.head pelco-d
 fi
-# The 20x lens, measured on the dome: zoom 3320 steps, 1-20x, the home stop at
-# tele; focus travel not measured exactly, 3000 covers it. No working
-# photo-interrupter, so it is homed into its end stops at start. The base is
-# mounted the other way from the sensor, so both directions are inverted.
-for kv in lensZoomSteps=3320 lensFocusSteps=3000 lensZoomMax=20 lensHome=true \
+# The 20x lens, measured end to end on a dome of this model with a microphone
+# listening for the stops (majestic-af tools/clickguard): zoom 2640 microsteps
+# from the tele stop, focus 1300 from the near stop. The limits sit 60 short of
+# the far stops; majestic-af keeps 100 clear of the home ones. No working
+# photo-interrupter, so the lens is homed into its stops when it has no saved
+# position. The base is mounted the other way from the sensor, so both
+# directions are inverted.
+for kv in lensZoomSteps=2580 lensFocusSteps=1240 lensZoomMax=20 lensHome=true \
 	panInvert=true tiltInvert=true; do
 	[ -n "$(cli -g .ptz.${kv%%=*} 2>/dev/null)" ] || cli -s .ptz.${kv%%=*} ${kv#*=}
 done
