@@ -14,7 +14,10 @@ fw_setenv wlandev rtl8188fu-generic
 #fw_setenv wlanssid Router
 #fw_setenv wlanpass 12345678
 #
-# IR-cut: GPIO 42 night, GPIO 41 day, each a short pulse that is driven
-# back low. The image has no streamer to switch it yet.
+# IR-cut: GPIO 41 day, GPIO 42 night, each a short pulse that is driven
+# back low (measured on the board, OpenIPC/builder#234).
+cli -s .nightMode.irCutPin1 41
+cli -s .nightMode.irCutPin2 42
+cli -s .video0.codec h264
 
 exit 0
