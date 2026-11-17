@@ -24,9 +24,15 @@ cli -s .nightMode.irCutPin1 65
 cli -s .nightMode.irCutPin2 64
 cli -s .video0.fps 30
 #
-# The H.264 channel wedges this board (OpenIPC/majestic#377), so the codec is
-# left at the image default and video is taken from /mjpeg. Nothing here forces
-# h264 on.
+# The [3dnr] ladder measured on this board. Without this key the streamer opens
+# default.ini, which is the AR0130 one on every cv200 image.
+#
+cli -s .isp.iqProfile /etc/sensors/iq/c23s.ini
+#
+# The codec is left at the image default. The H.264 channel is suspected on this
+# board (OpenIPC/majestic#377) but has not been reproduced in the lab, so nothing
+# here forces a codec on every flash; video was taken from /mjpeg while the board
+# was being brought up.
 #
 # Ralink MT7601U on the USB bus (148f:7601), same part as the C8892WIP
 #

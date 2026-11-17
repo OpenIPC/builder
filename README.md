@@ -111,7 +111,7 @@ XiongMai 85H50AI         HI3516EV300  IMX335    -                NOR_16M   testi
 XiongMai HI3516D_N81820  HI3516DV100  IMX291    -                NOR_16M   testing, motorized zoom+focus (ms41908 SPI)
 XiongMai JZC-N51813L     HI3518CV100  AR0130    -                NOR_16M   testing, 18x zoom+focus (visca lens MCU)
 XiongMai XM72050200      GK7201V200   SC2336    RTL8733BU_USB    NOR_16M   done
-VStarcam C23S            HI3518EV200  OV2710    MT7601U_USB      NOR_16M   testing, video-ok, pan-ok (openhisilicon#305), tilt-no, ircut-ok
+VStarcam C23S            HI3518EV200  OV2710    MT7601U_USB      NOR_16M   testing, video-ok, pan coils held off (pins known), tilt-no, ircut-ok
 VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
 VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip
 Wansview Q5 1080p        T21Z         OV2735B   RTL8188FU_USB    NOR_16M   in progress
