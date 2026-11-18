@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Imou LOOC 2 (IPC-C26EP-V2): RTL8192EU on the second USB host port.
+if [ "$1" = "rtl8192eu-msc316dc-imou-looc2" ] || [ "$1" = "rtl8192eu-ssc325de-imou-c26ep-v2" ]; then
+	# (the second name is the one earlier LOOC 2 images set)
+	# USB is modular on the infinity3 3.18 kernel. VBUS (GPIO 62) is driven by
+	# the kernel when ehci-hcd loads; the WiFi module's power is GPIO 63:
+	# low for 3 s, then high.
+	modprobe usb-common
+	modprobe usbcore
+	modprobe ehci-hcd
+	gpio clear 63
+	sleep 3
+	gpio set 63
+	modprobe cfg80211
+	modprobe 8192eu
+	i=0
+	while [ ! -e /sys/class/net/wlan0 ] && [ $i -lt 20 ]; do sleep 1; i=$((i + 1)); done
+	[ -e /sys/class/net/wlan0 ]
+	exit $?
+fi
+
+exit 1
