@@ -304,6 +304,17 @@ jobs:
           find /tmp/builder-dl -type f -regextype posix-extended \
             -regex '.*[-.](HEAD|master|main|dist)\.tar\.(gz|bz2|xz)' \
             -print -delete 2>/dev/null || true
+          # The kernel is the same kind of download: OpenIPC/linux's archive of a
+          # branch (<vendor>-<family>.tar.gz, e.g. goke-gk7205v200), a moving ref
+          # under a constant name with no .hash. A stale one does not fail the
+          # build by itself: olddefconfig drops the symbols it lacks without a
+          # word. It surfaced as post-image-split.sh refusing a kernel built
+          # without CONFIG_MTD_SPLIT_* (#257), from a tarball older than the
+          # branch's mtdsplit. Upstream kernels (linux-<version>.tar.*) keep
+          # their cache.
+          find /tmp/builder-dl/linux -type f -regextype posix-extended \
+            -regex '.*/[a-z]+-[a-z0-9]+\.tar\.gz' \
+            -print -delete 2>/dev/null || true
 
       - name: Build firmware
         if: env.RUN
