@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# Quiet the kernel's console output. On this board the motor MCU shares
+# ttyAMA0 with the serial console, so every runtime kernel message goes
+# out as garbage on the PTZ wire. Boot-loader and early-boot output still
+# spray (bootargs are untouched); the MCU's 0xC5 framing tolerates that,
+# this just stops the steady drip once userland is up.
+
+case "$1" in
+	start | "")
+		echo 0 > /proc/sys/kernel/printk
+		;;
+esac
+
+exit 0
