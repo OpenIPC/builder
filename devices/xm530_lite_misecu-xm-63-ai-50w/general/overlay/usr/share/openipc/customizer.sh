@@ -23,7 +23,9 @@ fw_setenv wifipdn 96
 #
 set_allocator xm 72
 #
-# The sensor's full 5 MP, and the sub-stream the split above was measured with
+# The sensor's full 5 MP, and the sub-stream the split above was measured with.
+# The issue's first report called 5 MP impossible on this board; that was at
+# mem=35M, with 32 MB for Linux. At 72/56 the owner ran these for days.
 #
 cli -s .video0.size 2592x1944
 cli -s .video0.fps 15
