@@ -1,7 +1,5 @@
 /usr/lib/sensors/libsns_ar0237.so
 /usr/lib/sensors/libsns_bt656.so
-/usr/lib/sensors/libsns_f22.so
-/usr/lib/sensors/libsns_f23.so
 /usr/lib/sensors/libsns_f37.so
 /usr/lib/sensors/libsns_gc2053.so
 /usr/lib/sensors/libsns_gc2053_forcar.so
@@ -22,7 +20,6 @@
 /usr/lib/sensors/libsns_sc2235.so
 /usr/lib/sensors/libsns_sc2239.so
 /usr/lib/sensors/libsns_sc223a.so
-/usr/lib/sensors/libsns_sc2315e.so
 /usr/lib/sensors/libsns_sc3235.so
 /usr/lib/sensors/libsns_sc3335.so
 /usr/lib/sensors/libsns_sc3336.so
