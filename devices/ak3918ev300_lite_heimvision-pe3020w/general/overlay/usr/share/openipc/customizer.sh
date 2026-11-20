@@ -21,5 +21,15 @@ fw_setenv wlandev rtl8188fu-generic
 cli -s .nightMode.irCutPin1 41
 cli -s .nightMode.irCutPin2 42
 cli -s .video0.codec h264
+#
+# Day and night from the photocell on SAR-ADC1 AIN0, in mV: about 3000 in
+# light, under 50 covered (OpenIPC/builder#234), so high is light. Night
+# below 300, day again above 1500. Automatic switching (lightMonitor) stays
+# off until the IR-cut direction above is confirmed.
+cli -s .nightMode.adcReadout true
+cli -s .nightMode.adcInvert true
+cli -s .nightMode.adcChannel 0
+cli -s .nightMode.minThreshold 300
+cli -s .nightMode.maxThreshold 1500
 
 exit 0
