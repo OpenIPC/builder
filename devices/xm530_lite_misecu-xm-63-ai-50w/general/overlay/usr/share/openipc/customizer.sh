@@ -34,6 +34,12 @@ cli -s .video1.enabled true
 cli -s .video1.size 640x360
 cli -s .video1.fps 12
 #
+# The speaker: the amplifier's enable is GPIO 73, active high, which
+# muxes.sh frees at every boot (OpenIPC/firmware#2853)
+#
+cli -s .audio.speakerPin 73
+cli -s .audio.outputEnabled true
+#
 # Night mode, confirmed on this camera in OpenIPC/firmware#2853. The board
 # has no light sensor (the stock Isp.json sets InfraredIO 255), so it
 # switches on exposure: night at isp_exposureismax, day under 6x gain, well
