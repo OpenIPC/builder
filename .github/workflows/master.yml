@@ -351,10 +351,11 @@ jobs:
           echo TIME=${TIME} >> ${GITHUB_ENV}
           COMMON=$(echo ${NAME} | awk -F_ '{print NF-1}')
 
-          # A board on the split NOR layout makes two packages: the fixed-slot
-          # one while it still fits its slots, and openipc.*-nor-*-split.tgz.
-          # The split one keeps "-split" before ".tgz", where sysupgrade looks
-          # for it beside the plain one; the manifest lists the plain one.
+          # A NOR board on the split layout makes openipc.*-nor-*-split.tgz
+          # and nothing else: it ships no fixed-slot package. The name keeps
+          # "-split" before ".tgz", where sysupgrade looks for it beside the
+          # plain URL a camera has in `upgrade`. NORFW is the plain package of
+          # a board whose SoC family has no split kernel yet.
           NORFW=$(find output/images -name 'openipc*nor*.tgz' ! -name '*-split.tgz' | head -n 1)
           NORSPLIT=$(find output/images -name 'openipc*nor*-split.tgz' | head -n 1)
           if [ -n "${NORFW}" ]; then
