@@ -1,8 +1,10 @@
-/etc/sensors/imx307.bin
-/etc/sensors/imx335.bin
 /etc/sensors/gc2053.bin
 /etc/sensors/gc4653.bin
 /etc/sensors/sc501ai.bin
+/etc/sensors/imx307.bin
+/etc/sensors/imx347.bin
+/etc/sensors/imx335_infinity6c.bin
+/etc/sensors/imx415_infinity6c.bin
 #
 /lib/modules/4.9.84/kernel/fs/lockd/*.ko
 /lib/modules/4.9.84/kernel/fs/nfs/*.ko
@@ -11,7 +13,6 @@
 /lib/modules/4.9.84/sigmastar/sensor_gc2053_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_gc4653_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_imx307_mipi.ko
-/lib/modules/4.9.84/sigmastar/sensor_imx335_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_imx347_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_os04c10_mipi.ko
 /lib/modules/4.9.84/sigmastar/sensor_sc501ai_mipi.ko
