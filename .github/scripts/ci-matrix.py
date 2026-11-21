@@ -69,7 +69,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 # narrow to nothing, exactly as they do today.
 NOT_BUILT = {
     "gk7102ca_lite_umea-qc01x", "gk7102ca_lite_vstarcam-g8896wip",
-    "gk7205v200_rubyfpv_generic", "hi3518ev200_lite_lenovo-snowman-1080p",
+    "hi3518ev200_lite_lenovo-snowman-1080p",
     "t31_lite_xiaomi-mjsxj05hl",
 }
 
@@ -412,8 +412,8 @@ def self_test():
         # ...and so does anything else in that device's directory. Its kernel
         # config is the case that regressed: OpenIPC/builder#126 touched three
         # NOT_BUILT devices and got the full 107 for it.
-        (["devices/gk7205v200_rubyfpv_generic/br-ext-chip-goke/board/gk7205v200/"
-          "gk7205v200.generic-fpv.config"], 0, "a kernel config in an unbuilt device"),
+        (["devices/hi3518ev200_lite_lenovo-snowman-1080p/br-ext-chip-hisilicon/board/"
+          "hi3516cv200/hi3518ev200.generic.config"], 0, "a kernel config in an unbuilt device"),
         (["devices/t31_lite_xiaomi-mjsxj05hl/general/overlay/usr/share/"
           "openipc/customizer.sh"], 0, "an overlay file in an unbuilt device"),
         # A directory with no defconfig at all is still unknown, and unknown

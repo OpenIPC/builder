@@ -288,13 +288,6 @@
       "note": "otg variant"
     },
     {
-      "builder": "devices/gk7205v200_rubyfpv_generic/br-ext-chip-goke/board/gk7205v200/gk7205v200.generic-fpv.config",
-      "firmware": "br-ext-chip-goke/board/gk7205v200/gk7205v200.generic.config",
-      "blob": "f97dce84c0f85d1a08a45bb7a173448d4a060e75",
-      "reconciled": "2026-08-25",
-      "note": "rubyfpv variant"
-    },
-    {
       "builder": "devices/hi3516cv200_lite_trassir-tr-d4121ir1-v2/br-ext-chip-hisilicon/board/hi3516cv200/hi3516cv200.generic.config",
       "firmware": "br-ext-chip-hisilicon/board/hi3516cv200/hi3516cv200.generic.config",
       "blob": "68f8da5fb686dd93a405b0e2d8410db009b301f8",
