@@ -112,6 +112,7 @@ XiongMai HI3516D_N81820  HI3516DV100  IMX291    -                NOR_16M   testi
 XiongMai IPC_G6S 20X     GK7205V300   IMX335    -                NOR_16M   untested, 20x zoom+focus (pelco-xm), board of Vixand IVG-G6S
 XiongMai JZC-N51813L     HI3518CV100  AR0130    -                NOR_16M   testing, 18x zoom+focus (visca lens MCU)
 XiongMai XM72050200      GK7201V200   SC2336    RTL8733BU_USB    NOR_16M   done
+XiongMai 7201V2_02M10    GK7201V200   SP2308    RTL8733BU_USB    NOR_16M   testing, sold as JN-107AR-D-WIFI
 VStarcam C23S            HI3518EV200  OV2710    MT7601U_USB      NOR_16M   testing, video-ok, pan coils held off (pins known), tilt-no, ircut-ok, IR LEDs local dusk switch (not SoC, #255)
 VStarcam C8892WIP        HI3518EV200  AR0237    MT7601U_USB      NOR_16M   done
 VStarcam C8896WIP        GK7102C_A    GC2033    RTL8189ES_SDIO   NOR_8M    wip

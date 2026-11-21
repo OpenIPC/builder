@@ -1,0 +1,47 @@
+#!/bin/sh
+# RTL8733BU stability tuning for mains-powered OpenIPC cameras.
+
+WIFI_IF=wlan0
+RTW=/proc/net/rtl8733bu/$WIFI_IF
+TAG=wifi-tune
+
+wait_associated() {
+	i=0
+	while [ "$i" -lt 30 ]; do
+		if command -v wpa_cli >/dev/null 2>&1; then
+			[ "$(wpa_cli -i "$WIFI_IF" status 2>/dev/null | sed -n 's/^wpa_state=//p')" = COMPLETED ] && return 0
+		elif command -v iwconfig >/dev/null 2>&1 && \
+		     iwconfig "$WIFI_IF" 2>/dev/null | grep -qv 'Access Point: Not-Associated'; then
+			return 0
+		fi
+		i=$((i+1)); sleep 1
+	done
+	return 1
+}
+
+tune() {
+	i=0
+	while [ ! -e "/sys/class/net/$WIFI_IF" ] && [ "$i" -lt 30 ]; do
+		i=$((i+1)); sleep 1
+	done
+	[ -e "/sys/class/net/$WIFI_IF" ] || { logger -t "$TAG" "$WIFI_IF not found"; return; }
+
+	# Disable Turbo-EDCA re-tuning
+	[ -e "$RTW/dis_turboedca" ] && echo 1 > "$RTW/dis_turboedca" 2>/dev/null
+
+	# Disable interface power management after association
+	wait_associated
+	command -v iwconfig >/dev/null 2>&1 && iwconfig "$WIFI_IF" power off >/dev/null 2>&1
+
+	ps=$(iwconfig "$WIFI_IF" 2>/dev/null | sed -n 's/.*Power Management:\([A-Za-z]*\).*/\1/p')
+	edca=$(sed -n '1p' "$RTW/dis_turboedca" 2>/dev/null)
+	logger -t "$TAG" "RTL8733BU tuned: WEXT=${ps:-?}; ${edca:-Turbo-EDCA ?}"
+}
+
+case "$1" in
+	start|restart|reload) ( tune ) & ;;
+	stop) : ;;
+	*) echo "Usage: $0 {start|stop|restart|reload}"; exit 1 ;;
+esac
+
+exit 0
