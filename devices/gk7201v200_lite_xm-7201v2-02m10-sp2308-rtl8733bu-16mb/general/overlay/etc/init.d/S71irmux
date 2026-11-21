@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# XM 7201V2_02M10 board: the IR-cut coil pads.
+#
+# Pad register 0x120c0014 resets to function 0 (0x1e00, JTAG_TCK); function 2
+# (0x1e02) is GPIO1_5, which is GPIO13, the filter's day coil. xm_sysconfig
+# leaves the pad as JTAG, so this runs after S70vendor has loaded it, as the
+# stock firmware writes it after its media modules. GPIO13 and GPIO15 are set
+# low first, so neither coil is driven while the pad changes function.
+
+case "$1" in
+	start)
+		for p in 13 15; do
+			[ -d /sys/class/gpio/gpio$p ] || echo $p > /sys/class/gpio/export
+			echo low > /sys/class/gpio/gpio$p/direction
+		done
+		devmem 0x120c0014 32 0x1e02
+		;;
+
+	stop)
+		;;
+
+	*)
+		echo "Usage: $0 {start}"
+		exit 1
+		;;
+esac
