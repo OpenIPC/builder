@@ -1,8 +1,5 @@
 #!/bin/sh
 
-### focus coil on GPIO0_6, a pad that boots as FLASH_TRIG ###
-devmem 0x200f0008 32 0
-
 ### night lamps: IR, not white ###
 # GPIO7_7 boots as SAR_ADC_CH1. It only picks which lamps may light, high for
 # IR and low for white; the camera's own light sensor switches them on and off
@@ -19,7 +16,24 @@ gpio set 63 >/dev/null
 # says and the outcome in syslog under "lens": a lens left out of position
 # should say why. Only with a gpio-motors that knows active-low coils: an
 # older one drives these inverted and leaves both motors energised.
+#
+# Not until the vendor modules are in: focus has a coil on GPIO0_6, and this
+# script runs at S30, while sys_config.ko at S70 puts that pad back to
+# FLASH_TRIG. A lens homed across that came up with zoom right and focus wrong,
+# and the same moves by hand were sharp (OpenIPC/firmware#2675). S95majestic
+# only starts once S70 has finished, so its process is the sign. The wait is
+# bounded: a camera with no video should still get its lens back.
 lens_home() {
+	wait=0
+	until pidof majestic >/dev/null; do
+		if [ "$wait" -ge 120 ]; then
+			echo "no majestic after ${wait}s, homing anyway"
+			break
+		fi
+		sleep 1
+		wait=$((wait + 1))
+	done
+	devmem 0x200f0008 32 0
 	if gpio-motors -400 -530 3 && gpio-motors 370 170 3; then
 		echo "homed, parked at zoom 370 focus 170"
 	else
