@@ -1,0 +1,2 @@
+# Nothing to drop: the defconfig already leaves out the generic image's other
+# USB Wi-Fi drivers and their firmware.

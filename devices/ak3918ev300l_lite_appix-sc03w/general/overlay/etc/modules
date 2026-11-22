@@ -1,0 +1,3 @@
+vfat
+exfat
+gpiostep pan_gpios=25,24,56,55 tilt_gpios=68,58,26,27

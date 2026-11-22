@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# APPIX SC03-W: an AltoBeam ATBM603x on USB, powered from GPIO 70, active low
+# (wifi_power in the stock factory_cfg.ini; OpenIPC/majestic#380).
+if [ "$1" = "atbm603x-ak3918ev300l-appix-sc03w" ]; then
+	gpio clear 70 > /dev/null
+	modprobe atbm603x_wifi_usb 2>/dev/null || modprobe atbm603x_comb_wifi_usb
+	exit 0
+fi
+
+exit 1
