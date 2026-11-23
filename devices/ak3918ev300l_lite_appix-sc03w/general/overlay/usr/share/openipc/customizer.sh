@@ -23,11 +23,17 @@ fw_setenv wlandev atbm603x-ak3918ev300l-appix-sc03w
 # Set custom majestic settings
 #
 # The pins the stock firmware's factory_cfg.ini names: IR-cut on 65/66, IR
-# LEDs on 10, white light on 9. Night mode confirmed with these on the camera.
-cli -s .nightMode.irCutPin1 65
-cli -s .nightMode.irCutPin2 66
+# LEDs on 10, white light on 9. Majestic pulses irCutPin1 for night and
+# irCutPin2 for day, and on this board that is 66 and 65 -- the other way
+# round from the stock file's ircut_a/ircut_b order (confirmed on the
+# camera, OpenIPC/majestic#380).
+cli -s .nightMode.irCutPin1 66
+cli -s .nightMode.irCutPin2 65
 cli -s .nightMode.backlightPin 10
 cli -s .nightMode.whiteLightPin 9
+# Automatic day/night, off by default in majestic. On this camera covering
+# the lens switches to night and uncovering it back to day.
+cli -s .nightMode.lightMonitor true
 # The WebUI's pan/tilt pad reads mirror, flip and rotate, and refuses every
 # move while one of them is missing.
 cli -s .image.mirror false
