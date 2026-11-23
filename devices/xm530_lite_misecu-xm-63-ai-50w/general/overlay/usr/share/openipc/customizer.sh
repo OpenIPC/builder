@@ -34,6 +34,14 @@ cli -s .video1.enabled true
 cli -s .video1.size 640x360
 cli -s .video1.fps 12
 #
+# The microphone, as the owner tested it in OpenIPC/firmware#2853: Opus at
+# 8000 Hz, volume 85
+#
+cli -s .audio.enabled true
+cli -s .audio.codec opus
+cli -s .audio.srate 8000
+cli -s .audio.volume 85
+#
 # The speaker: the amplifier's enable is GPIO 73, active high, which
 # muxes.sh frees at every boot (OpenIPC/firmware#2853)
 #
