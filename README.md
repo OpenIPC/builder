@@ -20,6 +20,7 @@ anbiux A8B-3MP           XM530AI      SC3335    ATBM603X_USB     NOR_8M    in pr
 Anjoy MC-L12D2           SSC377D      IMX335    -                NOR_16M   testing, video-ok, zoom/focus-ok (pelco-xm ttyS2), af-pending (OpenIPC/majestic#373)
 Anxinshi ASRIH698T       HI3516DV100  IMX291    -                NOR_8M    video-ok, pan/tilt-ok (pelco-d UART1), zoom/focus-no
 Aoni EP01J05             T31L         ?         RTL8188FU_USB    NOR_16M   new
+APPIX SC03-W             AK3918EV300L SC1346x2  ATBM603X_USB     NOR_8M    testing, video-ok (lower lens; upper not streamed), pan/tilt-ok (gpiostep), day/night-ok, ir-ok, wifi-ok (OpenIPC/majestic#380)
 Azarton C1               T20X         JXF23     RTL8189FS_SDIO   NOR_16M   done
 Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
 Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
