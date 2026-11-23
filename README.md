@@ -127,6 +127,7 @@ Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   prepa
 XVI ISI-2010C            T31N         GC2053    -                NOR_8M    done
 YuanCam DGK-423403       HI3518EV300  JXH62     RTL8188FU_USB    NOR_8M    research
 Zenointel SD-2N-4G       GK7205V510   MIS2009   EC200A_USB       NAND      done, pan/tilt (gpiostep), IR + white lamps
+ZMODO ZP-IBH15-S         HI3518CV100  JXH22     -                NOR_16M   testing, video-ok and ircut-ok by hand on stock-OpenIPC (owner), this image untested
 ZTE K540                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
 ZTE K543                 SSC337DE     SC401AI   MT7601U_USB      NOR_16M   done
 ZTE K545                 T31X         SC4336    ATBM6012B_USB    NOR_16M   done
