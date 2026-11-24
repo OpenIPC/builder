@@ -1,0 +1,21 @@
+--- a/arch/arm/boot/dts/ak3918av100x-demb.dts
++++ b/arch/arm/boot/dts/ak3918av100x-demb.dts
+@@ -16,3 +16,18 @@
+ 		bootargs = "console=ttySAK0,115200n8 root=/dev/mtdblock3 rootfstype=squashfs init=/init mem=128M memsize=128M mtdparts=spi0.0:256k(boot),64k(env),2048k(kernel),5120k(rootfs),-(rootfs_data)";
+ 	};
+ };
++
++/* Baseus SC5336 board wiring and USB radio power pin. */
++&sensor0 {
++	reset-gpio = <&gpio XGPIO_023 1>;
++	pwdn-gpio = <&gpio 0xffff 1>;
++};
++
++&i2c0_pins {
++	anyka,pins = <XGPIO_020 XGPIO_021>;
++	anyka,function = <XGPIO_020_FUNC_TWI0_SDA XGPIO_021_FUNC_TWI0_SCL>;
++};
++
++&mmc2 {
++	status = "disabled";
++};

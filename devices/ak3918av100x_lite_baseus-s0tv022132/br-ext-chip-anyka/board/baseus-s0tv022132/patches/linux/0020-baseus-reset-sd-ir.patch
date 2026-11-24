@@ -1,0 +1,41 @@
+--- a/arch/arm/boot/dts/ak3918av100x-demb.dts
++++ b/arch/arm/boot/dts/ak3918av100x-demb.dts
+@@ -31,3 +31,38 @@
+ &mmc2 {
+ 	status = "disabled";
+ };
++
++/* The Baseus microSD slot is wired for a single data lane. */
++&mci1_pins {
++	anyka,pins = <XGPIO_035 XGPIO_034 XGPIO_033>;
++	anyka,function = <XGPIO_035_FUNC_SDIO0_DATA0
++			  XGPIO_034_FUNC_SDIO0_MCLK
++			  XGPIO_033_FUNC_SDIO0_CMD>;
++	anyka,pull = <0x1010010>;
++};
++
++&mci1_idle_pins {
++	anyka,pins = <XGPIO_035 XGPIO_034 XGPIO_033>;
++	anyka,function = <XGPIO_035_FUNC_GPIO35 XGPIO_034_FUNC_GPIO34
++			  XGPIO_033_FUNC_GPIO33>;
++	anyka,pull = <0>;
++};
++
++&mmc1 {
++	bus-width = <1>;
++	pinctrl-0 = <&mci1_pins>, <&tf_det_pins>;
++	/delete-property/ power-pins;
++	/delete-property/ power-inverted;
++};
++
++&gpiokeys {
++	config {
++		gpios = <&gpio XGPIO_003 GPIO_ACTIVE_LOW>;
++	};
++};
++
++/* Release the shared pad so Majestic can drive the IR illuminator. */
++&saradc {
++	/delete-property/ pinctrl-0;
++	/delete-property/ pinctrl-names;
++};

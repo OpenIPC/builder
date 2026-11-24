@@ -25,6 +25,7 @@ Azarton C1               T20X         JXF23     RTL8189FS_SDIO   NOR_16M   done
 Azarton C1               T31X         GC2053    RTL8189FS_SDIO   NOR_16M   done
 Babysense See HD IP206   SSC333       GC2053    RTL8188FU_USB    NOR_16M   done
 Baolian 11R6W25-HX20Y    HI3518EV200  JXH65     MT7601U_USB      NOR_8M    testing, zoom/focus lens (OpenIPC/firmware#2675)
+Baseus P1 Pro S0TV022132  AK3918AV100X SC5336    AIC8800_USB      NOR_8M    testing, video-ok, wifi-ok, pan/tilt-ok, ircut-ok, ir-ok, microSD-ok on the local OpenIPC build
 Botslab C213             T23N         SC3332    ATBM6012B_USB    NOR_8M    **INIT** - frozen
 CCDCAM IM50Q01           SSC377QE     IMX335    -                NOR_16M   done
 ChinaTelecom DS-YTJ5301  SSC30KD      GC2053    RTL8188FU_USB    NOR_16M   video-ok, wifi-no, motors-no

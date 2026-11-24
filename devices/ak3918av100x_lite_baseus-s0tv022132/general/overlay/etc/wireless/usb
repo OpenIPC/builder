@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ "$1" = "baseus-aic8800" ]; then
+    [ ! -e /sys/class/net/wlan0 ] || exit 0
+    gpio=/sys/class/gpio/gpio98
+    [ -d "$gpio" ] || echo 98 > /sys/class/gpio/export || exit 1
+    echo high > "$gpio/direction" || exit 1
+    sleep 1
+    echo 0 > "$gpio/value" || exit 1
+    modprobe cfg80211 || exit 1
+    modprobe aic_load_fw aic_fw_path=/lib/firmware/aic8800D80 || exit 1
+    modprobe aic8800 use_80=0 sgi80=0 || exit 1
+    for i in 1 2 3 4 5 6 7 8 9 10; do
+        [ ! -e /sys/class/net/wlan0 ] || exit 0
+        sleep 1
+    done
+    logger -t baseus-wifi 'AIC8800 did not register wlan0'
+fi
+
+exit 1

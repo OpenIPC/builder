@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set_led() {
+    local pin="$1" level="$2" gpio=/sys/class/gpio
+    if [ ! -d "$gpio/gpio$pin" ]; then
+        echo "$pin" > "$gpio/export" || return
+    fi
+    echo "$level" > "$gpio/gpio$pin/direction"
+}
+
+case "$1" in
+    start)
+        # Both indicators are active-low. Blue indicates the system started.
+        set_led 5 high
+        set_led 9 low
+        ;;
+    stop)
+        set_led 9 high
+        set_led 5 high
+        ;;
+esac

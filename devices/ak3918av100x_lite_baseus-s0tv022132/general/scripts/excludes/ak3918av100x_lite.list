@@ -1,0 +1,16 @@
+# Other sensors delivered by the common Anyka AV100 package.
+/lib/modules/4.4.282/anyka/sensor_gc2063.ko
+/lib/modules/4.4.282/anyka/sensor_gc3003.ko
+/lib/modules/4.4.282/anyka/sensor_gc4653.ko
+/lib/modules/4.4.282/anyka/sensor_mis2008.ko
+/lib/modules/4.4.282/anyka/sensor_sc1346.ko
+/lib/modules/4.4.282/anyka/sensor_sc223a.ko
+/lib/modules/4.4.282/anyka/sensor_sc2336.ko
+/lib/modules/4.4.282/anyka/sensor_sc2336x.ko
+/lib/modules/4.4.282/anyka/sensor_sc3336.ko
+/lib/modules/4.4.282/anyka/sensor_sc401ai.ko
+/lib/modules/4.4.282/anyka/sensor_sc5238.ko
+/etc/sensor/isp_gc3003_mipi_2lane_av100_hp.conf
+/etc/sensor/isp_gc4653_mipi_2lane_av100_hp.conf
+/etc/sensor/isp_sc2336_mipi_2lane_av100.conf
+/etc/sensor/isp_sc5238_mipi_2lane_av100_hp.conf
