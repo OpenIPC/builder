@@ -1,9 +1,0 @@
-#!/bin/sh
-
-case "$1" in
-    start)
-        [ -n "$(fw_printenv -n wlandev 2>/dev/null)" ] || exit 0
-        [ -z "$(fw_printenv -n wlanssid 2>/dev/null)" ] || exit 0
-        qrscan.sh >/dev/null 2>&1 &
-        ;;
-esac
