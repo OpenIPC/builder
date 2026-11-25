@@ -1,9 +1,28 @@
+Subject: [PATCH] ARM: dts: configure Baseus P1 Pro S0TV022132
+
+Set the board GPIO and pinmux, configure microSD, and disable Ethernet.
+
 --- a/arch/arm/boot/dts/ak3918av100x-demb.dts
 +++ b/arch/arm/boot/dts/ak3918av100x-demb.dts
-@@ -31,3 +31,38 @@
- &mmc2 {
- 	status = "disabled";
+@@ -16,3 +16,58 @@
+ 		bootargs = "console=ttySAK0,115200n8 root=/dev/mtdblock3 rootfstype=squashfs init=/init mem=128M memsize=128M mtdparts=spi0.0:256k(boot),64k(env),2048k(kernel),5120k(rootfs),-(rootfs_data)";
+ 	};
  };
++
++/* Baseus SC5336 board wiring and USB radio power pin. */
++&sensor0 {
++	reset-gpio = <&gpio XGPIO_023 1>;
++	pwdn-gpio = <&gpio 0xffff 1>;
++};
++
++&i2c0_pins {
++	anyka,pins = <XGPIO_020 XGPIO_021>;
++	anyka,function = <XGPIO_020_FUNC_TWI0_SDA XGPIO_021_FUNC_TWI0_SCL>;
++};
++
++&mmc2 {
++	status = "disabled";
++};
 +
 +/* The Baseus microSD slot is wired for a single data lane. */
 +&mci1_pins {
@@ -38,4 +57,9 @@
 +&saradc {
 +	/delete-property/ pinctrl-0;
 +	/delete-property/ pinctrl-names;
++};
++
++/* This board has no populated Ethernet interface. */
++&ethernet {
++	status = "disabled";
 +};
