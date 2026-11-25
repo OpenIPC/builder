@@ -31,7 +31,8 @@ Baseus firmware and are included here for local builds. The two files are
 under `files/`; confirm redistribution terms before submitting them upstream.
 
 The first-boot customizer sets the adapter, sensor and PTZ defaults in U-Boot
-environment. Wi-Fi credentials are configured on the camera. The build assumes
+environment and fills in missing Majestic settings for the ISP profile, video,
+and IR hardware. Wi-Fi credentials are configured on the camera. The build assumes
 the profile is applied to the pinned firmware tree above.
 
 Factory payload SHA-256 digests:

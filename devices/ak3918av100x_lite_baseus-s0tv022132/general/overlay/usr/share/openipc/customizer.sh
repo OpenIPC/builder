@@ -21,4 +21,19 @@ trap 'rm -f "$settings"' EXIT
         fi
     fi
 } > "$settings"
-[ ! -s "$settings" ] || fw_setenv -s "$settings"
+if [ -s "$settings" ]; then
+    fw_setenv -s "$settings" || exit 1
+fi
+
+set_majestic_default() {
+    [ -n "$(cli -g "$1" 2>/dev/null)" ] || cli -s "$1" "$2"
+}
+
+set_majestic_default .isp.sensorConfig /etc/sensor/isp_sc5336_mipi_2lane_av100_15fps_YuTong.conf || exit 1
+set_majestic_default .video0.codec h264 || exit 1
+set_majestic_default .video0.fps 15 || exit 1
+set_majestic_default .nightMode.irCutPin1 4 || exit 1
+set_majestic_default .nightMode.irCutPin2 8 || exit 1
+set_majestic_default .nightMode.backlightPin 70 || exit 1
+set_majestic_default .nightMode.backlightInvert false || exit 1
+set_majestic_default .nightMode.backlight manual
