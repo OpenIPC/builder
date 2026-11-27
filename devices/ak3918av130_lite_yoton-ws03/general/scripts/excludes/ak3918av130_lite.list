@@ -1,0 +1,3 @@
+# Built only so that the kernel keeps its wireless-extensions core for
+# atbm606x-openipc's cfg80211 (see the kernel config fragment); nothing loads it.
+/lib/modules/4.4.302-cip94/kernel/drivers/staging/rtl8712/r8712u.ko

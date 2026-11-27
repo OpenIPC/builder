@@ -126,6 +126,7 @@ Xiaomi MJSXJ03HL         T31N         JXQ03     RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ03HL         T31N         JXQ03P    RTL8189FS_SDIO   NOR_16M   done
 Xiaomi MJSXJ05HL         T31L         GC2053    ATBM6031_SDIO    NOR_16M   preparation
 XVI ISI-2010C            T31N         GC2053    -                NOR_8M    done
+Yoton WS03               AK3918AV130  SC3B2AQ?  ATBM6132_USB     NOR_8M    testing: RAM boot only, wifi-ok (OpenIPC/firmware#2962), no sensor driver yet
 YuanCam DGK-423403       HI3518EV300  JXH62     RTL8188FU_USB    NOR_8M    research
 Zenointel SD-2N-4G       GK7205V510   MIS2009   EC200A_USB       NAND      done, pan/tilt (gpiostep), IR + white lamps
 ZMODO ZP-IBH15-S         HI3518CV100  JXH22     -                NOR_16M   testing, video-ok and ircut-ok by hand on stock-OpenIPC (owner), this image untested
