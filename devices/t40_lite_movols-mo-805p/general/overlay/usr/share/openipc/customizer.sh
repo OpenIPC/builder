@@ -29,6 +29,9 @@ cli -s .video1.gopMode smart
 cli -s .audio.enabled true
 cli -s .audio.codec ulaw
 cli -s .rtsp.audioCodec ulaw
+cli -s .audio.outputEnabled true
+cli -s .audio.speakerPin 68
+cli -s .audio.speakerPinInvert true
 #
 cli -s .nightMode.irCutPin1 122
 cli -s .nightMode.irCutPin2 123
