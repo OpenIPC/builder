@@ -1,8 +1,5 @@
 #!/bin/sh
 
-### focus coil on GPIO0_6, a pad that boots as FLASH_TRIG ###
-devmem 0x200f0008 32 0
-
 ### night lamps: IR, not white ###
 # GPIO7_7 boots as SAR_ADC_CH1. It only picks which lamps may light, high for
 # IR and low for white; the camera's own light sensor switches them on and off
@@ -10,6 +7,15 @@ devmem 0x200f0008 32 0
 # the default. `gpio clear 63` selects white until the next boot.
 devmem 0x200f00fc 32 1
 gpio set 63 >/dev/null
+
+### pan/tilt: UART1 on its pads, the RS-485 transceiver listening ###
+# The mount's header is UART1 behind a half-duplex transceiver whose direction
+# is gpio 47, high to send (#2675). Low from boot, so the bus is quiet until
+# majestic-af opens /dev/ttyAMA1 and takes the pin over.
+devmem 0x200f00c0 32 3 # GPIO6_0 -> UART1_RXD
+devmem 0x200f00c8 32 3 # GPIO6_2 -> UART1_TXD
+devmem 0x200f00bc 32 0 # GPIO5_7 as a GPIO
+gpio clear 47 >/dev/null
 
 ### home the lens, then park it at wide, focused at a few metres ###
 # A stepper has no idea where it is after a power cut, so this runs on every
@@ -19,14 +25,36 @@ gpio set 63 >/dev/null
 # says and the outcome in syslog under "lens": a lens left out of position
 # should say why. Only with a gpio-motors that knows active-low coils: an
 # older one drives these inverted and leaves both motors energised.
+#
+# Not until the vendor modules are in: focus has a coil on GPIO0_6, and this
+# script runs at S30, while sys_config.ko at S70 puts that pad back to
+# FLASH_TRIG. A lens homed across that came up with zoom right and focus wrong,
+# and the same moves by hand were sharp (OpenIPC/firmware#2675). S95majestic
+# only starts once S70 has finished, so its process is the sign. The wait is
+# bounded: a camera with no video should still get its lens back.
 lens_home() {
+	wait=0
+	until pidof majestic >/dev/null; do
+		if [ "$wait" -ge 120 ]; then
+			echo "no majestic after ${wait}s, homing anyway"
+			break
+		fi
+		sleep 1
+		wait=$((wait + 1))
+	done
+	devmem 0x200f0008 32 0
 	if gpio-motors -400 -530 3 && gpio-motors 370 170 3; then
 		echo "homed, parked at zoom 370 focus 170"
 	else
 		echo "homing failed: lens position unknown"
 	fi
 }
-if grep -q ptz_coil_active /usr/bin/gpio-motors 2>/dev/null; then
+# `fw_setenv lens_home off` leaves the lens where it is, for an owner driving it
+# some other way (#2675). Its position is then unknown to anything that counts
+# steps, which is the price.
+if [ "$(fw_printenv -n lens_home 2>/dev/null)" = off ]; then
+	logger -t lens "homing off (lens_home=off), lens left where it is"
+elif grep -q ptz_coil_active /usr/bin/gpio-motors 2>/dev/null; then
 	lens_home 2>&1 | logger -t lens &
 else
 	logger -t lens "gpio-motors does not know ptz_coil_active; lens left alone"
