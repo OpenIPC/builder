@@ -1,0 +1,19 @@
+config BR2_PACKAGE_GC6153
+	bool "gc6153"
+	depends on BR2_mipsel
+	help
+	  Userspace tool for the GC6153F 5-channel stepper/ircut driver
+	  on the Vstarcam C8622 (Ingenic T23). The GC6153 is a dual
+	  SPI/I2C chip; this board wires it in i2c mode at 7-bit 0x10.
+	  Datasheet summary:
+	  https://damodev.csdn.net/6823f4b5a5baf817cf4b3f9c.html
+
+	  The chip sits on a bit-banged i2c bus (PB21/PB20) that no kernel
+	  adapter owns, so the tool drives it through /dev/mem. Commands:
+	  init (the vendor init table, required after every power cycle),
+	  ircut day/night pulse, pan/tilt bursts, raw register access, and
+	  one-shot GPIO drive (the IR and white lamps hang off GPIO61/GPIO50
+	  with the shared brightness line on PB17).
+
+	  Installs /usr/sbin/gc6153 and /etc/init.d/S65gc6153, which runs
+	  the chip init at boot and parks the lamp lines.

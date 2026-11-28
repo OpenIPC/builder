@@ -1,0 +1,6 @@
+sensor:
+  name: gc1084
+  address: 0x37
+  width: 1280
+  height: 720
+  bus: i2c
