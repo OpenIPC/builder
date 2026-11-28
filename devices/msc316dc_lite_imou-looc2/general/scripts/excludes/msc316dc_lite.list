@@ -1,0 +1,10 @@
+/etc/sensors/iqfile/f22_iqfile.bin.mz
+/etc/sensors/iqfile/imx307_iqfile.bin.mz
+/etc/sensors/iqfile/imx323_iqfile.bin.mz
+/etc/sensors/iqfile/sc2235_iqfile.bin.mz
+/usr/lib/sensors/libdrv_ms_cus_imx307_MIPI.so
+/usr/lib/sensors/libdrv_ms_cus_imx323_fpga.so
+/usr/lib/sensors/libdrv_ms_cus_imx323.so
+/usr/lib/sensors/libdrv_ms_cus_JXF22.so
+/usr/lib/sensors/libdrv_ms_cus_sc2235_2.so
+/usr/lib/sensors/libdrv_ms_cus_sc2235.so
