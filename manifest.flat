@@ -1,5 +1,5 @@
 # OpenIPC builder build index
-# generated_at=2026-11-27T22:33:08Z
+# generated_at=2026-11-28T08:20:33Z
 # columns: build_id platform flash size url
 nightly-20261127-8fcb3de ak3918av130_lite_yoton-ws03 nor 5792651 https://github.com/OpenIPC/builder/releases/download/nightly-20261127-8fcb3de/ak3918av130_lite_yoton-ws03-nor.tgz
 nightly-20261127-8fcb3de ak3918ev300_lite_heimvision-pe3020w nor 6896851 https://github.com/OpenIPC/builder/releases/download/nightly-20261127-8fcb3de/ak3918ev300_lite_heimvision-pe3020w-nor.tgz
