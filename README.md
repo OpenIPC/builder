@@ -111,6 +111,7 @@ VStarcam C8622           T23N         SC2336P   AIC8800DL_?      NOR_8M    **INI
 XiongMai 85H50AI         HI3516EV300  IMX335    -                NOR_16M   testing, motorized zoom+focus (pelco-xm)
 XiongMai HI3516D_N81820  HI3516DV100  IMX291    -                NOR_16M   testing, motorized zoom+focus (ms41908 SPI)
 XiongMai IPC_G6S 20X     GK7205V300   IMX335    -                NOR_16M   untested, 20x zoom+focus (pelco-xm), board of Vixand IVG-G6S
+XiongMai IVG-N8S         NT98566      IMX415    -                NOR_16M   testing, 4-lane video-ok (OpenIPC/majestic#390), this image untested
 XiongMai JZC-N51813L     HI3518CV100  AR0130    -                NOR_16M   testing, 18x zoom+focus (visca lens MCU)
 XiongMai XM72050200      GK7201V200   SC2336    RTL8733BU_USB    NOR_16M   done
 XiongMai 7201V2_02M10    GK7201V200   SP2308    RTL8733BU_USB    NOR_16M   done, sold as JN-107AR-D-WIFI
