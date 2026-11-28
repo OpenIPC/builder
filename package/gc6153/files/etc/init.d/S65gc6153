@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# Bring up the GC6153F (pan/tilt + ircut chip) and the lamp lines.
+#
+# The chip loses its init table on every power cycle; without it i2c
+# still ACKs but ircut/motor pulses do nothing. PB17 is the shared lamp
+# brightness line (TCU0 PWM pin, held high = 100% duty); with it high,
+# GPIO61 (IR lamp) and GPIO50 (white lamp) become plain on/off switches
+# for majestic's nightMode.
+#
+
+case "$1" in
+	start)
+		gc6153 init
+		gc6153 set 49 1
+		gc6153 set 61 0
+		gc6153 set 50 0
+		;;
+	stop)
+		gc6153 set 61 0
+		gc6153 set 50 0
+		;;
+	*)
+		echo "Usage: $0 {start|stop}"
+		exit 1
+		;;
+esac
+
+exit 0

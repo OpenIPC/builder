@@ -1,0 +1,1419 @@
+From a08670995b536e9258c877a93de0ca06824785c6 Mon Sep 17 00:00:00 2001
+From: Petr B <pbekl@bk.ru>
+Date: Sat, 28 Nov 2026 16:38:04 +0000
+Subject: [PATCH] gc6153: add GC6153 i2c pan/tilt + ircut actuator,
+ self-contained shim
+
+---
+ CMakeLists.txt        |   5 +-
+ af-shim.c             | 118 ++++++
+ include/act_gc6153.h  | 111 ++++++
+ src/act_gc6153.c      | 856 ++++++++++++++++++++++++++++++++++++++++++
+ src/actuator.c        |   2 +
+ src/gc6153_calc.c     | 225 +++++++++++
+ tests/act_uart_test.c |   1 +
+ tests/schema_test.c   |   1 +
+ 8 files changed, 1318 insertions(+), 1 deletion(-)
+ create mode 100644 af-shim.c
+ create mode 100644 include/act_gc6153.h
+ create mode 100644 src/act_gc6153.c
+ create mode 100644 src/gc6153_calc.c
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a9ff38a..3362c35 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,8 +34,11 @@ add_library(majestic-af SHARED
+     src/ms41908_calc.c
+     src/act_gpiostep.c
+     src/gpiostep_calc.c
++    src/act_gc6153.c
++    src/gc6153_calc.c
+     src/act_visca.c
+-    src/visca_calc.c)
++    src/visca_calc.c
++    af-shim.c)
+ 
+ target_include_directories(majestic-af PRIVATE include)
+ 
+diff --git a/af-shim.c b/af-shim.c
+new file mode 100644
+index 0000000..642ce93
+--- /dev/null
++++ b/af-shim.c
+@@ -0,0 +1,118 @@
++// af-shim — LD_PRELOAD stand-ins for the majestic core symbols that the
++// published ingenic majestic binary does not export (it is built without
++// WITH_PLUGINS_SUPPORT), so /usr/lib/majestic-af.so can relocate and run.
++//
++// Provides:
++//   config_get_string/int/boolean  - minimal /etc/majestic.yaml reader
++//   sdk_get_focus_value            - false: no ISP focus statistic here
++//   sdk_set_zoom_mag               - no-op: no zoom lens on this head
++//   log_log                        - plugin logging -> syslog
++//
++// Drop once majestic ships the plugin seams on this family.
++#include <stdbool.h>
++#include <stdarg.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <syslog.h>
++
++#define MAJESTIC_YAML "/etc/majestic.yaml"
++
++// rotating buffers: the plugin may hold two returned strings live at once
++static char valbuf[8][128];
++static unsigned valbuf_next;
++
++static const char *yaml_get(const char *path, const char *param)
++{
++    static char line[512];
++    char *buf = valbuf[valbuf_next++ & 7];
++    size_t plen = strlen(path), klen = strlen(param);
++    int in_sec = 0;
++    FILE *f = fopen(MAJESTIC_YAML, "r");
++    if (!f)
++        return NULL;
++    buf[0] = 0;
++    while (fgets(line, sizeof line, f)) {
++        char *p, *q, *e;
++        if (line[0] != ' ' && line[0] != '\t' && line[0] != '#' && line[0] != '\n') {
++            in_sec = !strncmp(line, path, plen) && line[plen] == ':';
++            continue;
++        }
++        if (!in_sec)
++            continue;
++        p = line;
++        while (*p == ' ' || *p == '\t')
++            p++;
++        if (strncmp(p, param, klen))
++            continue;
++        q = p + klen;
++        while (*q == ' ' || *q == '\t')
++            q++;
++        if (*q != ':')
++            continue;
++        q++;
++        while (*q == ' ' || *q == '\t')
++            q++;
++        e = q + strlen(q);
++        while (e > q && (e[-1] == '\n' || e[-1] == '\r' || e[-1] == ' ' || e[-1] == '\t'))
++            --e;
++        if (e > q + 1 && (*q == '"' || *q == '\'') && e[-1] == *q) {
++            q++;
++            --e;
++        }
++        *e = 0;
++        snprintf(buf, sizeof valbuf[0], "%s", q);
++        fclose(f);
++        return buf;
++    }
++    fclose(f);
++    return NULL;
++}
++
++const char *config_get_string(const char *path, const char *param_name)
++{
++    const char *v = yaml_get(path, param_name);
++    return v && *v ? v : "";
++}
++
++int config_get_int(const char *path, const char *param_name)
++{
++    const char *v = yaml_get(path, param_name);
++    return v ? atoi(v) : 0;
++}
++
++bool config_get_boolean(const char *path, const char *param_name)
++{
++    const char *v = yaml_get(path, param_name);
++    return v && (!strcmp(v, "true") || !strcmp(v, "1") || !strcmp(v, "yes") ||
++                 !strcmp(v, "on"));
++}
++
++bool sdk_get_focus_value(unsigned *fv)
++{
++    (void)fv;
++    return false;
++}
++
++void sdk_set_zoom_mag(float mag)
++{
++    (void)mag;
++}
++
++void log_log(int level, const char *file, int line, const char *func,
++             const char *fmt, ...)
++{
++    static const int prio[] = {LOG_DEBUG, LOG_DEBUG, LOG_DEBUG, LOG_INFO,
++                               LOG_WARNING, LOG_ERR, LOG_CRIT};
++    char msg[512];
++    va_list ap;
++    (void)file;
++    (void)line;
++    (void)func;
++    va_start(ap, fmt);
++    vsnprintf(msg, sizeof msg, fmt, ap);
++    va_end(ap);
++    if (level < 0 || level > 6)
++        level = 3;
++    syslog(LOG_USER | prio[level], "majestic-af: %s", msg);
++}
+diff --git a/include/act_gc6153.h b/include/act_gc6153.h
+new file mode 100644
+index 0000000..69b8d55
+--- /dev/null
++++ b/include/act_gc6153.h
+@@ -0,0 +1,111 @@
++// gc6153 backend — the pure, hardware-free helpers, exposed so a unit test can
++// pin the board config parsing, the verb mapping, the speed mapping and the
++// soft-limit clamp without a camera. The transport (GPIO bitbang i2c to the
++// chip) and the stepping thread stay private to src/act_gc6153.c.
++
++#ifndef MAJESTIC_AF_ACT_GC6153_H
++#define MAJESTIC_AF_ACT_GC6153_H
++
++#include <stdbool.h>
++
++#include "proto.h"
++
++// The board description, read from GC_CONF_PATH. Everything here is a property
++// of the camera: which raw chip direction is left/up, how far each axis turns
++// before the gearbox stops it, how fast the chip may step, and which GPIOs the
++// chip's i2c sits on. A board that ships no file gets the Vstarcam C8622's
++// numbers (the board this backend was written for).
++#define GC_CONF_PATH "/etc/gc6153.conf"
++
++enum { GC_PAN = 0, GC_TILT = 1, GC_AXES = 2 };
++
++typedef struct GcConfig {
++    // Full travel stop to stop, in chip microsteps (the units of the vendor
++    // HwCfg HMotor/VMotor MaxStep: 15000/2000 on the C8622); 0 = unknown, so
++    // no soft limit and no homing on that axis.
++    int travel[GC_AXES];
++    // The sign of a raw burst that turns the head left (pan) or up (tilt):
++    // +1 = chip direction 1, -1 = chip direction 2. Wiring decides it.
++    int left_sign;
++    int up_sign;
++    // Chip step rate for a move at majestic speed 63 (and for speed 0, the
++    // configured rate): 1..10, the chip's own scale (10 the fastest). Lower
++    // speeds scale the microstep period up from this.
++    int speed;
++    // The same for the homing seek, for the same reason as gpiostep's: a head
++    // slammed into its stop at speed can slip somewhere homing cannot see.
++    int home_speed;
++    // Microseconds one microstep takes at chip speed 10, measured on the
++    // C8622 (~1 ms: a 1023-step burst runs ~1 s). Scaled by the speed's
++    // period ratio for other rates; the deadline math only ever over-estimates.
++    int step_us;
++    // Microsteps per burst (the chip self-steps one burst, at most 1023),
++    // and the same while a diagonal alternates the axes, where small bursts
++    // keep the two axes in step.
++    int chunk;
++    int diag_chunk;
++    // Seek both stops once per boot to learn where the head is.
++    bool home;
++    // Steps that turn the head one whole frame of the picture; 0 = unknown.
++    int frame_steps[GC_AXES];
++    // The i2c pins, as raw GPIO numbers (PB21/PB20 = 53/52 on the C8622).
++    int scl;
++    int sda;
++    // The IR lamp GPIO to watch for the day/night state: the chip's fifth
++    // channel is the IR-cut filter, and majestic drives the lamp pin on its
++    // own night switch, so following the lamp keeps the filter in step
++    // without a core hook. -1 = leave the filter alone (PB29 = 61 on the
++    // C8622, majestic's nightMode.backlightPin).
++    int ircut_watch;
++} GcConfig;
++
++void gc_config_defaults(GcConfig *c);
++
++// Apply one `key=value` line. Blank lines and `#` comments are accepted and
++// change nothing. Returns false for a line that is neither, or for a value out
++// of range, leaving the config as it was.
++bool gc_config_line(GcConfig *c, const char *line);
++
++// majestic's move speed (1..63, 63 the top rate; 0 the configured rate) as the
++// chip's 1..10.
++int gc_chip_speed(const GcConfig *c, int speed);
++
++// The chip's microstep period register for a chip speed: 215 + 30*(10-speed),
++// the vendor driver's own mapping (245 at speed 10 .. 515 at speed 1).
++int gc_period(const GcConfig *c, int chip_speed);
++
++// How long `steps` microsteps at `chip_speed` keep the axis busy, in ms,
++// rounded up: the burst issue plus the self-stepping run.
++long gc_burst_ms(const GcConfig *c, int steps, int chip_speed);
++
++// verb -> the raw burst direction of each axis (+1/-1, already signed by the
++// config; 0 for an axis the verb leaves alone). A diagonal sets both. Returns
++// false for stop and for every verb a pan/tilt head does not carry.
++bool gc_verb_dirs(const GcConfig *c, enum PtzVerb v, int dir[GC_AXES]);
++
++// The axis to burst next, given each axis's armed direction and the axis that
++// burst last: the two take turns while both are armed, otherwise the one that
++// is. -1 when neither is.
++int gc_next_axis(const int dir[GC_AXES], int last);
++
++// Arm `dir` as a counted move of `steps` on each axis it turns, or until
++// stopped with steps < 0, over what each axis is doing (updated in place) --
++// the same contract as gs_arm_axes().
++void gc_arm_axes(const int dir[GC_AXES], int steps, int speed, int cur_dir[GC_AXES],
++                 int cur_left[GC_AXES], int cur_speed[GC_AXES], bool armed[GC_AXES]);
++
++// Clamp a move of `want` (>= 0) steps in direction `dir` from `pos` to
++// [0, travel]; 0 at the stop in that direction; travel 0 (unknown) allows all.
++int gc_clamp_step(int pos, int dir, int want, int travel);
++
++// Position `pos` (0..travel, raw steps from the stop a raw negative burst runs
++// into) as -1..1, right (pan) and up (tilt) positive whichever way the board
++// is wired. Only for an axis with a travel.
++double gc_norm_pos(const GcConfig *c, int axis, int pos);
++
++// Read a saved position, "pan tilt", into `pos`, marking in `known` the axes
++// it can vouch for. Returns how many axes are known.
++int gc_parse_pos(const GcConfig *c, const char *line, int pos[GC_AXES],
++                 bool known[GC_AXES]);
++
++#endif
+diff --git a/src/act_gc6153.c b/src/act_gc6153.c
+new file mode 100644
+index 0000000..52a4adb
+--- /dev/null
++++ b/src/act_gc6153.c
+@@ -0,0 +1,856 @@
++// act_gc6153 — pan/tilt heads driven by a GC6153F dual SPI/I2C 5-channel
++// micro stepper driver, wired in i2c mode, on a bit-banged bus.
++//
++// The Vstarcam C8622 (Ingenic T23) has no motor MCU and no kernel driver for
++// the chip that works on OpenIPC (the vendor motor_iic.ko matches no module
++// layout we run, and the chip's i2c sits on GPIO 53/52, not the kernel's
++// adapter): this backend drives it from userspace through /dev/mem, the same
++// way the c8622-motor bench tool does. The protocol is the vendor driver's
++// own (see MOTOR_NOTES.md in the builder's c8622 directory): an init table,
++// then per move a short "burst" of i2c writes after which the chip self-steps
++// up to 1023 microsteps on its own; a brake/decay sequence stops it.
++//
++// The shape is act_gpiostep's. emit() only records a direction and never
++// blocks; the stepping thread issues one burst per axis in turn and paces it
++// out in 10 ms slices, so a stop lands within a slice (the chip is braked
++// mid-burst) rather than after a whole burst. Position is dead-reckoned from
++// homing seeks into the gearbox stops, once per boot, with the vendor HwCfg's
++// travels as the soft limits; a majestic restart within the same boot keeps
++// the position (GC_POS_PATH lives on tmpfs).
++//
++// The chip's fifth channel is the IR-cut filter. It is not a PTZ verb: the
++// stepping thread watches the IR lamp GPIO (majestic's nightMode.backlightPin)
++// and swings the filter with the lamp, the only day/night signal a plugin on
++// this core can see.
++
++#include "act_gc6153.h"
++#include "actuator.h"
++#include "motion.h"
++
++#include <errno.h>
++#include <fcntl.h>
++#include <pthread.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <string.h>
++#include <sys/mman.h>
++#include <sys/syscall.h>
++#include <time.h>
++#include <unistd.h>
++
++#include <majestic/log.h>
++
++// Where the dead-reckoned position survives a majestic restart. tmpfs, so it
++// dies with the boot -- exactly when the position stops being true.
++#define GC_POS_PATH "/tmp/gc6153.pos"
++
++#define GC_CHIP_ADDR 0x10   // 7-bit i2c address of the GC6153F
++
++// Ingenic T23 GPIO block: four ports of 32 at 0x1000 each, the function
++// shadow at 0x7000 (arch/mips/xburst/soc-t23/common/gpio.c).
++#define GC_GPIO_BASE 0x10010000
++#define GC_GPIO_SPAN 0x8000
++#define PX_PIN 0x00
++#define PZ_INTC 0x18
++#define PZ_MSKS 0x24
++#define PZ_PAT1S 0x34
++#define PZ_PAT1C 0x38
++#define PZ_PAT0S 0x44
++#define PZ_PAT0C 0x48
++#define PZ_GID2LD 0xf0
++
++static pthread_mutex_t s_mu = PTHREAD_MUTEX_INITIALIZER;
++static pthread_cond_t s_cv = PTHREAD_COND_INITIALIZER;
++static pthread_t s_thread;
++static bool s_thread_valid = false;
++static int s_run = 0;
++static volatile uint32_t *s_gpio;   // mapped GC_GPIO_BASE
++static GcConfig s_cfg;
++static int s_dir[GC_AXES];      // raw direction, 0 = that axis is still
++static int s_speed[GC_AXES];    // majestic speed 1..63, 0 = configured rate
++static int s_left[GC_AXES] = {-1, -1};   // steps left on a counted move; -1 = until stopped
++static int s_last = GC_TILT;
++static unsigned s_gen[GC_AXES];
++static int s_pos[GC_AXES];
++static bool s_homed[GC_AXES];
++static bool s_lost[GC_AXES];
++static bool s_homing = false;
++static bool s_starting = false;
++static bool s_home_cancel = false;
++static bool s_dirty = false;
++static bool s_pos_saved = false;
++static bool s_energized[GC_AXES];   // the chip still holds this axis's current
++static bool s_limit_said[GC_AXES][2];
++static int s_lamp = -1;         // last confirmed lamp level, -1 before the first read
++static int s_lamp_cand = -1;    // a changed level waits one poll for confirmation
++static int s_ircut_pos = 0;     // the filter position last driven, 0 = none yet
++
++// ---- i2c bitbang over /dev/mem -------------------------------------------
++
++static void gpio_wr(uint32_t off, uint32_t v) { s_gpio[off / 4] = v; }
++static uint32_t gpio_rd(uint32_t off) { return s_gpio[off / 4]; }
++
++static void delay_us(long us) {
++    struct timespec ts = {.tv_sec = us / 1000000, .tv_nsec = (us % 1000000) * 1000};
++    nanosleep(&ts, NULL);
++}
++
++static void pin_input(int g) {
++    uint32_t sh = 0x7000, b = 1u << (g % 32);
++    gpio_wr(sh + PZ_INTC, b);
++    gpio_wr(sh + PZ_MSKS, b);
++    gpio_wr(sh + PZ_PAT1S, b);
++    gpio_wr(sh + PZ_GID2LD, g / 32);
++}
++
++static void pin_out(int g, int v) {
++    uint32_t sh = 0x7000, b = 1u << (g % 32);
++    gpio_wr(sh + PZ_INTC, b);
++    gpio_wr(sh + PZ_MSKS, b);
++    gpio_wr(sh + PZ_PAT1C, b);
++    gpio_wr(sh + (v ? PZ_PAT0S : PZ_PAT0C), b);
++    gpio_wr(sh + PZ_GID2LD, g / 32);
++}
++
++static int pin_read(int g) {
++    return !!(gpio_rd((uint32_t)(g / 32) * 0x1000 + PX_PIN) & (1u << (g % 32)));
++}
++
++#define I2C_HALF_US 3   // ~150 kHz
++
++static void i2c_sda(int v) { v ? pin_input(s_cfg.sda) : pin_out(s_cfg.sda, 0); }
++static void i2c_scl(int v) { pin_out(s_cfg.scl, v); }   // push-pull: we are the only master
++
++static void i2c_start(void) {
++    i2c_sda(1);
++    i2c_scl(1);
++    delay_us(I2C_HALF_US);
++    i2c_sda(0);
++    delay_us(I2C_HALF_US);
++    i2c_scl(0);
++    delay_us(I2C_HALF_US);
++}
++
++static void i2c_stop(void) {
++    i2c_sda(0);
++    delay_us(I2C_HALF_US);
++    i2c_scl(1);
++    delay_us(I2C_HALF_US);
++    i2c_sda(1);
++    delay_us(I2C_HALF_US);
++}
++
++static int i2c_write_byte(uint8_t b) {
++    for (int i = 7; i >= 0; i--) {
++        i2c_sda((b >> i) & 1);
++        delay_us(I2C_HALF_US);
++        i2c_scl(1);
++        delay_us(I2C_HALF_US);
++        i2c_scl(0);
++        delay_us(I2C_HALF_US);
++    }
++    i2c_sda(1);
++    delay_us(I2C_HALF_US);
++    i2c_scl(1);
++    delay_us(I2C_HALF_US);
++    int ack = !pin_read(s_cfg.sda);
++    i2c_scl(0);
++    delay_us(I2C_HALF_US);
++    return ack;
++}
++
++static int chip_write(uint8_t reg, uint8_t val) {
++    int ack;
++    i2c_start();
++    ack = i2c_write_byte((GC_CHIP_ADDR << 1) | 0);
++    ack &= i2c_write_byte(reg);
++    ack &= i2c_write_byte(val);
++    i2c_stop();
++    return ack;
++}
++
++// The vendor power-on table (motor_iic.ko init_gc6153), 50 us between writes.
++static int chip_init(void) {
++    static const uint8_t tbl[][2] = {
++        {0x17, 0x00}, {0x17, 0x13}, {0x12, 0xc0}, {0x13, 0x03}, {0x14, 0x1f},
++        {0x00, 0x10}, {0x01, 0x00}, {0x09, 0x10}, {0x0a, 0x00},
++        {0x03, 0x00}, {0x0c, 0x00}, {0x02, 0x04}, {0x0b, 0x04},
++        {0x05, 0x11}, {0x0e, 0x11}, {0x06, 0x22}, {0x0f, 0x22},
++        {0x18, 0x00}, {0x19, 0x00}, {0x1a, 0x00}, {0x1b, 0x00},
++    };
++    int ack = 1;
++    for (size_t i = 0; i < sizeof tbl / sizeof *tbl; i++) {
++        ack &= chip_write(tbl[i][0], tbl[i][1]);
++        delay_us(50);
++    }
++    delay_us(10);
++    ack &= chip_write(0x17, 0x03);
++    delay_us(50);
++    return ack;
++}
++
++// ---- the vendor burst protocol --------------------------------------------
++
++// Per-axis register blocks: Y/tilt in block 1, X/pan in block 2.
++static const struct {
++    uint8_t mode, cur, phi, plo;
++} GC_REG[GC_AXES] = {
++    [GC_TILT] = {0x06, 0x01, 0x07, 0x08},
++    [GC_PAN] = {0x0f, 0x0a, 0x10, 0x11},
++};
++
++// One 16-bit phase word, hi then lo: [11]=start, [10]=dir, [9:0]=data.
++static int phase_wr(int axis, int dirflag, int start, unsigned data10) {
++    int ack = chip_write(GC_REG[axis].phi,
++                         ((data10 >> 8) & 3) | ((dirflag & 1) << 2) | (start ? 8 : 0));
++    ack &= chip_write(GC_REG[axis].plo, data10 & 0xff);
++    return ack;
++}
++
++// Program one self-stepping run of `steps` (1..1023) microsteps. Returns after
++// the ~2 ms of i2c; the chip then steps by itself for gc_burst_ms().
++static bool burst_issue(int axis, int dirflag, int steps, int chip_speed) {
++    int period = gc_period(&s_cfg, chip_speed);
++    int ack = chip_write(0x17, 0x13);
++    delay_us(50);
++    ack &= chip_write(GC_REG[axis].mode, 0x02);
++    ack &= chip_write(GC_REG[axis].cur, 0x7f);
++    ack &= phase_wr(axis, dirflag, 1, (unsigned)period);
++    delay_us(10);
++    static const int num[4] = {9, 8, 6, 5};
++    for (int i = 0; i < 4; i++) {
++        ack &= phase_wr(axis, dirflag, 0, (unsigned)(period * num[i] / 10));
++        delay_us(10);
++    }
++    ack &= phase_wr(axis, dirflag, 0, steps > 256 ? 32 : 0);
++    delay_us(10);
++    ack &= phase_wr(axis, 0, 0, (unsigned)steps & 0x3ff);   // vendor clears dir here
++    delay_us(10);
++    ack &= phase_wr(axis, dirflag, 0, ((unsigned)steps >> 10) & 0x3ff);
++    delay_us(10);
++    return ack != 0;
++}
++
++// Brake the axis and let the current decay (the vendor stop), then park the
++// chip's stop pin high.
++static bool axis_stop(int axis, int dirflag) {
++    static const unsigned decay[8] = {324, 216, 144, 96, 64, 0, 0, 0};
++    int ack = chip_write(GC_REG[axis].mode, 0x07);
++    ack &= chip_write(GC_REG[axis].cur, 0x00);
++    for (int i = 0; i < 8; i++) {
++        ack &= phase_wr(axis, dirflag, i == 0, decay[i]);
++    }
++    ack &= chip_write(0x17, 0x03);
++    return ack != 0;
++}
++
++// ---- board description -----------------------------------------------------
++
++static void load_config(void) {
++    gc_config_defaults(&s_cfg);
++    FILE *f = fopen(GC_CONF_PATH, "r");
++    if (!f) {
++        log_i("gc6153: no %s, using the C8622 defaults", GC_CONF_PATH);
++        return;
++    }
++    char line[128];
++    int n = 0;
++    while (fgets(line, sizeof line, f)) {
++        n++;
++        line[strcspn(line, "\r\n")] = 0;
++        if (!gc_config_line(&s_cfg, line)) {
++            log_w("gc6153: %s:%d: ignoring '%s'", GC_CONF_PATH, n, line);
++        }
++    }
++    fclose(f);
++}
++
++static bool limited(int axis) { return s_cfg.travel[axis] > 0; }
++
++static bool restore_pos(void) {
++    FILE *f = fopen(GC_POS_PATH, "r");
++    if (!f) {
++        return false;
++    }
++    char line[64];
++    bool read = fgets(line, sizeof line, f) != NULL;
++    fclose(f);
++    if (!read) {
++        return false;
++    }
++    int pos[GC_AXES];
++    bool known[GC_AXES];
++    gc_parse_pos(&s_cfg, line, pos, known);
++    for (int a = 0; a < GC_AXES; a++) {
++        if (limited(a) && !known[a]) {
++            return false;   // half a position is not one: home both
++        }
++    }
++    for (int a = 0; a < GC_AXES; a++) {
++        if (known[a]) {
++            s_pos[a] = pos[a];
++            s_homed[a] = true;
++        }
++    }
++    s_pos_saved = true;
++    return true;
++}
++
++static void save_pos(void) {
++    FILE *f = fopen(GC_POS_PATH, "w");
++    if (f) {
++        fprintf(f, "%d %d\n", s_pos[GC_PAN], s_pos[GC_TILT]);
++        fclose(f);
++        s_pos_saved = true;
++    }
++}
++
++static void forget_saved_pos(void) {
++    if (s_pos_saved) {
++        unlink(GC_POS_PATH);
++        s_pos_saved = false;
++    }
++}
++
++// ---- stepping --------------------------------------------------------------
++
++static bool seek_wanted(void) {
++    pthread_mutex_lock(&s_mu);
++    bool r = s_run != 0 && !s_home_cancel;
++    pthread_mutex_unlock(&s_mu);
++    return r;
++}
++
++// Run one burst to completion, pacing it in slices so an unload or a stop
++// during the homing seek lands within one. Returns the microsteps actually
++// run, or -1 when interrupted. Called with s_mu released.
++static int home_burst(int axis, int dir, int steps, int chip_speed) {
++    if (!burst_issue(axis, dir > 0 ? 0 : 1, steps, chip_speed)) {
++        return -1;
++    }
++    long left_ms = gc_burst_ms(&s_cfg, steps, chip_speed);
++    while (left_ms > 0) {
++        long slice = left_ms < 10 ? left_ms : 10;
++        delay_us(slice * 1000);
++        left_ms -= slice;
++        if (!seek_wanted()) {
++            axis_stop(axis, dir > 0 ? 0 : 1);
++            long done = (long)steps - left_ms * 1000 * 245 /
++                        ((long)s_cfg.step_us * gc_period(&s_cfg, chip_speed));
++            return done > 0 ? (int)done : 0;
++        }
++    }
++    return steps;
++}
++
++// `steps` on one axis in bursts, giving up if the plugin is being unloaded or
++// an operator sent a stop. Returns false when it was interrupted.
++static bool home_move(int axis, int steps) {
++    int dir = steps < 0 ? -1 : 1;
++    for (int left = steps * dir; left > 0; left -= s_cfg.chunk) {
++        if (!seek_wanted()) {
++            return false;
++        }
++        int n = left < s_cfg.chunk ? left : s_cfg.chunk;
++        int done = home_burst(axis, dir, n, s_cfg.home_speed);
++        if (done < 0) {
++            return false;
++        }
++        if (done < n) {
++            return false;   // interrupted mid-burst
++        }
++    }
++    return true;
++}
++
++// Drive each axis with a travel into its stop at 0, then to the middle of its
++// travel. The overshoot past the travel makes sure the head reaches the stop
++// wherever it was left; the gearbox slips against it without harm, the way the
++// vendor firmware's own boot self-check does.
++static void home(void) {
++    log_i("gc6153: homing pan %d / tilt %d steps", s_cfg.travel[GC_PAN],
++          s_cfg.travel[GC_TILT]);
++    bool ok = true;
++    for (int a = 0; a < GC_AXES && ok; a++) {
++        int t = s_cfg.travel[a];
++        if (limited(a)) {
++            ok = home_move(a, -(t + t / 8 + 64));
++        }
++    }
++    for (int a = 0; a < GC_AXES && ok; a++) {
++        if (!limited(a)) {
++            continue;
++        }
++        ok = home_move(a, s_cfg.travel[a] / 2);
++        if (ok) {
++            pthread_mutex_lock(&s_mu);
++            s_pos[a] = s_cfg.travel[a] / 2;
++            s_homed[a] = true;
++            pthread_mutex_unlock(&s_mu);
++        }
++    }
++    for (int a = 0; a < GC_AXES; a++) {
++        axis_stop(a, 0);
++        s_energized[a] = false;
++    }
++    pthread_mutex_lock(&s_mu);
++    for (int a = 0; a < GC_AXES; a++) {
++        if (limited(a) && !s_homed[a]) {
++            s_lost[a] = true;
++            log_w("gc6153: %s did not finish homing%s; it stays still until "
++                  "majestic restarts and homes it again",
++                  a == GC_PAN ? "pan" : "tilt", s_home_cancel ? " (stopped)" : "");
++        }
++    }
++    if (ok) {
++        save_pos();
++        log_i("gc6153: homed, centred at %d/%d", s_pos[GC_PAN], s_pos[GC_TILT]);
++    }
++    pthread_mutex_unlock(&s_mu);
++}
++
++// Whether the core was last told the coils are turning (sdk_ptz_motion).
++static bool s_told_moving = false;
++static int s_told_axis = GC_PAN;
++
++// Whether this command may keep running: still up, and the axis still armed
++// under the same generation. Read between pacing slices.
++static bool burst_wanted(int axis, unsigned gen) {
++    pthread_mutex_lock(&s_mu);
++    bool r = s_run != 0 && s_dir[axis] != 0 && s_gen[axis] == gen;
++    pthread_mutex_unlock(&s_mu);
++    return r;
++}
++
++// Issue one burst on `axis` and pace it out, aborting within a slice when the
++// command is superseded or stopped. Returns the microsteps run (>= 0), or -1
++// on an i2c failure. Called with s_mu released.
++static int run_burst(int axis, int dir, int steps, int chip_speed, unsigned gen) {
++    int dirflag = dir > 0 ? 0 : 1;
++    if (!burst_issue(axis, dirflag, steps, chip_speed)) {
++        axis_stop(axis, dirflag);
++        return -1;
++    }
++    long total_ms = gc_burst_ms(&s_cfg, steps, chip_speed);
++    long left_ms = total_ms;
++    while (left_ms > 0) {
++        long slice = left_ms < 10 ? left_ms : 10;
++        delay_us(slice * 1000);
++        left_ms -= slice;
++        if (!burst_wanted(axis, gen)) {
++            axis_stop(axis, dirflag);
++            // Credit the slices that ran: near a stop this keeps the count honest.
++            long done = (total_ms - left_ms) * steps / (total_ms > 0 ? total_ms : 1);
++            return (int)done;
++        }
++    }
++    return steps;
++}
++
++// Swing the IR-cut filter: 1 = night (filter out), 2 = day (filter in). The
++// vendor's tmi_ircut_control framing, but with the coil energized ~200 ms --
++// its own 50 us only clicks the mechanism without moving the filter (measured
++// on the C8622). Called with s_mu released: it bit-bangs the shared i2c bus
++// and sleeps, like a burst.
++static void ircut_drive(int pos) {
++    chip_write(0x17, 0x13);
++    delay_us(50);
++    chip_write(0x15, 0x7f);
++    delay_us(50);
++    chip_write(0x16, (uint8_t)pos);
++    usleep(200000);
++    chip_write(0x17, 0x03);
++    delay_us(50);
++}
++
++// Follow the IR lamp with the filter. Called with s_mu held from the stepping
++// thread's idle path; a changed level must be seen twice (~200 ms apart) so a
++// glitch on the pad cannot click the filter, and the pulse itself runs with
++// the mutex released so a PTZ command is never held up by it.
++static void ircut_poll(void) {
++    if (s_cfg.ircut_watch < 0) {
++        return;
++    }
++    int v = pin_read(s_cfg.ircut_watch);
++    if (v == s_lamp) {
++        s_lamp_cand = -1;
++        return;
++    }
++    if (v != s_lamp_cand) {
++        s_lamp_cand = v;
++        return;
++    }
++    s_lamp = v;
++    s_lamp_cand = -1;
++    int pos = v ? 1 : 2;   // lamp on = night = filter out
++    if (pos == s_ircut_pos) {
++        return;
++    }
++    s_ircut_pos = pos;
++    pthread_mutex_unlock(&s_mu);
++    log_i("gc6153: lamp %s, ircut -> %s", v ? "on" : "off", v ? "night" : "day");
++    ircut_drive(pos);
++    pthread_mutex_lock(&s_mu);
++}
++
++static void *step_thread(void *arg) {
++    (void)arg;
++    pthread_mutex_lock(&s_mu);
++    if (limited(GC_PAN) || limited(GC_TILT)) {
++        if (restore_pos()) {
++            log_i("gc6153: position %d/%d kept from this boot", s_pos[GC_PAN],
++                  s_pos[GC_TILT]);
++        } else if (s_cfg.home) {
++            unlink(GC_POS_PATH);
++            s_homing = true;
++            s_home_cancel = false;
++            pthread_mutex_unlock(&s_mu);
++            ptz_motion_report(1, -1, -1);
++            home();
++            ptz_motion_report(0, -1, -1);
++            pthread_mutex_lock(&s_mu);
++            s_homing = false;
++            s_dir[GC_PAN] = s_dir[GC_TILT] = 0;
++        }
++    }
++    s_starting = false;
++    while (s_run) {
++        int axis = gc_next_axis(s_dir, s_last);
++        if (axis < 0) {
++            bool stop_any = s_energized[GC_PAN] || s_energized[GC_TILT];
++            bool was_moving = s_told_moving;
++            int told = s_told_axis;
++            s_told_moving = false;
++            if (s_dirty) {
++                save_pos();
++                s_dirty = false;
++            }
++            if (stop_any || was_moving) {
++                pthread_mutex_unlock(&s_mu);
++                for (int a = 0; a < GC_AXES; a++) {
++                    if (s_energized[a]) {
++                        axis_stop(a, 0);
++                        s_energized[a] = false;
++                    }
++                }
++                if (was_moving) {
++                    ptz_motion_report(0, told, -1);
++                }
++                pthread_mutex_lock(&s_mu);
++                continue;
++            }
++            ircut_poll();
++            // A timed wait, so the lamp is re-read (~200 ms) even when no
++            // PTZ command ever arrives to signal the condvar.
++            struct timespec ts;
++            clock_gettime(CLOCK_REALTIME, &ts);
++            ts.tv_nsec += 200000000L;
++            if (ts.tv_nsec >= 1000000000L) {
++                ts.tv_sec++;
++                ts.tv_nsec -= 1000000000L;
++            }
++            pthread_cond_timedwait(&s_cv, &s_mu, &ts);
++            continue;
++        }
++        int dir = s_dir[axis];
++        int cs = gc_chip_speed(&s_cfg, s_speed[axis]);
++        int travel = s_homed[axis] ? s_cfg.travel[axis] : 0;
++        unsigned gen = s_gen[axis];
++        int chunk = s_dir[!axis] ? s_cfg.diag_chunk : s_cfg.chunk;
++        if (s_left[axis] >= 0 && chunk > s_left[axis]) {
++            chunk = s_left[axis];   // a counted move ends exactly on its count
++        }
++        int n = gc_clamp_step(s_pos[axis], dir, chunk, travel);
++        if (n == 0) {
++            bool *said = &s_limit_said[axis][dir > 0];
++            if (!*said) {
++                log_i("gc6153: %s at its limit", axis == GC_PAN ? "pan" : "tilt");
++                *said = true;
++            }
++            s_dir[axis] = 0;   // a diagonal goes on along the other axis
++            continue;
++        }
++        s_last = axis;
++        s_limit_said[axis][dir < 0] = false;
++        forget_saved_pos();
++        bool begin = !s_told_moving;
++        s_told_moving = true;
++        if (begin) {
++            s_told_axis = s_dir[!axis] ? -1 : axis;
++        } else if (s_told_axis != axis) {
++            s_told_axis = -1;
++        }
++        int told = s_told_axis;
++        s_energized[axis] = true;
++        pthread_mutex_unlock(&s_mu);
++        if (begin) {
++            ptz_motion_report(1, told, -1);
++        }
++        int done = run_burst(axis, dir, n, cs, gen);
++        pthread_mutex_lock(&s_mu);
++        if (done < 0) {
++            log_e("gc6153: i2c failure, stopping both axes");
++            s_dir[GC_PAN] = s_dir[GC_TILT] = 0;
++            continue;
++        }
++        if (s_homed[axis]) {
++            s_pos[axis] += dir * done;
++            if (s_pos[axis] < 0) {
++                s_pos[axis] = 0;
++            } else if (s_pos[axis] > s_cfg.travel[axis]) {
++                s_pos[axis] = s_cfg.travel[axis];
++            }
++            s_dirty = true;
++        }
++        if (done < n) {
++            // Aborted mid-burst: the command that armed this is gone (a stop,
++            // a new verb, or the count was replaced) -- nothing more to do here.
++            continue;
++        }
++        if (s_left[axis] > 0 && gen == s_gen[axis]) {
++            s_left[axis] -= n;
++            if (s_left[axis] <= 0) {
++                s_dir[axis] = 0;   // counted out: this axis stops here
++            }
++        }
++    }
++    if (s_dirty) {
++        save_pos();
++    }
++    bool was_moving = s_told_moving;
++    s_told_moving = false;
++    int ax = s_told_axis;
++    pthread_mutex_unlock(&s_mu);
++    for (int a = 0; a < GC_AXES; a++) {
++        if (s_energized[a]) {
++            axis_stop(a, 0);
++            s_energized[a] = false;
++        }
++    }
++    if (was_moving) {
++        ptz_motion_report(0, ax, -1);
++    }
++    return NULL;
++}
++
++// ---- transport open/close --------------------------------------------------
++
++static bool gpio_map(void) {
++    int fd = open("/dev/mem", O_RDWR | O_SYNC);
++    if (fd < 0) {
++        return false;
++    }
++    // Issue SYS_mmap2 directly (offset in PAGES), NOT the libc mmap symbol:
++    // majestic exports a uClibc-ABI mmap for the vendor MPP blobs, and when it
++    // dlopens this .so our mmap binds to THAT -- the offset is then misread
++    // and the mapping lands on a garbage page (GPIO reads come back 0 and the
++    // writes go nowhere; the same trap act_ms41908 documents).
++#ifdef SYS_mmap2
++    void *p = (void *)syscall(SYS_mmap2, NULL, (size_t)GC_GPIO_SPAN,
++                              PROT_READ | PROT_WRITE, MAP_SHARED, fd,
++                              GC_GPIO_BASE >> 12);
++#else
++    void *p = mmap(NULL, GC_GPIO_SPAN, PROT_READ | PROT_WRITE, MAP_SHARED, fd,
++                   (off_t)GC_GPIO_BASE);
++#endif
++    close(fd);
++    if (p == MAP_FAILED) {
++        return false;
++    }
++    s_gpio = p;
++    return true;
++}
++
++static bool gc_open(void) {
++    pthread_mutex_lock(&s_mu);
++    if (s_gpio) {
++        pthread_mutex_unlock(&s_mu);
++        return true;
++    }
++    if (!gpio_map()) {
++        pthread_mutex_unlock(&s_mu);
++        return false;   // motion.c owns the rate-limited retry logging
++    }
++    load_config();
++    pin_input(s_cfg.scl);
++    pin_input(s_cfg.sda);
++    delay_us(50);
++    log_i("gc6153: pins idle scl=%d sda=%d (want 1 1)", pin_read(s_cfg.scl),
++          pin_read(s_cfg.sda));
++    if (!chip_init()) {
++        i2c_start();
++        int a1 = i2c_write_byte((GC_CHIP_ADDR << 1) | 0);
++        i2c_stop();
++        log_e("gc6153: no ack from the chip at 0x%02x (scl=%d sda=%d, addr byte %s, pins %d%d)",
++              GC_CHIP_ADDR, s_cfg.scl, s_cfg.sda, a1 ? "acked" : "NACK",
++              pin_read(s_cfg.scl), pin_read(s_cfg.sda));
++        munmap((void *)s_gpio, GC_GPIO_SPAN);
++        s_gpio = NULL;
++        pthread_mutex_unlock(&s_mu);
++        return false;
++    }
++    s_homed[GC_PAN] = s_homed[GC_TILT] = false;
++    s_dir[GC_PAN] = s_dir[GC_TILT] = 0;
++    s_energized[GC_PAN] = s_energized[GC_TILT] = false;
++    s_run = 1;
++    s_starting = true;
++    pthread_attr_t attr;
++    pthread_attr_init(&attr);
++    pthread_attr_setstacksize(&attr, 0x10000);
++    int rc = pthread_create(&s_thread, &attr, step_thread, NULL);
++    pthread_attr_destroy(&attr);
++    if (rc) {
++        log_e("gc6153: cannot start the stepping thread: %s", strerror(rc));
++        s_run = 0;
++        s_starting = false;
++        munmap((void *)s_gpio, GC_GPIO_SPAN);
++        s_gpio = NULL;
++        pthread_mutex_unlock(&s_mu);
++        return false;
++    }
++    s_thread_valid = true;
++    pthread_mutex_unlock(&s_mu);
++    return true;
++}
++
++static void gc_close(void) {
++    pthread_mutex_lock(&s_mu);
++    s_dir[GC_PAN] = s_dir[GC_TILT] = 0;
++    s_run = 0;
++    pthread_cond_signal(&s_cv);
++    bool join = s_thread_valid;
++    pthread_t t = s_thread;
++    s_thread_valid = false;
++    pthread_mutex_unlock(&s_mu);
++    if (join) {
++        pthread_join(t, NULL);   // the thread stops the axes, then saves
++    }
++    pthread_mutex_lock(&s_mu);
++    if (s_gpio) {
++        chip_write(0x17, 0x03);
++        munmap((void *)s_gpio, GC_GPIO_SPAN);
++        s_gpio = NULL;
++    }
++    pthread_mutex_unlock(&s_mu);
++}
++
++// ---- verbs -----------------------------------------------------------------
++
++static bool gc_arm_locked(enum PtzVerb v, int speed, int steps) {
++    int dir[GC_AXES];
++    if (!gc_verb_dirs(&s_cfg, v, dir) || s_starting || s_homing) {
++        return false;
++    }
++    for (int a = 0; a < GC_AXES; a++) {
++        if (dir[a] && s_lost[a]) {
++            return false;
++        }
++    }
++    bool armed[GC_AXES];
++    gc_arm_axes(dir, steps, speed, s_dir, s_left, s_speed, armed);
++    for (int a = 0; a < GC_AXES; a++) {
++        if (armed[a]) {
++            s_gen[a]++;
++        }
++    }
++    return true;
++}
++
++static bool gc_move_steps(enum PtzVerb v, int steps, int speed) {
++    pthread_mutex_lock(&s_mu);
++    bool ok = steps > 0 && gc_arm_locked(v, speed, steps);
++    if (ok) {
++        pthread_cond_signal(&s_cv);
++    }
++    pthread_mutex_unlock(&s_mu);
++    return ok;
++}
++
++// How long one step of `v` takes: a diagonal's step is one on each axis, run
++// one after the other.
++static long gc_step_ms(enum PtzVerb v, int speed) {
++    pthread_mutex_lock(&s_mu);
++    int dir[GC_AXES];
++    long ms = 0;
++    if (gc_verb_dirs(&s_cfg, v, dir)) {
++        for (int a = 0; a < GC_AXES; a++) {
++            if (dir[a]) {
++                ms += gc_burst_ms(&s_cfg, 1, gc_chip_speed(&s_cfg, speed));
++            }
++        }
++    }
++    pthread_mutex_unlock(&s_mu);
++    return ms < 1 ? 1 : ms;
++}
++
++static bool gc_emit(enum PtzVerb v, int speed) {
++    pthread_mutex_lock(&s_mu);
++    if (v == PTZ_STOP) {
++        s_dir[GC_PAN] = s_dir[GC_TILT] = 0;
++        if (s_homing) {
++            // Not cancelled, unlike gpiostep's seek: on this head the core's
++            // boot-time day/night evaluation books an autofocus refocus whose
++            // opening stop lands mid-seek every boot, and a half-run seek
++            // leaves the head with no position until majestic restarts. The
++            // seek runs once per boot; let it end.
++            log_i("gc6153: stop during homing ignored");
++        }
++    } else {
++        if (!gc_arm_locked(v, speed, -1)) {
++            pthread_mutex_unlock(&s_mu);
++            return false;
++        }
++    }
++    pthread_cond_signal(&s_cv);   // wake the stepping thread; never blocks
++    pthread_mutex_unlock(&s_mu);
++    return true;
++}
++
++static bool gc_frame_steps(int *w, int *h) {
++    pthread_mutex_lock(&s_mu);
++    *w = s_cfg.frame_steps[GC_PAN];
++    *h = s_cfg.frame_steps[GC_TILT];
++    pthread_mutex_unlock(&s_mu);
++    return *w > 0 && *h > 0;
++}
++
++static bool gc_position(double *pan, double *tilt, bool *pan_known, bool *tilt_known) {
++    pthread_mutex_lock(&s_mu);
++    *pan_known = !s_homing && limited(GC_PAN) && s_homed[GC_PAN];
++    *tilt_known = !s_homing && limited(GC_TILT) && s_homed[GC_TILT];
++    if (*pan_known) {
++        *pan = gc_norm_pos(&s_cfg, GC_PAN, s_pos[GC_PAN]);
++    }
++    if (*tilt_known) {
++        *tilt = gc_norm_pos(&s_cfg, GC_TILT, s_pos[GC_TILT]);
++    }
++    pthread_mutex_unlock(&s_mu);
++    return *pan_known || *tilt_known;
++}
++
++static bool gc_has(enum PtzVerb v) {
++    return v == PTZ_STOP || ptz_verb_is_pantilt(v);   // the diagonals included
++}
++
++static const char *gc_proto_name(void) { return "gc6153"; }
++static bool gc_wake_noop(void) { return true; }   // nothing to wake
++static int gc_fd_none(void) { return -1; }        // no UART: the zoom reader stays off
++
++const Actuator act_gc6153 = {
++    .name = "gc6153",
++    .reports_motion = true,
++    .honours_speed = true,
++    .proto_name = gc_proto_name,
++    .open = gc_open,
++    .close = gc_close,
++    .emit = gc_emit,
++    .move_steps = gc_move_steps,
++    .frame_steps = gc_frame_steps,
++    .position = gc_position,
++    .step_ms = gc_step_ms,
++    .has = gc_has,
++    .wake_blob = gc_wake_noop,
++    .wake = gc_wake_noop,
++    .fd = gc_fd_none,
++    .derives_mag = false,   // no zoom, so no magnification from anywhere
++};
+diff --git a/src/actuator.c b/src/actuator.c
+index 6c85365..1482477 100644
+--- a/src/actuator.c
++++ b/src/actuator.c
+@@ -8,6 +8,7 @@
+ extern const Actuator act_uart;      // src/act_uart.c — Pelco / XiongMai over a tty
+ extern Actuator act_ms41908;         // src/act_ms41908.c — MS41908M SPI stepper (its focus travel is set at open)
+ extern const Actuator act_gpiostep;  // src/act_gpiostep.c — GPIO pan/tilt steppers
++extern const Actuator act_gc6153;    // src/act_gc6153.c — GC6153 i2c pan/tilt head
+ extern const Actuator act_visca;     // src/act_visca.c — Sony VISCA lens MCU over a tty
+ 
+ // Every value the key may take, the backend that serves it, and its word on
+@@ -22,6 +23,7 @@ static const struct {
+     {{"pelco-d", "Pelco-D (UART)"}, &act_uart},
+     {{"ms41908", "MS41908 lens stepper (SPI)"}, &act_ms41908},
+     {{"gpiostep", "GPIO pan/tilt steppers"}, &act_gpiostep},
++    {{"gc6153", "GC6153 i2c pan/tilt head"}, &act_gc6153},
+     {{"visca", "Sony VISCA lens MCU (UART)"}, &act_visca},
+ };
+ 
+diff --git a/src/gc6153_calc.c b/src/gc6153_calc.c
+new file mode 100644
+index 0000000..4bb532a
+--- /dev/null
++++ b/src/gc6153_calc.c
+@@ -0,0 +1,225 @@
++// The gc6153 backend's pure logic: the board config parser, verb -> axis, the
++// speed mapping and the soft-limit clamp. No device, no thread, no HAL seam.
++
++#include "act_gc6153.h"
++
++#include <ctype.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
++void gc_config_defaults(GcConfig *c) {
++    // The Vstarcam C8622 (T23), the board this was written on: the vendor
++    // HwCfg's HMotor MaxStep 15000 / VMotor MaxStep 2000, direction 1 turning
++    // the head left and up, and the vendor driver's own top rate.
++    c->travel[GC_PAN] = 15000;
++    c->travel[GC_TILT] = 2000;
++    c->left_sign = 1;
++    c->up_sign = 1;
++    c->speed = 10;
++    c->home_speed = 5;
++    c->step_us = 1000;
++    c->chunk = 1023;        // the most one burst can run (10-bit count)
++    c->diag_chunk = 128;
++    c->home = true;
++    c->frame_steps[GC_PAN] = 0;
++    c->frame_steps[GC_TILT] = 0;
++    c->scl = 53;            // PB21
++    c->sda = 52;            // PB20
++    c->ircut_watch = 61;    // PB29, majestic's nightMode.backlightPin
++}
++
++static bool parse_int(const char *s, long lo, long hi, long *out) {
++    char *end;
++    long v = strtol(s, &end, 10);
++    while (*end && isspace((unsigned char)*end)) {
++        end++;
++    }
++    if (end == s || *end || v < lo || v > hi) {
++        return false;
++    }
++    *out = v;
++    return true;
++}
++
++bool gc_config_line(GcConfig *c, const char *line) {
++    while (*line && isspace((unsigned char)*line)) {
++        line++;
++    }
++    if (!*line || *line == '#') {
++        return true;
++    }
++    const char *eq = strchr(line, '=');
++    if (!eq) {
++        return false;
++    }
++    size_t klen = (size_t)(eq - line);
++    while (klen && isspace((unsigned char)line[klen - 1])) {
++        klen--;
++    }
++    const char *val = eq + 1;
++    while (*val && isspace((unsigned char)*val)) {
++        val++;
++    }
++
++    static const struct {
++        const char *key;
++        long lo, hi;
++    } keys[] = {
++        {"pan_travel", 0, 200000},  {"tilt_travel", 0, 200000},
++        {"pan_left", -1, 1},        {"tilt_up", -1, 1},
++        {"speed", 1, 10},           {"home_speed", 1, 10},
++        {"step_us", 100, 20000},
++        {"chunk", 1, 1023},         {"diag_chunk", 1, 1023},
++        {"home", 0, 1},
++        {"pan_frame_steps", 0, 2 * PTZ_STEPS_MAX},
++        {"tilt_frame_steps", 0, 2 * PTZ_STEPS_MAX},
++        {"scl", 0, 127},            {"sda", 0, 127},
++        {"ircut_watch", -1, 127},
++    };
++    for (size_t i = 0; i < sizeof keys / sizeof *keys; i++) {
++        if (strlen(keys[i].key) != klen || strncmp(keys[i].key, line, klen)) {
++            continue;
++        }
++        long v;
++        if (!parse_int(val, keys[i].lo, keys[i].hi, &v)) {
++            return false;
++        }
++        switch (i) {
++        case 0: c->travel[GC_PAN] = (int)v; break;
++        case 1: c->travel[GC_TILT] = (int)v; break;
++        case 2:
++            if (!v) return false;   // a sign, so +1 or -1, never 0
++            c->left_sign = (int)v;
++            break;
++        case 3:
++            if (!v) return false;
++            c->up_sign = (int)v;
++            break;
++        case 4: c->speed = (int)v; break;
++        case 5: c->home_speed = (int)v; break;
++        case 6: c->step_us = (int)v; break;
++        case 7: c->chunk = (int)v; break;
++        case 8: c->diag_chunk = (int)v; break;
++        case 9: c->home = v != 0; break;
++        case 10: c->frame_steps[GC_PAN] = (int)v; break;
++        case 11: c->frame_steps[GC_TILT] = (int)v; break;
++        case 12: c->scl = (int)v; break;
++        case 13: c->sda = (int)v; break;
++        case 14: c->ircut_watch = (int)v; break;
++        }
++        return true;
++    }
++    return false;
++}
++
++int gc_chip_speed(const GcConfig *c, int speed) {
++    if (speed <= 0 || speed >= 63) {
++        return c->speed;
++    }
++    // 1..62 over the chip's 1..10, never below its slowest.
++    int cs = 1 + (speed - 1) * 9 / 62;
++    if (cs > c->speed) {
++        cs = c->speed;   // the configured rate stays the ceiling
++    }
++    return cs;
++}
++
++int gc_period(const GcConfig *c, int chip_speed) {
++    (void)c;
++    if (chip_speed < 1) {
++        chip_speed = 1;
++    } else if (chip_speed > 10) {
++        chip_speed = 10;
++    }
++    return 215 + 30 * (10 - chip_speed);
++}
++
++long gc_burst_ms(const GcConfig *c, int steps, int chip_speed) {
++    // step_us is calibrated at the chip's speed 10 (period 245); the run
++    // stretches with the period. Rounded up: a deadline set from this must
++    // never expire while the chip is still stepping. The product overflows
++    // 32-bit long at the slow end of the config range (1023 * 20000 * 515),
++    // so it is taken in 64-bit; after the /245 the result fits a long.
++    long long us = (long long)steps * c->step_us * gc_period(c, chip_speed) / 245;
++    return (long)((us + 999) / 1000);
++}
++
++bool gc_verb_dirs(const GcConfig *c, enum PtzVerb v, int dir[GC_AXES]) {
++    int pan, tilt;
++    if (!ptz_verb_dirs(v, &pan, &tilt)) {
++        return false;
++    }
++    // ptz_verb_dirs says right and up are +1; the board says which raw sign
++    // turns the head left and which up.
++    dir[GC_PAN] = pan * -c->left_sign;
++    dir[GC_TILT] = tilt * c->up_sign;
++    return true;
++}
++
++void gc_arm_axes(const int dir[GC_AXES], int steps, int speed, int cur_dir[GC_AXES],
++                 int cur_left[GC_AXES], int cur_speed[GC_AXES], bool armed[GC_AXES]) {
++    for (int a = 0; a < GC_AXES; a++) {
++        armed[a] = false;
++        if (!dir[a] && steps > 0 && cur_dir[a] && cur_left[a] > 0) {
++            continue;   // that axis's own count goes on, at its own speed
++        }
++        cur_dir[a] = dir[a];
++        cur_left[a] = dir[a] ? steps : -1;
++        if (dir[a]) {
++            cur_speed[a] = speed;
++        }
++        armed[a] = dir[a] != 0;
++    }
++}
++
++int gc_next_axis(const int dir[GC_AXES], int last) {
++    bool pan = dir[GC_PAN] != 0, tilt = dir[GC_TILT] != 0;
++    if (pan && tilt) {
++        return last == GC_PAN ? GC_TILT : GC_PAN;
++    }
++    return pan ? GC_PAN : tilt ? GC_TILT : -1;
++}
++
++double gc_norm_pos(const GcConfig *c, int axis, int pos) {
++    int travel = c->travel[axis];
++    if (travel <= 0) {
++        return 0.0;
++    }
++    double u = 2.0 * pos / travel - 1.0;   // -1 at raw 0, 1 at the far stop
++    if (u < -1.0) {
++        u = -1.0;
++    } else if (u > 1.0) {
++        u = 1.0;
++    }
++    return axis == GC_PAN ? u * -c->left_sign : u * c->up_sign;
++}
++
++int gc_parse_pos(const GcConfig *c, const char *line, int pos[GC_AXES],
++                 bool known[GC_AXES]) {
++    int v[GC_AXES];
++    int n = 0;
++    bool parsed = sscanf(line, "%d %d", &v[GC_PAN], &v[GC_TILT]) == 2;
++    for (int a = 0; a < GC_AXES; a++) {
++        known[a] = parsed && c->travel[a] > 0 && v[a] >= 0 && v[a] <= c->travel[a];
++        if (known[a]) {
++            pos[a] = v[a];
++            n++;
++        }
++    }
++    return n;
++}
++
++int gc_clamp_step(int pos, int dir, int want, int travel) {
++    if (want <= 0) {
++        return 0;
++    }
++    if (travel <= 0) {
++        return want;
++    }
++    int room = dir > 0 ? travel - pos : pos;
++    if (room <= 0) {
++        return 0;
++    }
++    return want < room ? want : room;
++}
+diff --git a/tests/act_uart_test.c b/tests/act_uart_test.c
+index f6add50..bd89128 100644
+--- a/tests/act_uart_test.c
++++ b/tests/act_uart_test.c
+@@ -32,6 +32,7 @@ extern const Actuator act_uart;
+ Actuator act_ms41908 = {.name = "ms41908"};
+ const Actuator act_gpiostep = {.name = "gpiostep"};
+ const Actuator act_visca = {.name = "visca"};
++const Actuator act_gc6153 = {.name = "gc6153"};
+ 
+ // ---- the core, stubbed ---------------------------------------------------
+ 
+diff --git a/tests/schema_test.c b/tests/schema_test.c
+index 001c7f9..12e22a2 100644
+--- a/tests/schema_test.c
++++ b/tests/schema_test.c
+@@ -14,6 +14,7 @@ const Actuator act_uart = {.name = "pelco"};
+ Actuator act_ms41908 = {.name = "ms41908"};
+ const Actuator act_gpiostep = {.name = "gpiostep"};
+ const Actuator act_visca = {.name = "visca"};
++const Actuator act_gc6153 = {.name = "gc6153"};
+ 
+ static const ActuatorChoice two[] = {
+     {"pelco-xm", "XiongMai lens MCU (UART)"},
+-- 
+2.43.0
+
