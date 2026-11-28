@@ -41,6 +41,7 @@ GARUS GSL-5030X-30AP-NM  HI3516EV200  SC2315E?  -                NOR_8M    done
 G.Craftsman GCA50        T31ZX        GC4653    -                NOR_16M   done
 EC37-T11                 T20L         SC2232    RTL8188FU_USB    MOR_16M   in progress
 H3C TC2101               SSC337       JXQ03     RTL8188FU_USB    NOR_16M   done
+HiWatch DS-I203          HI3518EV100  IMX122    -                NOR_16M   done, requires hi3518ev100-ddr3-256m U-Boot
 HB-WIFI-Z6 v1.2          T10          JXH62     RTL8188EU_USB    NOR_8M    in progress
 HeimVision HM202         SSC325       GC2063    RTL8188FU_USB    NOR_8M    video-ok, wifi-ok, ir-ok, pan/tilt-ok (74HC595)
 HeimVision PE3020-W      AK3918EV300  JXF37     RTL8188FU_USB    NOR_8M    testing: flash boot ok, RTSP main + sub streams (hardware, #234), ircut GPIO 42 night / 41 day, photocell on AIN0 for day/night
