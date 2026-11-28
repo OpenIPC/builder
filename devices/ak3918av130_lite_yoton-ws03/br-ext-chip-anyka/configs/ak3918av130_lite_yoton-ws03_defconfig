@@ -22,8 +22,10 @@ BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(EXTERNAL_VENDOR)/board/$(OPENIPC_SOC_FAMI
 BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(EXTERNAL_VENDOR)/board/$(OPENIPC_SOC_FAMILY)/ak3918av130-yoton-ws03.config"
 # The uImage is the zImage with the board's DTB appended
 # (CONFIG_ARM_APPENDED_DTB), built by the kernel itself as on hisilicon.
+# The entry is the payload past the 64-byte uImage header: this board's
+# U-Boot runs the image in place, without relocating it (OpenIPC/firmware#2962).
 BR2_LINUX_KERNEL_UIMAGE=y
-BR2_LINUX_KERNEL_UIMAGE_LOADADDR="0x80008000"
+BR2_LINUX_KERNEL_UIMAGE_LOADADDR="0x80008040"
 BR2_LINUX_KERNEL_XZ=y
 
 # Filesystem
