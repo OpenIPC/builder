@@ -41,6 +41,10 @@ BR2_OPENIPC_SOC_VENDOR="novatek"
 BR2_OPENIPC_SOC_MODEL="nt98566"
 BR2_OPENIPC_SOC_FAMILY="nt9856x"
 BR2_OPENIPC_VARIANT="lite"
+# The chip is 16 MB (GD25Q128), but this is the 8 MB NOR layout on purpose:
+# it is firmware's nt98566_lite layout, the one the owner's camera runs
+# today, and the rest of the chip is rootfs_data. The 16 MB layout is a
+# different partition table and has not been tried on this board.
 BR2_OPENIPC_FLASH_SIZE="8"
 
 # Packages
